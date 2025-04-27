@@ -1,75 +1,74 @@
 .product-viewer-360 {
-    position: relative;
-    width: 100%;
-    height: 400px;
-    background-color: var(--white);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    cursor: grab;
-    user-select: none;
+  position: relative;
+  width: 100%;
+  height: 400px;
+  background-color: var(--white);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  cursor: grab;
+  user-select: none;
+}
+
+.product-viewer-360:active {
+  cursor: grabbing;
+}
+
+.viewer-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.viewer-controls {
+  position: absolute;
+  bottom: var(--spacing-md);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  z-index: 2;
+}
+
+.frame-indicator {
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.frame-progress {
+  height: 100%;
+  background-color: var(--primary-green);
+  border-radius: var(--radius-full);
+  transition: width 0.2s ease;
+}
+
+.viewer-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--white);
+}
+
+.viewer-loading p {
+  margin-top: var(--spacing-md);
+  color: var(--text-medium);
+}
+
+@media (max-width: 768px) {
+  .product-viewer-360 {
+    height: 300px;
   }
-  
-  .product-viewer-360:active {
-    cursor: grabbing;
+}
+
+@media (max-width: 576px) {
+  .product-viewer-360 {
+    height: 250px;
   }
-  
-  .viewer-image {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    pointer-events: none;
-  }
-  
-  .viewer-controls {
-    position: absolute;
-    bottom: var(--spacing-md);
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80%;
-    z-index: 2;
-  }
-  
-  .frame-indicator {
-    height: 4px;
-    background-color: rgba(255, 255, 255, 0.5);
-    border-radius: var(--radius-full);
-    overflow: hidden;
-  }
-  
-  .frame-progress {
-    height: 100%;
-    background-color: var(--primary-green);
-    border-radius: var(--radius-full);
-    transition: width 0.2s ease;
-  }
-  
-  .viewer-loading {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--white);
-  }
-  
-  .viewer-loading p {
-    margin-top: var(--spacing-md);
-    color: var(--text-medium);
-  }
-  
-  @media (max-width: 768px) {
-    .product-viewer-360 {
-      height: 300px;
-    }
-  }
-  
-  @media (max-width: 576px) {
-    .product-viewer-360 {
-      height: 250px;
-    }
-  }
-  
+}
