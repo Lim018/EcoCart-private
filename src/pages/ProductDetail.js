@@ -25,7 +25,7 @@ const ProductDetail = () => {
     price: 12.99,
     discount: 0,
     images: [
-      "/eco-friendly-oral-care.png",
+      "/bamboo-toothbrush-set.png",
       "/bamboo-toothbrush-angle.png",
       "/bamboo-toothbrush-packaging.png",
       "/bamboo-toothbrush-detail.png",
@@ -220,6 +220,10 @@ const ProductDetail = () => {
                     "/bamboo-toothbrush-360-6.png",
                     "/bamboo-toothbrush-360-7.png",
                     "/bamboo-toothbrush-360-8.png",
+                    "/bamboo-toothbrush-360-9.png",
+                    "/bamboo-toothbrush-360-10.png",
+                    "/bamboo-toothbrush-360-11.png",
+                    "/bamboo-toothbrush-360-12.png",
                   ]}
                 />
               ) : (
@@ -513,22 +517,22 @@ const ProductDetail = () => {
                       </div>
                     ))}
                   </div>
-                </div>
 
-                <div className="certifications">
-                  <h3>Certifications</h3>
-                  <div className="certification-logos">
-                    <div className="certification">
-                      <img src="/fsc-certified.png" alt="FSC Certified" />
-                      <span>FSC Certified</span>
-                    </div>
-                    <div className="certification">
-                      <img src="/vegan-friendly.png" alt="Vegan Friendly" />
-                      <span>Vegan Friendly</span>
-                    </div>
-                    <div className="certification">
-                      <img src="/plastic-free.png" alt="Plastic Free" />
-                      <span>Plastic Free</span>
+                  <div className="certifications">
+                    <h3>Certifications</h3>
+                    <div className="certification-logos">
+                      <div className="certification">
+                        <img src="/fsc-certified.png" alt="FSC Certified" />
+                        <span>FSC Certified</span>
+                      </div>
+                      <div className="certification">
+                        <img src="/vegan-friendly.png" alt="Vegan Friendly" />
+                        <span>Vegan Friendly</span>
+                      </div>
+                      <div className="certification">
+                        <img src="/plastic-free.png" alt="Plastic Free" />
+                        <span>Plastic Free</span>
+                      </div>
                     </div>
                   </div>
                 </div>
