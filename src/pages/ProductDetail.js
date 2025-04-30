@@ -1,7 +1,8 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { useParams, Link } from "react-router-dom"
+import { useParams } from "react-router-dom"
+import { Link } from "react-router-dom"
 import ProductViewer360 from "../components/ProductViewer360"
 import TestimonialCarousel from "../components/TestimonialCarousel"
 import "../styles/ProductDetail.css"
@@ -185,7 +186,7 @@ const ProductDetail = () => {
         <div className="container">
           <h2>Product Not Found</h2>
           <p>Sorry, the product you are looking for does not exist.</p>
-          <Link to="/products" className="btn btn-primary">
+          <Link href="/products" className="btn btn-primary">
             Back to Products
           </Link>
         </div>
@@ -198,9 +199,9 @@ const ProductDetail = () => {
       <div className="container">
         {/* Breadcrumb Navigation */}
         <div className="breadcrumb">
-          <Link to="/">Home</Link>
+          <Link href="/">Home</Link>
           <span className="separator">/</span>
-          <Link to="/products">Products</Link>
+          <Link href="/products">Products</Link>
           <span className="separator">/</span>
           <span className="current">{product.name}</span>
         </div>
@@ -288,7 +289,7 @@ const ProductDetail = () => {
             <div className="product-meta">
               <div className="product-rating">
                 <div className="stars" style={{ "--rating": product.rating }}></div>
-                <Link to="#reviews" className="review-count">
+                <Link href="#reviews" className="review-count">
                   {product.reviewCount} reviews
                 </Link>
               </div>
@@ -366,7 +367,7 @@ const ProductDetail = () => {
             <div className="product-meta-info">
               <div className="meta-item">
                 <span className="meta-label">Category:</span>
-                <Link to={`/products/category/${product.category}`} className="meta-value">
+                <Link href={`/products/category/${product.category}`} className="meta-value">
                   {product.category.charAt(0).toUpperCase() + product.category.slice(1)}
                 </Link>
               </div>
@@ -374,9 +375,9 @@ const ProductDetail = () => {
               <div className="meta-item">
                 <span className="meta-label">Tags:</span>
                 <span className="meta-value">
-                  <Link to="/products/tag/eco-friendly">Eco-friendly</Link>,
-                  <Link to="/products/tag/plastic-free">Plastic-free</Link>,
-                  <Link to="/products/tag/biodegradable">Biodegradable</Link>
+                  <Link href="/products/tag/eco-friendly">Eco-friendly</Link>,
+                  <Link href="/products/tag/plastic-free">Plastic-free</Link>,
+                  <Link href="/products/tag/biodegradable">Biodegradable</Link>
                 </span>
               </div>
 
@@ -622,7 +623,7 @@ const ProductDetail = () => {
 
                 <div className="product-info">
                   <h3 className="product-name">
-                    <Link to={`/products/${relatedProduct.id}`}>{relatedProduct.name}</Link>
+                    <Link href={`/products/${relatedProduct.id}`}>{relatedProduct.name}</Link>
                   </h3>
 
                   <div className="product-price">${relatedProduct.price.toFixed(2)}</div>
