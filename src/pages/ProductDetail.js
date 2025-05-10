@@ -470,51 +470,53 @@ const ProductDetail = () => {
               </div>
             )}
 
-            <div className="sustainability-tab">
-              <div className="sustainability-score">
-                <div className="score-circle">
-                  <svg viewBox="0 0 36 36">
-                    <path
-                      className="score-circle-bg"
-                      d="M18 2.0845
-                        a 15.9155 15.9155 0 0 1 0 31.831
-                        a 15.9155 15.9155 0 0 1 0 -31.831"
-                    />
-                    <path
-                      className="score-circle-fill"
-                      strokeDasharray={`${product.sustainabilityScore}, 100`}
-                      d="M18 2.0845
-                        a 15.9155 15.9155 0 0 1 0 31.831
-                        a 15.9155 15.9155 0 0 1 0 -31.831"
-                    />
-                    <text x="18" y="20.35" className="score-text">
-                      {product.sustainabilityScore}
-                    </text>
-                  </svg>
-                  <span className="score-label">Eco Score</span>
+            {activeTab === "sustainability" && (
+              <div className="sustainability-tab">
+                <div className="sustainability-score">
+                  <div className="score-circle">
+                    <svg viewBox="0 0 36 36">
+                      <path
+                        className="score-circle-bg"
+                        d="M18 2.0845
+                          a 15.9155 15.9155 0 0 1 0 31.831
+                          a 15.9155 15.9155 0 0 1 0 -31.831"
+                      />
+                      <path
+                        className="score-circle-fill"
+                        strokeDasharray={`${product.sustainabilityScore}, 100`}
+                        d="M18 2.0845
+                          a 15.9155 15.9155 0 0 1 0 31.831
+                          a 15.9155 15.9155 0 0 1 0 -31.831"
+                      />
+                      <text x="18" y="20.35" className="score-text">
+                        {product.sustainabilityScore}
+                      </text>
+                    </svg>
+                    <span className="score-label">Eco Score</span>
+                  </div>
+
+                  <div className="score-explanation">
+                    <h3>What This Score Means</h3>
+                    <p>
+                      Our Eco Score rates products on a scale from 0-100 based on environmental impact, materials,
+                      production methods, packaging, and end-of-life considerations. A score above 90 indicates an
+                      exceptional eco-friendly product.
+                    </p>
+                  </div>
                 </div>
 
-                <div className="score-explanation">
-                  <h3>What This Score Means</h3>
-                  <p>
-                    Our Eco Score rates products on a scale from 0-100 based on environmental impact, materials,
-                    production methods, packaging, and end-of-life considerations. A score above 90 indicates an
-                    exceptional eco-friendly product.
-                  </p>
-                </div>
-              </div>
-
-              <div className="impact-details">
-                <h3>Environmental Impact</h3>
-                <div className="impact-grid">
-                  {Object.entries(product.impact).map(([key, value]) => (
-                    <div className="impact-card" key={key}>
-                      <div className="impact-icon">
-                        <i className="fas fa-leaf"></i>
+                <div className="impact-details">
+                  <h3>Environmental Impact</h3>
+                  <div className="impact-grid">
+                    {Object.entries(product.impact).map(([key, value]) => (
+                      <div className="impact-card" key={key}>
+                        <div className="impact-icon">
+                          <i className="fas fa-leaf"></i>
+                        </div>
+                        <div className="impact-text">{value}</div>
                       </div>
-                      <div className="impact-text">{value}</div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
 
                 <div className="certifications">
@@ -533,9 +535,9 @@ const ProductDetail = () => {
                       <span>Plastic Free</span>
                     </div>
                   </div>
-                </div> {/* Close certifications */}
-              </div> {/* Close impact-details */}
-            </div> {/* Close sustainability-tab */}
+                </div>
+              </div>
+            )}
 
             {activeTab === "reviews" && (
               <div className="reviews-tab" id="reviews">
