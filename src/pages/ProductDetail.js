@@ -1,8 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { useParams } from "react-router-dom"
-import { Link } from "react-router-dom"
+import { useParams, Link } from "react-router-dom"
 import ProductViewer360 from "../components/ProductViewer360"
 import TestimonialCarousel from "../components/TestimonialCarousel"
 import "../styles/ProductDetail.css"
@@ -186,7 +185,7 @@ const ProductDetail = () => {
         <div className="container">
           <h2>Product Not Found</h2>
           <p>Sorry, the product you are looking for does not exist.</p>
-          <Link href="/products" className="btn btn-primary">
+          <Link to="/products" className="btn btn-primary">
             Back to Products
           </Link>
         </div>
@@ -199,9 +198,9 @@ const ProductDetail = () => {
       <div className="container">
         {/* Breadcrumb Navigation */}
         <div className="breadcrumb">
-          <Link href="/">Home</Link>
+          <Link to="/">Home</Link>
           <span className="separator">/</span>
-          <Link href="/products">Products</Link>
+          <Link to="/products">Products</Link>
           <span className="separator">/</span>
           <span className="current">{product.name}</span>
         </div>
@@ -289,7 +288,7 @@ const ProductDetail = () => {
             <div className="product-meta">
               <div className="product-rating">
                 <div className="stars" style={{ "--rating": product.rating }}></div>
-                <Link href="#reviews" className="review-count">
+                <Link to="#reviews" className="review-count">
                   {product.reviewCount} reviews
                 </Link>
               </div>
@@ -367,7 +366,7 @@ const ProductDetail = () => {
             <div className="product-meta-info">
               <div className="meta-item">
                 <span className="meta-label">Category:</span>
-                <Link href={`/products/category/${product.category}`} className="meta-value">
+                <Link to={`/products/category/${product.category}`} className="meta-value">
                   {product.category.charAt(0).toUpperCase() + product.category.slice(1)}
                 </Link>
               </div>
@@ -375,9 +374,9 @@ const ProductDetail = () => {
               <div className="meta-item">
                 <span className="meta-label">Tags:</span>
                 <span className="meta-value">
-                  <Link href="/products/tag/eco-friendly">Eco-friendly</Link>,
-                  <Link href="/products/tag/plastic-free">Plastic-free</Link>,
-                  <Link href="/products/tag/biodegradable">Biodegradable</Link>
+                  <Link to="/products/tag/eco-friendly">Eco-friendly</Link>,
+                  <Link to="/products/tag/plastic-free">Plastic-free</Link>,
+                  <Link to="/products/tag/biodegradable">Biodegradable</Link>
                 </span>
               </div>
 
@@ -471,74 +470,72 @@ const ProductDetail = () => {
               </div>
             )}
 
-            {activeTab === "sustainability" && (
-              <div className="sustainability-tab">
-                <div className="sustainability-score">
-                  <div className="score-circle">
-                    <svg viewBox="0 0 36 36">
-                      <path
-                        className="score-circle-bg"
-                        d="M18 2.0845
-                          a 15.9155 15.9155 0 0 1 0 31.831
-                          a 15.9155 15.9155 0 0 1 0 -31.831"
-                      />
-                      <path
-                        className="score-circle-fill"
-                        strokeDasharray={`${product.sustainabilityScore}, 100`}
-                        d="M18 2.0845
-                          a 15.9155 15.9155 0 0 1 0 31.831
-                          a 15.9155 15.9155 0 0 1 0 -31.831"
-                      />
-                      <text x="18" y="20.35" className="score-text">
-                        {product.sustainabilityScore}
-                      </text>
-                    </svg>
-                    <span className="score-label">Eco Score</span>
-                  </div>
-
-                  <div className="score-explanation">
-                    <h3>What This Score Means</h3>
-                    <p>
-                      Our Eco Score rates products on a scale from 0-100 based on environmental impact, materials,
-                      production methods, packaging, and end-of-life considerations. A score above 90 indicates an
-                      exceptional eco-friendly product.
-                    </p>
-                  </div>
+            <div className="sustainability-tab">
+              <div className="sustainability-score">
+                <div className="score-circle">
+                  <svg viewBox="0 0 36 36">
+                    <path
+                      className="score-circle-bg"
+                      d="M18 2.0845
+                        a 15.9155 15.9155 0 0 1 0 31.831
+                        a 15.9155 15.9155 0 0 1 0 -31.831"
+                    />
+                    <path
+                      className="score-circle-fill"
+                      strokeDasharray={`${product.sustainabilityScore}, 100`}
+                      d="M18 2.0845
+                        a 15.9155 15.9155 0 0 1 0 31.831
+                        a 15.9155 15.9155 0 0 1 0 -31.831"
+                    />
+                    <text x="18" y="20.35" className="score-text">
+                      {product.sustainabilityScore}
+                    </text>
+                  </svg>
+                  <span className="score-label">Eco Score</span>
                 </div>
 
-                <div className="impact-details">
-                  <h3>Environmental Impact</h3>
-                  <div className="impact-grid">
-                    {Object.entries(product.impact).map(([key, value]) => (
-                      <div className="impact-card" key={key}>
-                        <div className="impact-icon">
-                          <i className="fas fa-leaf"></i>
-                        </div>
-                        <div className="impact-text">{value}</div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="certifications">
-                    <h3>Certifications</h3>
-                    <div className="certification-logos">
-                      <div className="certification">
-                        <img src="/fsc-certified.png" alt="FSC Certified" />
-                        <span>FSC Certified</span>
-                      </div>
-                      <div className="certification">
-                        <img src="/vegan-friendly.png" alt="Vegan Friendly" />
-                        <span>Vegan Friendly</span>
-                      </div>
-                      <div className="certification">
-                        <img src="/plastic-free.png" alt="Plastic Free" />
-                        <span>Plastic Free</span>
-                      </div>
-                    </div>
-                  </div>
+                <div className="score-explanation">
+                  <h3>What This Score Means</h3>
+                  <p>
+                    Our Eco Score rates products on a scale from 0-100 based on environmental impact, materials,
+                    production methods, packaging, and end-of-life considerations. A score above 90 indicates an
+                    exceptional eco-friendly product.
+                  </p>
                 </div>
               </div>
-            )}
+
+              <div className="impact-details">
+                <h3>Environmental Impact</h3>
+                <div className="impact-grid">
+                  {Object.entries(product.impact).map(([key, value]) => (
+                    <div className="impact-card" key={key}>
+                      <div className="impact-icon">
+                        <i className="fas fa-leaf"></i>
+                      </div>
+                      <div className="impact-text">{value}</div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="certifications">
+                  <h3>Certifications</h3>
+                  <div className="certification-logos">
+                    <div className="certification">
+                      <img src="/fsc-certified.png" alt="FSC Certified" />
+                      <span>FSC Certified</span>
+                    </div>
+                    <div className="certification">
+                      <img src="/vegan-friendly.png" alt="Vegan Friendly" />
+                      <span>Vegan Friendly</span>
+                    </div>
+                    <div className="certification">
+                      <img src="/plastic-free.png" alt="Plastic Free" />
+                      <span>Plastic Free</span>
+                    </div>
+                  </div>
+                </div> {/* Close certifications */}
+              </div> {/* Close impact-details */}
+            </div> {/* Close sustainability-tab */}
 
             {activeTab === "reviews" && (
               <div className="reviews-tab" id="reviews">
@@ -623,7 +620,7 @@ const ProductDetail = () => {
 
                 <div className="product-info">
                   <h3 className="product-name">
-                    <Link href={`/products/${relatedProduct.id}`}>{relatedProduct.name}</Link>
+                    <Link to={`/products/${relatedProduct.id}`}>{relatedProduct.name}</Link>
                   </h3>
 
                   <div className="product-price">${relatedProduct.price.toFixed(2)}</div>

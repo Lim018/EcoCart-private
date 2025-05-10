@@ -2,9 +2,25 @@
 
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
+import { DndContext, closestCenter, useSensor, useSensors, PointerSensor } from "@dnd-kit/core"
+import { SortableContext, useSortable, arrayMove, verticalListSortingStrategy } from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
 import { motion, AnimatePresence } from "framer-motion"
 import "../styles/Cart.css"
+
+const SortableItem = ({ id, children }) => {
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id })
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  }
+
+  return (
+    <motion.div ref={setNodeRef} style={style} {...attributes} className="cart-item">
+      {children(listeners)}
+    </motion.div>
+  )
+}
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([])
@@ -18,6 +34,8 @@ const Cart = () => {
   const [couponError, setCouponError] = useState("")
   const [couponSuccess, setCouponSuccess] = useState("")
   const [removingItemId, setRemovingItemId] = useState(null)
+
+  const sensors = useSensors(useSensor(PointerSensor))
 
   // Sample cart items data
   const sampleCartItems = [
@@ -55,7 +73,6 @@ const Cart = () => {
 
   // Load cart items
   useEffect(() => {
-    // Simulate API call
     setTimeout(() => {
       setCartItems(sampleCartItems)
       setLoading(false)
@@ -67,7 +84,7 @@ const Cart = () => {
     if (cartItems.length > 0) {
       const itemsSubtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
       const shippingCost = itemsSubtotal > 50 ? 0 : 5.99
-      const taxAmount = itemsSubtotal * 0.08 // 8% tax
+      const taxAmount = itemsSubtotal * 0.08
 
       setSubtotal(itemsSubtotal)
       setShipping(shippingCost)
@@ -96,8 +113,6 @@ const Cart = () => {
   // Handle item removal with animation
   const handleRemoveItem = (itemId) => {
     setRemovingItemId(itemId)
-
-    // Wait for animation to complete before removing from state
     setTimeout(() => {
       setCartItems(cartItems.filter((item) => item.id !== itemId))
       setRemovingItemId(null)
@@ -105,24 +120,23 @@ const Cart = () => {
   }
 
   // Handle drag and drop to reorder items
-  const handleDragEnd = (result) => {
-    if (!result.destination) return
-
-    const items = Array.from(cartItems)
-    const [reorderedItem] = items.splice(result.source.index, 1)
-    items.splice(result.destination.index, 0, reorderedItem)
-
-    setCartItems(items)
+  const handleDragEnd = (event) => {
+    const { active, over } = event
+    if (active.id !== over.id) {
+      setCartItems((items) => {
+        const oldIndex = items.findIndex((item) => item.id === active.id)
+        const newIndex = items.findIndex((item) => item.id === over.id)
+        return arrayMove(items, oldIndex, newIndex)
+      })
+    }
   }
 
   // Apply coupon code
   const applyCoupon = () => {
     setCouponError("")
     setCouponSuccess("")
-
-    // Simulate coupon validation
     if (couponCode.toLowerCase() === "eco20") {
-      const discountAmount = subtotal * 0.2 // 20% discount
+      const discountAmount = subtotal * 0.2
       setDiscount(discountAmount)
       setCouponSuccess("20% discount applied successfully!")
     } else if (couponCode.toLowerCase() === "freeship") {
@@ -136,10 +150,8 @@ const Cart = () => {
   // Calculate environmental impact
   const calculateImpact = () => {
     const plasticSaved = cartItems.reduce((sum, item) => {
-      // Assume each product saves different amount of plastic based on sustainability score
       return sum + (item.sustainabilityScore / 10) * item.quantity
     }, 0)
-
     return {
       plasticSaved: Math.round(plasticSaved),
       co2Reduced: Math.round(plasticSaved * 0.5),
@@ -191,102 +203,97 @@ const Cart = () => {
                 <div className="cart-header-actions"></div>
               </div>
 
-              <DragDropContext onDragEnd={handleDragEnd}>
-                <Droppable droppableId="cart-items">
-                  {(provided) => (
-                    <div className="cart-items" {...provided.droppableProps} ref={provided.innerRef}>
-                      <AnimatePresence>
-                        {cartItems.map((item, index) => (
-                          <Draggable key={item.id} draggableId={item.id} index={index}>
-                            {(provided) => (
-                              <motion.div
-                                className={`cart-item ${removingItemId === item.id ? "removing" : ""}`}
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, height: 0, marginBottom: 0 }}
-                                transition={{ duration: 0.3 }}
-                              >
-                                <div className="drag-handle" {...provided.dragHandleProps}>
-                                  <i className="fas fa-grip-vertical"></i>
-                                </div>
+              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                <SortableContext items={cartItems.map((item) => item.id)} strategy={verticalListSortingStrategy}>
+                  <div className="cart-items">
+                    <AnimatePresence>
+                      {cartItems.map((item) => (
+                        <SortableItem key={item.id} id={item.id}>
+                          {(listeners) => (
+                            <motion.div
+                              className={`cart-item ${removingItemId === item.id ? "removing" : ""}`}
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+                              transition={{ duration: 0.3 }}
+                            >
+                              <div className="drag-handle" {...listeners}>
+                                <i className="fas fa-grip-vertical"></i>
+                              </div>
 
-                                <div className="cart-item-product">
-                                  <img src={item.image || "/placeholder.svg"} alt={item.name} />
-                                  <div className="item-details">
-                                    <h3>{item.name}</h3>
-                                    <div className="sustainability-badge">
-                                      <i className="fas fa-leaf"></i>
-                                      <span>Eco Score: {item.sustainabilityScore}</span>
-                                    </div>
+                              <div className="cart-item-product">
+                                <img src={item.image || "/placeholder.svg"} alt={item.name} />
+                                <div className="item-details">
+                                  <h3>{item.name}</h3>
+                                  <div className="sustainability-badge">
+                                    <i className="fas fa-leaf"></i>
+                                    <span>Eco Score: {item.sustainabilityScore}</span>
                                   </div>
                                 </div>
+                              </div>
 
-                                <div className="cart-item-price">${item.price.toFixed(2)}</div>
+                              <div className="cart-item-price">${item.price.toFixed(2)}</div>
 
-                                <div className="cart-item-quantity">
-                                  <div className="quantity-selector">
-                                    <button
-                                      className="quantity-btn"
-                                      onClick={() => handleQuantityChange(item.id, Math.max(1, item.quantity - 1))}
-                                      disabled={item.quantity <= 1}
-                                    >
-                                      <i className="fas fa-minus"></i>
-                                    </button>
-                                    <input
-                                      type="number"
-                                      value={item.quantity}
-                                      min="1"
-                                      max={item.maxQuantity}
-                                      onChange={(e) =>
-                                        handleQuantityChange(
-                                          item.id,
-                                          Math.min(item.maxQuantity, Math.max(1, Number.parseInt(e.target.value) || 1)),
-                                        )
-                                      }
-                                    />
-                                    <button
-                                      className="quantity-btn"
-                                      onClick={() =>
-                                        handleQuantityChange(item.id, Math.min(item.maxQuantity, item.quantity + 1))
-                                      }
-                                      disabled={item.quantity >= item.maxQuantity}
-                                    >
-                                      <i className="fas fa-plus"></i>
-                                    </button>
-                                  </div>
-                                </div>
-
-                                <motion.div
-                                  className="cart-item-total"
-                                  key={`${item.id}-${item.quantity}`}
-                                  initial={{ scale: 1 }}
-                                  animate={{ scale: [1, 1.05, 1] }}
-                                  transition={{ duration: 0.3 }}
-                                >
-                                  ${(item.price * item.quantity).toFixed(2)}
-                                </motion.div>
-
-                                <div className="cart-item-actions">
+                              <div className="cart-item-quantity">
+                                <div className="quantity-selector">
                                   <button
-                                    className="remove-item"
-                                    onClick={() => handleRemoveItem(item.id)}
-                                    aria-label="Remove item"
+                                    className="quantity-btn"
+                                    onClick={() => handleQuantityChange(item.id, Math.max(1, item.quantity - 1))}
+                                    disabled={item.quantity <= 1}
                                   >
-                                    <i className="fas fa-trash-alt"></i>
+                                    <i className="fas fa-minus"></i>
+                                  </button>
+                                  <input
+                                    type="number"
+                                    value={item.quantity}
+                                    min="1"
+                                    max={item.maxQuantity}
+                                    onChange={(e) =>
+                                      handleQuantityChange(
+                                        item.id,
+                                        Math.min(item.maxQuantity, Math.max(1, Number.parseInt(e.target.value) || 1)),
+                                      )
+                                    }
+                                  />
+                                  <button
+                                    className="quantity-btn"
+                                    onClick={() =>
+                                      handleQuantityChange(item.id, Math.min(item.maxQuantity, item.quantity + 1))
+                                    }
+                                    disabled={item.quantity >= item.maxQuantity}
+                                  >
+                                    <i className="fas fa-plus"></i>
                                   </button>
                                 </div>
+                              </div>
+
+                              <motion.div
+                                className="cart-item-total"
+                                key={`${item.id}-${item.quantity}`}
+                                initial={{ scale: 1 }}
+                                animate={{ scale: [1, 1.05, 1] }}
+                                transition={{ duration: 0.3 }}
+                              >
+                                ${(item.price * item.quantity).toFixed(2)}
                               </motion.div>
-                            )}
-                          </Draggable>
-                        ))}
-                      </AnimatePresence>
-                      {provided.placeholder}
-                    </div>
-                  )}
-                </Droppable>
-              </DragDropContext>
+
+                              <div className="cart-item-actions">
+                                <button
+                                  className="remove-item"
+                                  onClick={() => handleRemoveItem(item.id)}
+                                  aria-label="Remove item"
+                                >
+                                  <i className="fas fa-trash-alt"></i>
+                                </button>
+                              </div>
+                            </motion.div>
+                          )}
+                        </SortableItem>
+                      ))}
+                    </AnimatePresence>
+                  </div>
+                </SortableContext>
+              </DndContext>
 
               <div className="cart-instructions">
                 <p>

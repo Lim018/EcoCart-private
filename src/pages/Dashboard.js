@@ -1,7 +1,9 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
+import { DndContext, closestCenter, useSensor, useSensors, PointerSensor } from "@dnd-kit/core"
+import { SortableContext, useSortable, arrayMove, rectSortingStrategy } from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
 import {
   BarChart,
   Bar,
@@ -31,7 +33,20 @@ import {
 } from "react-feather"
 import "../styles/Dashboard.css"
 
-// Sample data for charts
+const SortableItem = ({ id, children }) => {
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id })
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  }
+
+  return (
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="widget-wrapper">
+      {children}
+    </div>
+  )
+}
+
 const salesData = [
   { name: "Jan", eco: 4000, conventional: 2400 },
   { name: "Feb", eco: 3000, conventional: 1398 },
@@ -70,7 +85,6 @@ const recentTransactions = [
   { id: "TX-1238", customer: "Charlie Wilson", amount: 67.25, date: "2023-06-29", status: "processing" },
 ]
 
-// Widget components
 const DashboardWidget = ({ id, title, children, onRemove, onMaximize, refreshData }) => {
   const [isLoading, setIsLoading] = useState(false)
 
@@ -101,7 +115,6 @@ const DashboardWidget = ({ id, title, children, onRemove, onMaximize, refreshDat
   )
 }
 
-// KPI Card Component
 const KPICard = ({ title, value, change, icon, color }) => {
   const isPositive = change > 0
 
@@ -122,7 +135,6 @@ const KPICard = ({ title, value, change, icon, color }) => {
   )
 }
 
-// Dashboard Component
 const Dashboard = () => {
   const [widgets, setWidgets] = useState([
     { id: "kpi", title: "Key Performance Indicators", type: "kpi" },
@@ -134,25 +146,25 @@ const Dashboard = () => {
 
   const [maximizedWidget, setMaximizedWidget] = useState(null)
   const [isUpdating, setIsUpdating] = useState(false)
+  const sensors = useSensors(useSensor(PointerSensor))
 
-  // Simulate real-time updates
   useEffect(() => {
     const interval = setInterval(() => {
       setIsUpdating(true)
       setTimeout(() => setIsUpdating(false), 500)
     }, 10000)
-
     return () => clearInterval(interval)
   }, [])
 
-  const handleDragEnd = (result) => {
-    if (!result.destination) return
-
-    const items = Array.from(widgets)
-    const [reorderedItem] = items.splice(result.source.index, 1)
-    items.splice(result.destination.index, 0, reorderedItem)
-
-    setWidgets(items)
+  const handleDragEnd = (event) => {
+    const { active, over } = event
+    if (active.id !== over.id) {
+      setWidgets((items) => {
+        const oldIndex = items.findIndex((item) => item.id === active.id)
+        const newIndex = items.findIndex((item) => item.id === over.id)
+        return arrayMove(items, oldIndex, newIndex)
+      })
+    }
   }
 
   const removeWidget = (id) => {
@@ -168,7 +180,6 @@ const Dashboard = () => {
   }
 
   const refreshData = () => {
-    // In a real app, this would fetch fresh data
     console.log("Refreshing data...")
   }
 
@@ -353,37 +364,25 @@ const Dashboard = () => {
         </div>
       </header>
 
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId="widgets">
-          {(provided) => (
-            <div className="widgets-grid" {...provided.droppableProps} ref={provided.innerRef}>
-              {widgets.map((widget, index) => (
-                <Draggable key={widget.id} draggableId={widget.id} index={index}>
-                  {(provided) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      className="widget-wrapper"
-                    >
-                      <DashboardWidget
-                        id={widget.id}
-                        title={widget.title}
-                        onRemove={removeWidget}
-                        onMaximize={maximizeWidget}
-                        refreshData={refreshData}
-                      >
-                        {renderWidgetContent(widget)}
-                      </DashboardWidget>
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <SortableContext items={widgets.map((widget) => widget.id)} strategy={rectSortingStrategy}>
+          <div className="widgets-grid">
+            {widgets.map((widget) => (
+              <SortableItem key={widget.id} id={widget.id}>
+                <DashboardWidget
+                  id={widget.id}
+                  title={widget.title}
+                  onRemove={removeWidget}
+                  onMaximize={maximizeWidget}
+                  refreshData={refreshData}
+                >
+                  {renderWidgetContent(widget)}
+                </DashboardWidget>
+              </SortableItem>
+            ))}
+          </div>
+        </SortableContext>
+      </DndContext>
 
       {maximizedWidget && (
         <div className="maximized-widget-overlay">
