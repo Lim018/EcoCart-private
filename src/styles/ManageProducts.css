@@ -1,10 +1,11 @@
 /* ManageProducts.css */
 .manage-products-container {
-    padding-top: 100px;
+    padding-top: 120px; /* Increased from 100px */
     max-width: 1400px;
     margin: 0 auto;
     padding-bottom: 50px;
     font-family: var(--font-primary);
+    overflow-x: hidden; /* Add this to prevent horizontal overflow */
   }
   
   .admin-header {
@@ -148,7 +149,8 @@
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    overflow: hidden;
+    overflow: auto; /* Change from overflow: hidden to auto */
+    max-width: 100%; /* Ensure it doesn't exceed container width */
   }
   
   .products-table table {
@@ -313,6 +315,7 @@
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     margin-bottom: 30px;
     animation: slideDown 0.3s ease;
+    overflow-x: hidden; /* Add this to prevent horizontal overflow */
   }
   
   @keyframes slideDown {
@@ -351,7 +354,7 @@
   
   .product-edit-form {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 30px;
   }
   
@@ -370,7 +373,7 @@
   
   .product-form {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 20px;
   }
   
@@ -698,6 +701,10 @@
   /* Responsive Styles */
   @media (max-width: 1200px) {
     .product-edit-form {
+      grid-template-columns: 1fr;
+    }
+  
+    .product-form {
       grid-template-columns: 1fr;
     }
   }
