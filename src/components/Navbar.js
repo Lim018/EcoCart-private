@@ -26,9 +26,14 @@ const Navbar = () => {
     setIsMobileMenuOpen(false)
   }, [location])
 
+  // Don't render Navbar on the authentication page
+  if (location.pathname === "/auth") {
+    return null
+  }
+
   return (
     <nav className={`navbar ${isScrolled ? "scrolled" : ""}`}>
-      <div className="container navbar-container">
+      <div className="navbar-container container">
         <Link to="/" className="navbar-logo">
           <span className="logo-text">
             Eco<span className="logo-highlight">Cart</span>
