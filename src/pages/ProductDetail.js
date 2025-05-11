@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useParams, Link } from "react-router-dom"
 import ProductViewer360 from "../components/ProductViewer360"
 import TestimonialCarousel from "../components/TestimonialCarousel"
@@ -517,22 +517,22 @@ const ProductDetail = () => {
                       </div>
                     ))}
                   </div>
-                </div>
 
-                <div className="certifications">
-                  <h3>Certifications</h3>
-                  <div className="certification-logos">
-                    <div className="certification">
-                      <img src="/fsc-certified.png" alt="FSC Certified" />
-                      <span>FSC Certified</span>
-                    </div>
-                    <div className="certification">
-                      <img src="/vegan-friendly.png" alt="Vegan Friendly" />
-                      <span>Vegan Friendly</span>
-                    </div>
-                    <div className="certification">
-                      <img src="/plastic-free.png" alt="Plastic Free" />
-                      <span>Plastic Free</span>
+                  <div className="certifications">
+                    <h3>Certifications</h3>
+                    <div className="certification-logos">
+                      <div className="certification">
+                        <img src="/fsc-certified.png" alt="FSC Certified" />
+                        <span>FSC Certified</span>
+                      </div>
+                      <div className="certification">
+                        <img src="/vegan-friendly.png" alt="Vegan Friendly" />
+                        <span>Vegan Friendly</span>
+                      </div>
+                      <div className="certification">
+                        <img src="/plastic-free.png" alt="Plastic Free" />
+                        <span>Plastic Free</span>
+                      </div>
                     </div>
                   </div>
                 </div>
