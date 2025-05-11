@@ -1,8 +1,9 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
-import { DndProvider, useDrag, useDrop } from "react-dnd"
-import { HTML5Backend } from "react-dnd-html5-backend"
+import { useState, useEffect } from "react"
+import { DndContext, closestCenter, useSensor, useSensors, PointerSensor } from "@dnd-kit/core"
+import { SortableContext, useSortable, arrayMove, verticalListSortingStrategy } from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
 import { motion, AnimatePresence } from "framer-motion"
 import "../styles/ManageArticles.css"
 
@@ -222,36 +223,13 @@ const initialMediaItems = [
 ]
 
 // Draggable content block component
-const ContentBlock = ({ id, content, index, moveBlock, handleContentChange, handleDeleteBlock }) => {
-  const ref = useRef(null)
-
-  const [{ isDragging }, drag] = useDrag({
-    type: "CONTENT_BLOCK",
-    item: { id, index },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  })
-
-  const [, drop] = useDrop({
-    accept: "CONTENT_BLOCK",
-    hover: (item, monitor) => {
-      if (!ref.current) {
-        return
-      }
-      const dragIndex = item.index
-      const hoverIndex = index
-
-      if (dragIndex === hoverIndex) {
-        return
-      }
-
-      moveBlock(dragIndex, hoverIndex)
-      item.index = hoverIndex
-    },
-  })
-
-  drag(drop(ref))
+const ContentBlock = ({ id, content, index, handleContentChange, handleDeleteBlock }) => {
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id })
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: transform ? 0.5 : 1,
+  }
 
   // Determine if the block is a paragraph, heading, or image
   const getBlockType = () => {
@@ -336,11 +314,7 @@ const ContentBlock = ({ id, content, index, moveBlock, handleContentChange, hand
   }
 
   return (
-    <div
-      ref={ref}
-      className={`content-block ${blockType}-block ${isDragging ? "dragging" : ""}`}
-      style={{ opacity: isDragging ? 0.5 : 1 }}
-    >
+    <div ref={setNodeRef} style={style} className={`content-block ${blockType}-block`}>
       <div className="block-header">
         <div className="block-type">
           {blockType === "heading" && <i className="fas fa-heading"></i>}
@@ -349,7 +323,7 @@ const ContentBlock = ({ id, content, index, moveBlock, handleContentChange, hand
           <span>{blockType.charAt(0).toUpperCase() + blockType.slice(1)}</span>
         </div>
         <div className="block-actions">
-          <button className="block-action-btn" title="Drag to reorder">
+          <button className="block-action-btn" title="Drag to reorder" {...attributes} {...listeners}>
             <i className="fas fa-grip-lines"></i>
           </button>
           <button className="block-action-btn delete-btn" onClick={() => handleDeleteBlock(index)} title="Delete block">
@@ -400,12 +374,20 @@ const TagSelector = ({ selectedTags, setSelectedTags }) => {
   return (
     <div className="tag-selector">
       <div className="selected-tags">
-        {selectedTags.map((tag, index) => (
-          <motion.div key={index} className="tag" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-            <span>{tag}</span>
-            <button onClick={() => removeTag(tag)}>×</button>
-          </motion.div>
-        ))}
+        <AnimatePresence>
+          {selectedTags.map((tag, index) => (
+            <motion.div
+              key={index}
+              className="tag"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0 }}
+            >
+              <span>{tag}</span>
+              <button onClick={() => removeTag(tag)}>×</button>
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
       <div className="tag-input-container">
         <input
@@ -424,7 +406,11 @@ const TagSelector = ({ selectedTags, setSelectedTags }) => {
         {showSuggestions && suggestions.length > 0 && (
           <div className="tag-suggestions">
             {suggestions.map((suggestion, index) => (
-              <div key={index} className="tag-suggestion" onClick={() => addTag(suggestion)}>
+              <div
+                key={index}
+                className="tag-suggestion"
+                onClick={() => addTag(suggestion)}
+              >
                 {suggestion}
               </div>
             ))}
@@ -440,7 +426,9 @@ const MediaLibrary = ({ mediaItems, onSelectMedia, onClose }) => {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedItem, setSelectedItem] = useState(null)
 
-  const filteredItems = mediaItems.filter((item) => item.name.toLowerCase().includes(searchTerm.toLowerCase()))
+  const filteredItems = mediaItems.filter((item) =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  )
 
   const handleSelect = () => {
     if (selectedItem) {
@@ -458,7 +446,6 @@ const MediaLibrary = ({ mediaItems, onSelectMedia, onClose }) => {
             ×
           </button>
         </div>
-
         <div className="media-search">
           <input
             type="text"
@@ -467,7 +454,6 @@ const MediaLibrary = ({ mediaItems, onSelectMedia, onClose }) => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-
         <div className="media-grid">
           {filteredItems.map((item) => (
             <div
@@ -478,17 +464,22 @@ const MediaLibrary = ({ mediaItems, onSelectMedia, onClose }) => {
               <img src={item.url || "/placeholder.svg"} alt={item.name} />
               <div className="media-item-info">
                 <span className="media-item-name">{item.name}</span>
-                <span className="media-item-date">{new Date(item.uploadDate).toLocaleDateString()}</span>
+                <span className="media-item-date">
+                  {new Date(item.uploadDate).toLocaleDateString()}
+                </span>
               </div>
             </div>
           ))}
         </div>
-
         <div className="media-library-footer">
           <button className="action-button" onClick={onClose}>
             Cancel
           </button>
-          <button className="action-button primary-button" onClick={handleSelect} disabled={!selectedItem}>
+          <button
+            className="action-button primary-button"
+            onClick={handleSelect}
+            disabled={!selectedItem}
+          >
             Select
           </button>
         </div>
@@ -502,28 +493,30 @@ const RichTextEditor = ({ content, setContent }) => {
   // Parse content into blocks
   const parseContent = () => {
     if (!content) return []
-
     const parser = new DOMParser()
     const doc = parser.parseFromString(content, "text/html")
     const elements = Array.from(doc.body.children)
-
     return elements.map((el) => el.outerHTML)
   }
 
   const [contentBlocks, setContentBlocks] = useState(parseContent())
+  const sensors = useSensors(useSensor(PointerSensor))
 
   // Update parent content when blocks change
   useEffect(() => {
     setContent(contentBlocks.join("\n"))
   }, [contentBlocks, setContent])
 
-  // Move block
-  const moveBlock = (dragIndex, hoverIndex) => {
-    const draggedBlock = contentBlocks[dragIndex]
-    const newBlocks = [...contentBlocks]
-    newBlocks.splice(dragIndex, 1)
-    newBlocks.splice(hoverIndex, 0, draggedBlock)
-    setContentBlocks(newBlocks)
+  // Handle drag end
+  const handleDragEnd = (event) => {
+    const { active, over } = event
+    if (active.id !== over.id) {
+      setContentBlocks((blocks) => {
+        const oldIndex = blocks.findIndex((_, idx) => `block-${idx}` === active.id)
+        const newIndex = blocks.findIndex((_, idx) => `block-${idx}` === over.id)
+        return arrayMove(blocks, oldIndex, newIndex)
+      })
+    }
   }
 
   // Handle content change
@@ -556,7 +549,6 @@ const RichTextEditor = ({ content, setContent }) => {
       default:
         return
     }
-
     setContentBlocks([...contentBlocks, newBlock])
   }
 
@@ -571,37 +563,56 @@ const RichTextEditor = ({ content, setContent }) => {
   return (
     <div className="rich-text-editor">
       <div className="editor-toolbar">
-        <button className="toolbar-btn" onClick={() => addBlock("heading")} title="Add Heading">
+        <button
+          className="toolbar-btn"
+          onClick={() => addBlock("heading")}
+          title="Add Heading"
+        >
           <i className="fas fa-heading"></i>
         </button>
-        <button className="toolbar-btn" onClick={() => addBlock("paragraph")} title="Add Paragraph">
+        <button
+          className="toolbar-btn"
+          onClick={() => addBlock("paragraph")}
+          title="Add Paragraph"
+        >
           <i className="fas fa-paragraph"></i>
         </button>
-        <button className="toolbar-btn" onClick={() => addBlock("image")} title="Add Image">
+        <button
+          className="toolbar-btn"
+          onClick={() => addBlock("image")}
+          title="Add Image"
+        >
           <i className="fas fa-image"></i>
         </button>
       </div>
-
-      <div className="editor-content">
-        {contentBlocks.map((block, index) => (
-          <ContentBlock
-            key={index}
-            id={`block-${index}`}
-            content={block}
-            index={index}
-            moveBlock={moveBlock}
-            handleContentChange={handleContentChange}
-            handleDeleteBlock={handleDeleteBlock}
-          />
-        ))}
-
-        {contentBlocks.length === 0 && (
-          <div className="empty-editor">
-            <p>Start adding content blocks using the toolbar above.</p>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext
+          items={contentBlocks.map((_, index) => `block-${index}`)}
+          strategy={verticalListSortingStrategy}
+        >
+          <div className="editor-content">
+            {contentBlocks.map((block, index) => (
+              <ContentBlock
+                key={index}
+                id={`block-${index}`}
+                content={block}
+                index={index}
+                handleContentChange={handleContentChange}
+                handleDeleteBlock={handleDeleteBlock}
+              />
+            ))}
+            {contentBlocks.length === 0 && (
+              <div className="empty-editor">
+                <p>Start adding content blocks using the toolbar above.</p>
+              </div>
+            )}
           </div>
-        )}
-      </div>
-
+        </SortableContext>
+      </DndContext>
       {showMediaLibrary && (
         <MediaLibrary
           mediaItems={initialMediaItems}
@@ -615,21 +626,45 @@ const RichTextEditor = ({ content, setContent }) => {
 
 // Content preview component
 const ContentPreview = ({ content }) => {
-  return (
-    <div className="content-preview">
-      <div className="preview-content" dangerouslySetInnerHTML={{ __html: content }} />
-    </div>
-  )
+  // Log content for debugging
+  console.log("Preview content:", content)
+
+  // Attempt to render content, fallback if malformed
+  try {
+    return (
+      <div className="content-preview">
+        <div
+          className="preview-content"
+          dangerouslySetInnerHTML={{ __html: content }}
+        />
+      </div>
+    )
+  } catch (error) {
+    console.error("Error rendering preview:", error)
+    return (
+      <div className="content-preview">
+        <p>Error rendering preview: Malformed content</p>
+      </div>
+    )
+  }
 }
 
 // Scheduling calendar component
 const SchedulingCalendar = ({ publishDate, setPublishDate }) => {
   const [showCalendar, setShowCalendar] = useState(false)
-  const [selectedDate, setSelectedDate] = useState(publishDate ? new Date(publishDate) : new Date())
+  const [selectedDate, setSelectedDate] = useState(
+    publishDate ? new Date(publishDate) : new Date()
+  )
   const [selectedTime, setSelectedTime] = useState(
     publishDate
-      ? `${new Date(publishDate).getHours().toString().padStart(2, "0")}:${new Date(publishDate).getMinutes().toString().padStart(2, "0")}`
-      : "09:00",
+      ? `${new Date(publishDate)
+          .getHours()
+          .toString()
+          .padStart(2, "0")}:${new Date(publishDate)
+          .getMinutes()
+          .toString()
+          .padStart(2, "0")}`
+      : "09:00"
   )
 
   const handleDateSelect = (date) => {
@@ -658,25 +693,17 @@ const SchedulingCalendar = ({ publishDate, setPublishDate }) => {
   const generateCalendarDays = () => {
     const year = selectedDate.getFullYear()
     const month = selectedDate.getMonth()
-
     const firstDay = new Date(year, month, 1)
     const lastDay = new Date(year, month + 1, 0)
-
     const daysInMonth = lastDay.getDate()
     const startingDayOfWeek = firstDay.getDay()
-
     const days = []
-
-    // Add empty cells for days before the first day of the month
     for (let i = 0; i < startingDayOfWeek; i++) {
       days.push(null)
     }
-
-    // Add days of the month
     for (let i = 1; i <= daysInMonth; i++) {
       days.push(new Date(year, month, i))
     }
-
     return days
   }
 
@@ -699,18 +726,26 @@ const SchedulingCalendar = ({ publishDate, setPublishDate }) => {
 
   return (
     <div className="scheduling-calendar">
-      <div className="schedule-display" onClick={() => setShowCalendar(!showCalendar)}>
+      <div
+        className="schedule-display"
+        onClick={() => setShowCalendar(!showCalendar)}
+      >
         <i className="fas fa-calendar-alt"></i>
         <span>{formatDate(publishDate)}</span>
-        <i className={`fas fa-chevron-${showCalendar ? "up" : "down"}`}></i>
+        <i
+          className={`fas fa-chevron-${showCalendar ? "up" : "down"}`}
+        ></i>
       </div>
-
       {showCalendar && (
         <div className="calendar-dropdown">
           <div className="calendar-header">
             <button
               className="month-nav"
-              onClick={() => setSelectedDate(new Date(selectedDate.getFullYear(), selectedDate.getMonth() - 1, 1))}
+              onClick={() =>
+                setSelectedDate(
+                  new Date(selectedDate.getFullYear(), selectedDate.getMonth() - 1, 1)
+                )
+              }
             >
               <i className="fas fa-chevron-left"></i>
             </button>
@@ -719,19 +754,21 @@ const SchedulingCalendar = ({ publishDate, setPublishDate }) => {
             </h4>
             <button
               className="month-nav"
-              onClick={() => setSelectedDate(new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 1))}
+              onClick={() =>
+                setSelectedDate(
+                  new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 1)
+                )
+              }
             >
               <i className="fas fa-chevron-right"></i>
             </button>
           </div>
-
           <div className="calendar-grid">
             {weekdays.map((day) => (
               <div key={day} className="weekday">
                 {day}
               </div>
             ))}
-
             {days.map((day, index) => (
               <div
                 key={index}
@@ -749,12 +786,14 @@ const SchedulingCalendar = ({ publishDate, setPublishDate }) => {
               </div>
             ))}
           </div>
-
           <div className="time-selector">
             <label>Time:</label>
-            <input type="time" value={selectedTime} onChange={handleTimeChange} />
+            <input
+              type="time"
+              value={selectedTime}
+              onChange={handleTimeChange}
+            />
           </div>
-
           <div className="calendar-actions">
             <button
               className="action-button"
@@ -765,7 +804,10 @@ const SchedulingCalendar = ({ publishDate, setPublishDate }) => {
             >
               Clear
             </button>
-            <button className="action-button primary-button" onClick={handleSave}>
+            <button
+              className="action-button primary-button"
+              onClick={handleSave}
+            >
               Set Date & Time
             </button>
           </div>
@@ -799,16 +841,19 @@ const ManageArticles = () => {
       const matchesSearch =
         article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         article.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        article.tags.some((tag) => tag.toLowerCase().includes(searchTerm.toLowerCase()))
-
-      const matchesCategory = filterCategory ? article.category === filterCategory : true
-      const matchesStatus = filterStatus ? article.status === filterStatus : true
-
+        article.tags.some((tag) =>
+          tag.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      const matchesCategory = filterCategory
+        ? article.category === filterCategory
+        : true
+      const matchesStatus = filterStatus
+        ? article.status === filterStatus
+        : true
       return matchesSearch && matchesCategory && matchesStatus
     })
     .sort((a, b) => {
       let valueA, valueB
-
       if (sortField === "publishDate") {
         valueA = a.publishDate ? new Date(a.publishDate).getTime() : 0
         valueB = b.publishDate ? new Date(b.publishDate).getTime() : 0
@@ -816,7 +861,6 @@ const ManageArticles = () => {
         valueA = a[sortField]
         valueB = b[sortField]
       }
-
       if (sortDirection === "asc") {
         return valueA > valueB ? 1 : -1
       } else {
@@ -868,23 +912,21 @@ const ManageArticles = () => {
 
   // Handle save article
   const handleSaveArticle = () => {
-    // Save to undo stack
     setUndoStack([...undoStack, [...articles]])
     setRedoStack([])
-
-    // Update slug if title changed
-    if (!editingArticle.slug || editingArticle.title !== articles.find((a) => a.id === editingArticle.id)?.title) {
+    if (
+      !editingArticle.slug ||
+      editingArticle.title !==
+        articles.find((a) => a.id === editingArticle.id)?.title
+    ) {
       editingArticle.slug = generateSlug(editingArticle.title)
     }
-
-    // Update last modified date
     editingArticle.lastModified = new Date().toISOString()
-
     if (editingArticle.id) {
-      // Update existing article
-      setArticles(articles.map((a) => (a.id === editingArticle.id ? editingArticle : a)))
+      setArticles(
+        articles.map((a) => (a.id === editingArticle.id ? editingArticle : a))
+      )
     } else {
-      // Add new article
       const newArticle = {
         ...editingArticle,
         id: Math.max(...articles.map((a) => a.id)) + 1,
@@ -892,11 +934,8 @@ const ManageArticles = () => {
       }
       setArticles([...articles, newArticle])
     }
-
     setIsEditing(false)
     setEditingArticle(null)
-
-    // Show confirmation
     setShowConfirmation(true)
     setTimeout(() => setShowConfirmation(false), 3000)
   }
@@ -930,32 +969,39 @@ const ManageArticles = () => {
     setConfirmationAction({
       type: action,
       callback: () => {
-        // Save to undo stack
         setUndoStack([...undoStack, [...articles]])
         setRedoStack([])
-
         switch (action) {
           case "delete":
-            setArticles(articles.filter((a) => !selectedArticles.includes(a.id)))
+            setArticles(
+              articles.filter((a) => !selectedArticles.includes(a.id))
+            )
             break
           case "publish":
             setArticles(
               articles.map((a) =>
                 selectedArticles.includes(a.id)
-                  ? { ...a, status: "published", publishDate: new Date().toISOString() }
-                  : a,
-              ),
+                  ? {
+                      ...a,
+                      status: "published",
+                      publishDate: new Date().toISOString(),
+                    }
+                  : a
+              )
             )
             break
           case "draft":
             setArticles(
-              articles.map((a) => (selectedArticles.includes(a.id) ? { ...a, status: "draft", publishDate: null } : a)),
+              articles.map((a) =>
+                selectedArticles.includes(a.id)
+                  ? { ...a, status: "draft", publishDate: null }
+                  : a
+              )
             )
             break
           default:
             break
         }
-
         setSelectedArticles([])
         setShowConfirmation(true)
         setTimeout(() => setShowConfirmation(false), 3000)
@@ -989,310 +1035,388 @@ const ManageArticles = () => {
   }
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <div className="manage-articles-container">
-        <div className="admin-header">
-          <h1>Manage Articles</h1>
-          <div className="admin-actions">
-            <button className="action-button undo-button" disabled={undoStack.length === 0} onClick={handleUndo}>
-              <i className="fas fa-undo"></i> Undo
-            </button>
-            <button className="action-button redo-button" disabled={redoStack.length === 0} onClick={handleRedo}>
-              <i className="fas fa-redo"></i> Redo
-            </button>
-            <button className="action-button primary-button" onClick={handleNewArticle}>
-              <i className="fas fa-plus"></i> Add Article
-            </button>
-          </div>
+    <div className="manage-articles-container">
+      {/* Admin Header */}
+      <div className="admin-header">
+        <h1>Manage Articles</h1>
+        <div className="admin-actions">
+          <button
+            className="action-button undo-button"
+            disabled={undoStack.length === 0}
+            onClick={handleUndo}
+          >
+            <i className="fas fa-undo"></i> Undo
+          </button>
+          <button
+            className="action-button redo-button"
+            disabled={redoStack.length === 0}
+            onClick={handleRedo}
+          >
+            <i className="fas fa-redo"></i> Redo
+          </button>
+          <button
+            className="action-button primary-button"
+            onClick={handleNewArticle}
+          >
+            <i className="fas fa-plus"></i> Add Article
+          </button>
         </div>
+      </div>
 
-        {isEditing ? (
-          <div className="edit-article-panel">
-            <div className="panel-header">
-              <h2>{editingArticle.id ? "Edit Article" : "New Article"}</h2>
-              <div className="panel-actions">
-                <button className="action-button" onClick={handleCancelEdit}>
-                  Cancel
-                </button>
-                <button className="action-button primary-button" onClick={handleSaveArticle}>
-                  Save Article
-                </button>
-              </div>
+      {/* Editing Panel or Article List */}
+      {isEditing ? (
+        <div className="edit-article-panel">
+          <div className="panel-header">
+            <h2>{editingArticle.id ? "Edit Article" : "New Article"}</h2>
+            <div className="panel-actions">
+              <button className="action-button" onClick={handleCancelEdit}>
+                Cancel
+              </button>
+              <button
+                className="action-button primary-button"
+                onClick={handleSaveArticle}
+              >
+                Save Article
+              </button>
             </div>
-
-            <div className="panel-content">
-              <div className="article-edit-form">
-                <div className="form-section article-info">
+          </div>
+          <div className="panel-content">
+            <div className="article-edit-form">
+              <div className="form-section article-info">
+                <div className="form-group">
+                  <label>Title</label>
+                  <input
+                    type="text"
+                    value={editingArticle.title}
+                    onChange={(e) =>
+                      setEditingArticle({
+                        ...editingArticle,
+                        title: e.target.value,
+                      })
+                    }
+                    placeholder="Article title"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Excerpt</label>
+                  <textarea
+                    value={editingArticle.excerpt}
+                    onChange={(e) =>
+                      setEditingArticle({
+                        ...editingArticle,
+                        excerpt: e.target.value,
+                      })
+                    }
+                    placeholder="Brief summary of the article"
+                  />
+                </div>
+                <div className="form-row">
                   <div className="form-group">
-                    <label>Title</label>
+                    <label>Category</label>
+                    <select
+                      value={editingArticle.category}
+                      onChange={(e) =>
+                        setEditingArticle({
+                          ...editingArticle,
+                          category: e.target.value,
+                        })
+                      }
+                    >
+                      <option value="">Select Category</option>
+                      {categories.map((category) => (
+                        <option key={category.id} value={category.id}>
+                          {category.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label>Author</label>
                     <input
                       type="text"
-                      value={editingArticle.title}
-                      onChange={(e) => setEditingArticle({ ...editingArticle, title: e.target.value })}
-                      placeholder="Article title"
+                      value={editingArticle.author}
+                      onChange={(e) =>
+                        setEditingArticle({
+                          ...editingArticle,
+                          author: e.target.value,
+                        })
+                      }
+                      placeholder="Article author"
                     />
-                  </div>
-
-                  <div className="form-group">
-                    <label>Excerpt</label>
-                    <textarea
-                      value={editingArticle.excerpt}
-                      onChange={(e) => setEditingArticle({ ...editingArticle, excerpt: e.target.value })}
-                      placeholder="Brief summary of the article"
-                    />
-                  </div>
-
-                  <div className="form-row">
-                    <div className="form-group">
-                      <label>Category</label>
-                      <select
-                        value={editingArticle.category}
-                        onChange={(e) => setEditingArticle({ ...editingArticle, category: e.target.value })}
-                      >
-                        <option value="">Select Category</option>
-                        {categories.map((category) => (
-                          <option key={category.id} value={category.id}>
-                            {category.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div className="form-group">
-                      <label>Author</label>
-                      <input
-                        type="text"
-                        value={editingArticle.author}
-                        onChange={(e) => setEditingArticle({ ...editingArticle, author: e.target.value })}
-                        placeholder="Article author"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="form-group">
-                    <label>Tags</label>
-                    <TagSelector
-                      selectedTags={editingArticle.tags}
-                      setSelectedTags={(tags) => setEditingArticle({ ...editingArticle, tags })}
-                    />
-                  </div>
-
-                  <div className="form-row">
-                    <div className="form-group">
-                      <label>Status</label>
-                      <select
-                        value={editingArticle.status}
-                        onChange={(e) => {
-                          const newStatus = e.target.value
-                          const newArticle = { ...editingArticle, status: newStatus }
-
-                          // If changing to published, set publish date to now if not already set
-                          if (newStatus === "published" && !editingArticle.publishDate) {
-                            newArticle.publishDate = new Date().toISOString()
-                          }
-
-                          // If changing to draft, clear publish date
-                          if (newStatus === "draft") {
-                            newArticle.publishDate = null
-                          }
-
-                          setEditingArticle(newArticle)
-                        }}
-                      >
-                        <option value="draft">Draft</option>
-                        <option value="published">Published</option>
-                        <option value="scheduled">Scheduled</option>
-                      </select>
-                    </div>
-
-                    <div className="form-group">
-                      <label>Publish Date</label>
-                      <SchedulingCalendar
-                        publishDate={editingArticle.publishDate}
-                        setPublishDate={(date) => {
-                          const newArticle = { ...editingArticle, publishDate: date }
-
-                          // Update status based on publish date
-                          if (date) {
-                            const publishDate = new Date(date)
-                            const now = new Date()
-
-                            if (publishDate > now) {
-                              newArticle.status = "scheduled"
-                            } else {
-                              newArticle.status = "published"
-                            }
-                          }
-
-                          setEditingArticle(newArticle)
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="form-group">
-                    <label>Featured Image</label>
-                    <div className="featured-image-selector">
-                      {editingArticle.featuredImage ? (
-                        <div className="featured-image-preview">
-                          <img src={editingArticle.featuredImage || "/placeholder.svg"} alt="Featured" />
-                          <button
-                            className="remove-image-btn"
-                            onClick={() => setEditingArticle({ ...editingArticle, featuredImage: "" })}
-                          >
-                            <i className="fas fa-times"></i>
-                          </button>
-                        </div>
-                      ) : (
-                        <button className="select-image-btn" onClick={() => setShowMediaLibrary(true)}>
-                          <i className="fas fa-image"></i>
-                          <span>Select Featured Image</span>
-                        </button>
-                      )}
-                    </div>
                   </div>
                 </div>
-
-                <div className="form-section article-content">
-                  <div className="editor-container">
-                    <div className="editor-header">
-                      <h3>Content</h3>
-                      <div className="editor-tabs">
-                        <button className="editor-tab active">Edit</button>
-                        <button className="editor-tab">Preview</button>
+                <div className="form-group">
+                  <label>Tags</label>
+                  <TagSelector
+                    selectedTags={editingArticle.tags}
+                    setSelectedTags={(tags) =>
+                      setEditingArticle({ ...editingArticle, tags })
+                    }
+                  />
+                </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Status</label>
+                    <select
+                      value={editingArticle.status}
+                      onChange={(e) => {
+                        const newStatus = e.target.value
+                        const newArticle = {
+                          ...editingArticle,
+                          status: newStatus,
+                        }
+                        if (newStatus === "published" && !editingArticle.publishDate) {
+                          newArticle.publishDate = new Date().toISOString()
+                        }
+                        if (newStatus === "draft") {
+                          newArticle.publishDate = null
+                        }
+                        setEditingArticle(newArticle)
+                      }}
+                    >
+                      <option value="draft">Draft</option>
+                      <option value="published">Published</option>
+                      <option value="scheduled">Scheduled</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label>Publish Date</label>
+                    <SchedulingCalendar
+                      publishDate={editingArticle.publishDate}
+                      setPublishDate={(date) => {
+                        const newArticle = {
+                          ...editingArticle,
+                          publishDate: date,
+                        }
+                        if (date) {
+                          const publishDate = new Date(date)
+                          const now = new Date()
+                          if (publishDate > now) {
+                            newArticle.status = "scheduled"
+                          } else {
+                            newArticle.status = "published"
+                          }
+                        }
+                        setEditingArticle(newArticle)
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label>Featured Image</label>
+                  <div className="featured-image-selector">
+                    {editingArticle.featuredImage ? (
+                      <div className="featured-image-preview">
+                        <img
+                          src={editingArticle.featuredImage || "/placeholder.svg"}
+                          alt="Featured"
+                        />
+                        <button
+                          className="remove-image-btn"
+                          onClick={() =>
+                            setEditingArticle({
+                              ...editingArticle,
+                              featuredImage: "",
+                            })
+                          }
+                        >
+                          <i className="fas fa-times"></i>
+                        </button>
                       </div>
+                    ) : (
+                      <button
+                        className="select-image-btn"
+                        onClick={() => setShowMediaLibrary(true)}
+                      >
+                        <i className="fas fa-image"></i>
+                        <span>Select Featured Image</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="form-section article-content">
+                <div className="editor-container">
+                  <div className="editor-header">
+                    <h3>Content</h3>
+                    <div className="editor-tabs">
+                      <button className="editor-tab active">Edit</button>
+                      <button className="editor-tab">Preview</button>
                     </div>
-
-                    <div className="editor-preview-container">
-                      <RichTextEditor
-                        content={editingArticle.content}
-                        setContent={(content) => setEditingArticle({ ...editingArticle, content })}
-                      />
-                      <ContentPreview content={editingArticle.content} />
-                    </div>
+                  </div>
+                  <div className="editor-preview-container">
+                    <RichTextEditor
+                      content={editingArticle.content}
+                      setContent={(content) =>
+                        setEditingArticle({ ...editingArticle, content })
+                      }
+                    />
+                    <ContentPreview content={editingArticle.content} />
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        ) : (
-          <>
-            <div className="filter-bar">
-              <div className="search-box">
-                <input
-                  type="text"
-                  placeholder="Search articles..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                <i className="fas fa-search"></i>
-              </div>
-
-              <div className="filter-options">
-                <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)}>
-                  <option value="">All Categories</option>
-                  {categories.map((category) => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
-                    </option>
-                  ))}
-                </select>
-
-                <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
-                  <option value="">All Statuses</option>
-                  <option value="published">Published</option>
-                  <option value="draft">Draft</option>
-                  <option value="scheduled">Scheduled</option>
-                </select>
+        </div>
+      ) : (
+        <>
+          <div className="filter-bar">
+            <div className="search-box">
+              <input
+                type="text"
+                placeholder="Search articles..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <i className="fas fa-search"></i>
+            </div>
+            <div className="filter-options">
+              <select
+                value={filterCategory}
+                onChange={(e) => setFilterCategory(e.target.value)}
+              >
+                <option value="">All Categories</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+              <select
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+              >
+                <option value="">All Statuses</option>
+                <option value="published">Published</option>
+                <option value="draft">Draft</option>
+                <option value="scheduled">Scheduled</option>
+              </select>
+            </div>
+          </div>
+          {selectedArticles.length > 0 && (
+            <div className="bulk-actions">
+              <span>{selectedArticles.length} articles selected</span>
+              <div className="action-buttons">
+                <button
+                  className="action-button"
+                  onClick={() => handleBulkAction("publish")}
+                >
+                  Publish
+                </button>
+                <button
+                  className="action-button"
+                  onClick={() => handleBulkAction("draft")}
+                >
+                  Move to Draft
+                </button>
+                <button
+                  className="action-button danger-button"
+                  onClick={() => handleBulkAction("delete")}
+                >
+                  Delete
+                </button>
               </div>
             </div>
-
-            {selectedArticles.length > 0 && (
-              <div className="bulk-actions">
-                <span>{selectedArticles.length} articles selected</span>
-                <div className="action-buttons">
-                  <button className="action-button" onClick={() => handleBulkAction("publish")}>
-                    Publish
-                  </button>
-                  <button className="action-button" onClick={() => handleBulkAction("draft")}>
-                    Move to Draft
-                  </button>
-                  <button className="action-button danger-button" onClick={() => handleBulkAction("delete")}>
-                    Delete
-                  </button>
-                </div>
-              </div>
-            )}
-
-            <div className="articles-table">
-              <table>
-                <thead>
-                  <tr>
-                    <th className="checkbox-column">
-                      <input
-                        type="checkbox"
-                        checked={selectedArticles.length === filteredArticles.length && filteredArticles.length > 0}
-                        onChange={toggleSelectAll}
-                      />
-                    </th>
-                    <th className="image-column">Image</th>
-                    <th
-                      className={`sortable ${sortField === "title" ? "sorted" : ""}`}
-                      onClick={() => handleSort("title")}
-                    >
-                      Title
-                      {sortField === "title" && (
-                        <i className={`fas fa-sort-${sortDirection === "asc" ? "up" : "down"}`}></i>
-                      )}
-                    </th>
-                    <th
-                      className={`sortable ${sortField === "author" ? "sorted" : ""}`}
-                      onClick={() => handleSort("author")}
-                    >
-                      Author
-                      {sortField === "author" && (
-                        <i className={`fas fa-sort-${sortDirection === "asc" ? "up" : "down"}`}></i>
-                      )}
-                    </th>
-                    <th
-                      className={`sortable ${sortField === "category" ? "sorted" : ""}`}
-                      onClick={() => handleSort("category")}
-                    >
-                      Category
-                      {sortField === "category" && (
-                        <i className={`fas fa-sort-${sortDirection === "asc" ? "up" : "down"}`}></i>
-                      )}
-                    </th>
-                    <th>Tags</th>
-                    <th
-                      className={`sortable ${sortField === "status" ? "sorted" : ""}`}
-                      onClick={() => handleSort("status")}
-                    >
-                      Status
-                      {sortField === "status" && (
-                        <i className={`fas fa-sort-${sortDirection === "asc" ? "up" : "down"}`}></i>
-                      )}
-                    </th>
-                    <th
-                      className={`sortable ${sortField === "publishDate" ? "sorted" : ""}`}
-                      onClick={() => handleSort("publishDate")}
-                    >
-                      Published
-                      {sortField === "publishDate" && (
-                        <i className={`fas fa-sort-${sortDirection === "asc" ? "up" : "down"}`}></i>
-                      )}
-                    </th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
+          )}
+          <div className="articles-table">
+            <table>
+              <thead>
+                <tr>
+                  <th className="checkbox-column">
+                    <input
+                      type="checkbox"
+                      checked={
+                        selectedArticles.length === filteredArticles.length &&
+                        filteredArticles.length > 0
+                      }
+                      onChange={toggleSelectAll}
+                    />
+                  </th>
+                  <th className="image-column">Image</th>
+                  <th
+                    className={`sortable ${sortField === "title" ? "sorted" : ""}`}
+                    onClick={() => handleSort("title")}
+                  >
+                    Title
+                    {sortField === "title" && (
+                      <i
+                        className={`fas fa-sort-${
+                          sortDirection === "asc" ? "up" : "down"
+                        }`}
+                      ></i>
+                    )}
+                  </th>
+                  <th
+                    className={`sortable ${sortField === "author" ? "sorted" : ""}`}
+                    onClick={() => handleSort("author")}
+                  >
+                    Author
+                    {sortField === "author" && (
+                      <i
+                        className={`fas fa-sort-${
+                          sortDirection === "asc" ? "up" : "down"
+                        }`}
+                      ></i>
+                    )}
+                  </th>
+                  <th
+                    className={`sortable ${
+                      sortField === "category" ? "sorted" : ""
+                    }`}
+                    onClick={() => handleSort("category")}
+                  >
+                    Category
+                    {sortField === "category" && (
+                      <i
+                        className={`fas fa-sort-${
+                          sortDirection === "asc" ? "up" : "down"
+                        }`}
+                      ></i>
+                    )}
+                  </th>
+                  <th>Tags</th>
+                  <th
+                    className={`sortable ${sortField === "status" ? "sorted" : ""}`}
+                    onClick={() => handleSort("status")}
+                  >
+                    Status
+                    {sortField === "status" && (
+                      <i
+                        className={`fas fa-sort-${
+                          sortDirection === "asc" ? "up" : "down"
+                        }`}
+                      ></i>
+                    )}
+                  </th>
+                  <th
+                    className={`sortable ${
+                      sortField === "publishDate" ? "sorted" : ""
+                    }`}
+                    onClick={() => handleSort("publishDate")}
+                  >
+                    Published
+                    {sortField === "publishDate" && (
+                      <i
+                        className={`fas fa-sort-${
+                          sortDirection === "asc" ? "up" : "down"
+                        }`}
+                      ></i>
+                    )}
+                  </th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <AnimatePresence>
                   {filteredArticles.map((article) => (
                     <motion.tr
                       key={article.id}
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      className={selectedArticles.includes(article.id) ? "selected" : ""}
+                      className={
+                        selectedArticles.includes(article.id) ? "selected" : ""
+                      }
                     >
                       <td className="checkbox-column">
                         <input
@@ -1303,17 +1427,25 @@ const ManageArticles = () => {
                       </td>
                       <td className="image-column">
                         {article.featuredImage ? (
-                          <img src={article.featuredImage || "/placeholder.svg"} alt={article.title} />
+                          <img
+                            src={article.featuredImage || "/placeholder.svg"}
+                            alt={article.title}
+                          />
                         ) : (
                           <div className="no-image">No Image</div>
                         )}
                       </td>
                       <td className="title-column">
                         <div className="article-title">{article.title}</div>
-                        <div className="article-excerpt">{article.excerpt.substring(0, 60)}...</div>
+                        <div className="article-excerpt">
+                          {article.excerpt.substring(0, 60)}...
+                        </div>
                       </td>
                       <td>{article.author}</td>
-                      <td>{categories.find((c) => c.id === article.category)?.name || article.category}</td>
+                      <td>
+                        {categories.find((c) => c.id === article.category)?.name ||
+                          article.category}
+                      </td>
                       <td className="tags-column">
                         {article.tags.map((tag, index) => (
                           <span key={index} className="tag">
@@ -1323,14 +1455,20 @@ const ManageArticles = () => {
                       </td>
                       <td>
                         <span className={`status-badge ${article.status}`}>
-                          {article.status.charAt(0).toUpperCase() + article.status.slice(1)}
+                          {article.status.charAt(0).toUpperCase() +
+                            article.status.slice(1)}
                         </span>
                       </td>
                       <td>
-                        {article.publishDate ? new Date(article.publishDate).toLocaleDateString() : "Not published"}
+                        {article.publishDate
+                          ? new Date(article.publishDate).toLocaleDateString()
+                          : "Not published"}
                       </td>
                       <td className="actions-column">
-                        <button className="action-icon-button" onClick={() => handleEditArticle(article)}>
+                        <button
+                          className="action-icon-button"
+                          onClick={() => handleEditArticle(article)}
+                        >
                           <i className="fas fa-edit"></i>
                         </button>
                         <button
@@ -1345,65 +1483,74 @@ const ManageArticles = () => {
                       </td>
                     </motion.tr>
                   ))}
-                </tbody>
-              </table>
-            </div>
-          </>
-        )}
+                </AnimatePresence>
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
 
-        {/* Confirmation dialog */}
-        {confirmationAction && (
-          <div className="confirmation-dialog">
-            <div className="confirmation-content">
-              <h3>Confirm Action</h3>
-              <p>
-                {confirmationAction.type === "delete"
-                  ? `Are you sure you want to delete ${selectedArticles.length} article(s)?`
-                  : `Are you sure you want to ${confirmationAction.type} ${selectedArticles.length} article(s)?`}
-              </p>
-              <div className="confirmation-actions">
-                <button className="action-button" onClick={() => setConfirmationAction(null)}>
-                  Cancel
-                </button>
-                <button
-                  className={`action-button ${confirmationAction.type === "delete" ? "danger-button" : "primary-button"}`}
-                  onClick={() => {
-                    confirmationAction.callback()
-                    setConfirmationAction(null)
-                  }}
-                >
-                  Confirm
-                </button>
-              </div>
+      {/* Confirmation Dialog */}
+      {confirmationAction && (
+        <div className="confirmation-dialog">
+          <div className="confirmation-content">
+            <h3>Confirm Action</h3>
+            <p>
+              {confirmationAction.type === "delete"
+                ? `Are you sure you want to delete ${selectedArticles.length} article(s)?`
+                : `Are you sure you want to ${confirmationAction.type} ${selectedArticles.length} article(s)?`}
+            </p>
+            <div className="confirmation-actions">
+              <button
+                className="action-button"
+                onClick={() => setConfirmationAction(null)}
+              >
+                Cancel
+              </button>
+              <button
+                className={`action-button ${
+                  confirmationAction.type === "delete"
+                    ? "danger-button"
+                    : "primary-button"
+                }`}
+                onClick={() => {
+                  confirmationAction.callback()
+                  setConfirmationAction(null)
+                }}
+              >
+                Confirm
+              </button>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* Media library */}
-        {showMediaLibrary && (
+      {/* Media Library */}
+      {showMediaLibrary && (
+        <div className="media-library-overlay">
           <MediaLibrary
             mediaItems={mediaItems}
             onSelectMedia={handleSelectFeaturedImage}
             onClose={() => setShowMediaLibrary(false)}
           />
-        )}
+        </div>
+      )}
 
-        {/* Success notification */}
-        <AnimatePresence>
-          {showConfirmation && (
-            <motion.div
-              className="success-notification"
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 50 }}
-            >
-              <i className="fas fa-check-circle"></i>
-              <span>Changes saved successfully!</span>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </DndProvider>
+      {/* Success Notification */}
+      <AnimatePresence>
+        {showConfirmation && (
+          <motion.div
+            className="success-notification"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+          >
+            <i className="fas fa-check-circle"></i>
+            <span>Changes saved successfully!</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   )
 }
 

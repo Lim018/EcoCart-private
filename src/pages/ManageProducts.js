@@ -1,8 +1,9 @@
 "use client"
 
 import React, { useState, useCallback } from "react"
-import { DndProvider, useDrag, useDrop } from "react-dnd"
-import { HTML5Backend } from "react-dnd-html5-backend"
+import { DndContext, closestCenter, useSensor, useSensors, PointerSensor } from "@dnd-kit/core"
+import { SortableContext, useSortable, arrayMove, rectSortingStrategy } from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
 import { motion, AnimatePresence } from "framer-motion"
 import "../styles/ManageProducts.css"
 
@@ -139,50 +140,27 @@ const availableTags = [
   "minimalist",
 ]
 
-// Image component for drag and drop
-const DraggableImage = ({ image, index, moveImage }) => {
-  const ref = React.useRef(null)
-
-  const [{ isDragging }, drag] = useDrag({
-    type: "IMAGE",
-    item: { index },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  })
-
-  const [, drop] = useDrop({
-    accept: "IMAGE",
-    hover: (item, monitor) => {
-      if (!ref.current) {
-        return
-      }
-      const dragIndex = item.index
-      const hoverIndex = index
-
-      if (dragIndex === hoverIndex) {
-        return
-      }
-
-      moveImage(dragIndex, hoverIndex)
-      item.index = hoverIndex
-    },
-  })
-
-  drag(drop(ref))
+// Draggable image component
+const DraggableImage = ({ image, index, removeImage }) => {
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: `image-${index}` })
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: transform ? 0.5 : 1,
+  }
 
   return (
-    <div
-      ref={ref}
-      className={`product-image-preview ${isDragging ? "dragging" : ""}`}
-      style={{ opacity: isDragging ? 0.5 : 1 }}
-    >
+    <div ref={setNodeRef} style={style} className="product-image-preview">
       <img src={image || "/placeholder.svg"} alt={`Product ${index + 1}`} />
       <div className="image-overlay">
-        <button className="image-action-btn">
+        <button className="image-action-btn" {...attributes} {...listeners} title="Drag to reorder">
           <i className="fas fa-arrows-alt"></i>
         </button>
-        <button className="image-action-btn">
+        <button
+          className="image-action-btn danger"
+          onClick={() => removeImage(index)}
+          title="Delete image"
+        >
           <i className="fas fa-trash-alt"></i>
         </button>
       </div>
@@ -190,7 +168,7 @@ const DraggableImage = ({ image, index, moveImage }) => {
   )
 }
 
-// Tag component with autocomplete
+// Tag selector component
 const TagSelector = ({ selectedTags, setSelectedTags }) => {
   const [inputValue, setInputValue] = useState("")
   const [suggestions, setSuggestions] = useState([])
@@ -228,12 +206,20 @@ const TagSelector = ({ selectedTags, setSelectedTags }) => {
   return (
     <div className="tag-selector">
       <div className="selected-tags">
-        {selectedTags.map((tag, index) => (
-          <motion.div key={index} className="tag" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-            <span>{tag}</span>
-            <button onClick={() => removeTag(tag)}>×</button>
-          </motion.div>
-        ))}
+        <AnimatePresence>
+          {selectedTags.map((tag, index) => (
+            <motion.div
+              key={index}
+              className="tag"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0 }}
+            >
+              <span>{tag}</span>
+              <button onClick={() => removeTag(tag)}>×</button>
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
       <div className="tag-input-container">
         <input
@@ -252,7 +238,11 @@ const TagSelector = ({ selectedTags, setSelectedTags }) => {
         {showSuggestions && suggestions.length > 0 && (
           <div className="tag-suggestions">
             {suggestions.map((suggestion, index) => (
-              <div key={index} className="tag-suggestion" onClick={() => addTag(suggestion)}>
+              <div
+                key={index}
+                className="tag-suggestion"
+                onClick={() => addTag(suggestion)}
+              >
                 {suggestion}
               </div>
             ))}
@@ -265,21 +255,37 @@ const TagSelector = ({ selectedTags, setSelectedTags }) => {
 
 // Image uploader component
 const ImageUploader = ({ images, setImages }) => {
+  const sensors = useSensors(useSensor(PointerSensor))
+
   const onDrop = useCallback(
     (acceptedFiles) => {
-      // Convert files to image URLs (in a real app, you'd upload these to a server)
-      const newImages = acceptedFiles.map((file) => URL.createObjectURL(file))
+      // Validate and convert files to image URLs
+      const validImages = acceptedFiles.filter((file) =>
+        ["image/jpeg", "image/png", "image/gif"].includes(file.type)
+      )
+      if (validImages.length === 0) {
+        alert("Please upload valid image files (JPEG, PNG, GIF).")
+        return
+      }
+      const newImages = validImages.map((file) => URL.createObjectURL(file))
       setImages([...images, ...newImages])
     },
-    [images, setImages],
+    [images, setImages]
   )
 
-  const moveImage = (dragIndex, hoverIndex) => {
-    const draggedImage = images[dragIndex]
-    const newImages = [...images]
-    newImages.splice(dragIndex, 1)
-    newImages.splice(hoverIndex, 0, draggedImage)
-    setImages(newImages)
+  const removeImage = (index) => {
+    setImages(images.filter((_, i) => i !== index))
+  }
+
+  const handleDragEnd = (event) => {
+    const { active, over } = event
+    if (active.id !== over.id) {
+      setImages((currentImages) => {
+        const oldIndex = Number(active.id.split("-")[1])
+        const newIndex = Number(over.id.split("-")[1])
+        return arrayMove(currentImages, oldIndex, newIndex)
+      })
+    }
   }
 
   return (
@@ -289,7 +295,7 @@ const ImageUploader = ({ images, setImages }) => {
           id="file-input"
           type="file"
           multiple
-          accept="image/*"
+          accept="image/jpeg,image/png,image/gif"
           onChange={(e) => {
             const files = Array.from(e.target.files)
             onDrop(files)
@@ -299,14 +305,38 @@ const ImageUploader = ({ images, setImages }) => {
         <div className="dropzone-content">
           <i className="fas fa-cloud-upload-alt"></i>
           <p>Drag & drop images here or click to browse</p>
+          <p className="dropzone-note">(JPEG, PNG, GIF only)</p>
         </div>
       </div>
 
-      <div className="image-previews">
-        {images.map((image, index) => (
-          <DraggableImage key={index} image={image} index={index} moveImage={moveImage} />
-        ))}
-      </div>
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <SortableContext items={images.map((_, index) => `image-${index}`)} strategy={rectSortingStrategy}>
+          <div className="image-previews">
+            <AnimatePresence>
+              {images.length > 0 ? (
+                images.map((image, index) => (
+                  <motion.div
+                    key={`image-${index}`}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                  >
+                    <DraggableImage image={image} index={index} removeImage={removeImage} />
+                  </motion.div>
+                ))
+              ) : (
+                <motion.div
+                  className="empty-previews"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                >
+                  <p>No images uploaded yet.</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </SortableContext>
+      </DndContext>
     </div>
   )
 }
@@ -534,12 +564,21 @@ const ProductForm = ({ product, setProduct, categories }) => {
     <div className="product-form">
       <div className="form-group">
         <label>Product Name</label>
-        <input type="text" value={product.name} onChange={(e) => setProduct({ ...product, name: e.target.value })} />
+        <input
+          type="text"
+          value={product.name}
+          onChange={(e) => setProduct({ ...product, name: e.target.value })}
+          required
+        />
       </div>
 
       <div className="form-group">
         <label>Category</label>
-        <select value={product.category} onChange={(e) => setProduct({ ...product, category: e.target.value })}>
+        <select
+          value={product.category}
+          onChange={(e) => setProduct({ ...product, category: e.target.value })}
+          required
+        >
           <option value="">Select Category</option>
           {categories.map((category) => (
             <option key={category.id} value={category.id}>
@@ -554,8 +593,9 @@ const ProductForm = ({ product, setProduct, categories }) => {
         <input
           type="number"
           step="0.01"
-          value={product.price}
-          onChange={(e) => setProduct({ ...product, price: Number.parseFloat(e.target.value) })}
+          value={product.price || ""}
+          onChange={(e) => setProduct({ ...product, price: Number.parseFloat(e.target.value) || 0 })}
+          required
         />
       </div>
 
@@ -563,8 +603,8 @@ const ProductForm = ({ product, setProduct, categories }) => {
         <label>Stock</label>
         <input
           type="number"
-          value={product.stock}
-          onChange={(e) => setProduct({ ...product, stock: Number.parseInt(e.target.value) })}
+          value={product.stock || ""}
+          onChange={(e) => setProduct({ ...product, stock: Number.parseInt(e.target.value) || 0 })}
         />
       </div>
 
@@ -582,26 +622,37 @@ const ProductForm = ({ product, setProduct, categories }) => {
       </div>
 
       <div className="form-group">
-        <label>Status</label>
-        <select value={product.status} onChange={(e) => setProduct({ ...product, status: e.target.value })}>
-          <option value="active">Active</option>
-          <option value="draft">Draft</option>
-          <option value="archived">Archived</option>
-        </select>
+        <label>Images</label>
+        <ImageUploader images={product.images} setImages={(images) => setProduct({ ...product, images })} />
       </div>
 
       <div className="form-group">
-        <label className="checkbox-label">
-          <input
-            type="checkbox"
-            checked={product.featured}
-            onChange={(e) => setProduct({ ...product, featured: e.target.checked })}
-          />
-          Featured Product
-        </label>
+        <label>Featured</label>
+        <input
+          type="checkbox"
+          checked={product.featured}
+          onChange={(e) => setProduct({ ...product, featured: e.target.checked })}
+        />
       </div>
 
-      {product.category && getCategoryFields()}
+      <div className="form-group">
+        <label>Status</label>
+        <select
+          value={product.status}
+          onChange={(e) => setProduct({ ...product, status: e.target.value })}
+        >
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+          <option value="out-of-stock">Out of Stock</option>
+        </select>
+      </div>
+
+      {product.category && (
+        <div className="form-group">
+          <label>Category-Specific Details</label>
+          {getCategoryFields()}
+        </div>
+      )}
     </div>
   )
 }
@@ -621,6 +672,7 @@ const ManageProducts = () => {
   const [filterStatus, setFilterStatus] = useState("")
   const [sortField, setSortField] = useState("name")
   const [sortDirection, setSortDirection] = useState("asc")
+  const [errors, setErrors] = useState({})
 
   // Filter and sort products
   const filteredProducts = products
@@ -636,10 +688,18 @@ const ManageProducts = () => {
       return matchesSearch && matchesCategory && matchesStatus
     })
     .sort((a, b) => {
+      let valueA = a[sortField]
+      let valueB = b[sortField]
+
+      if (sortField === "price" || sortField === "stock") {
+        valueA = Number(valueA) || 0
+        valueB = Number(valueB) || 0
+      }
+
       if (sortDirection === "asc") {
-        return a[sortField] > b[sortField] ? 1 : -1
+        return valueA > valueB ? 1 : -1
       } else {
-        return a[sortField] < b[sortField] ? 1 : -1
+        return valueA < valueB ? 1 : -1
       }
     })
 
@@ -673,12 +733,47 @@ const ManageProducts = () => {
 
   // Handle edit product
   const handleEditProduct = (product) => {
-    setEditingProduct({ ...product })
+    setEditingProduct({ ...product, specifications: { ...product.specifications } })
     setIsEditing(true)
+    setErrors({})
+  }
+
+  // Handle new product
+  const handleNewProduct = () => {
+    setEditingProduct({
+      id: null,
+      name: "",
+      category: "",
+      price: 0,
+      stock: 0,
+      tags: [],
+      images: [],
+      description: "",
+      specifications: {},
+      featured: false,
+      status: "active",
+    })
+    setIsEditing(true)
+    setErrors({})
+  }
+
+  // Validate product
+  const validateProduct = (product) => {
+    const newErrors = {}
+    if (!product.name.trim()) newErrors.name = "Product name is required"
+    if (!product.category) newErrors.category = "Category is required"
+    if (!product.price || product.price <= 0) newErrors.price = "Valid price is required"
+    return newErrors
   }
 
   // Handle save product
   const handleSaveProduct = () => {
+    const validationErrors = validateProduct(editingProduct)
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors)
+      return
+    }
+
     // Save to undo stack
     setUndoStack([...undoStack, [...products]])
     setRedoStack([])
@@ -697,6 +792,7 @@ const ManageProducts = () => {
 
     setIsEditing(false)
     setEditingProduct(null)
+    setErrors({})
 
     // Show confirmation
     setShowConfirmation(true)
@@ -707,23 +803,7 @@ const ManageProducts = () => {
   const handleCancelEdit = () => {
     setIsEditing(false)
     setEditingProduct(null)
-  }
-
-  // Handle new product
-  const handleNewProduct = () => {
-    setEditingProduct({
-      name: "",
-      category: "",
-      price: 0,
-      stock: 0,
-      tags: [],
-      images: [],
-      description: "",
-      specifications: {},
-      featured: false,
-      status: "draft",
-    })
-    setIsEditing(true)
+    setErrors({})
   }
 
   // Handle bulk actions
@@ -739,17 +819,26 @@ const ManageProducts = () => {
           case "delete":
             setProducts(products.filter((p) => !selectedProducts.includes(p.id)))
             break
-          case "activate":
-            setProducts(products.map((p) => (selectedProducts.includes(p.id) ? { ...p, status: "active" } : p)))
+          case "active":
+            setProducts(
+              products.map((p) =>
+                selectedProducts.includes(p.id) ? { ...p, status: "active" } : p
+              )
+            )
             break
-          case "deactivate":
-            setProducts(products.map((p) => (selectedProducts.includes(p.id) ? { ...p, status: "draft" } : p)))
+          case "inactive":
+            setProducts(
+              products.map((p) =>
+                selectedProducts.includes(p.id) ? { ...p, status: "inactive" } : p
+              )
+            )
             break
           case "feature":
-            setProducts(products.map((p) => (selectedProducts.includes(p.id) ? { ...p, featured: true } : p)))
-            break
-          case "unfeature":
-            setProducts(products.map((p) => (selectedProducts.includes(p.id) ? { ...p, featured: false } : p)))
+            setProducts(
+              products.map((p) =>
+                selectedProducts.includes(p.id) ? { ...p, featured: true } : p
+              )
+            )
             break
           default:
             break
@@ -782,171 +871,217 @@ const ManageProducts = () => {
   }
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <div className="manage-products-container">
-        <div className="admin-header">
-          <h1>Manage Products</h1>
-          <div className="admin-actions">
-            <button className="action-button undo-button" disabled={undoStack.length === 0} onClick={handleUndo}>
-              <i className="fas fa-undo"></i> Undo
-            </button>
-            <button className="action-button redo-button" disabled={redoStack.length === 0} onClick={handleRedo}>
-              <i className="fas fa-redo"></i> Redo
-            </button>
-            <button className="action-button primary-button" onClick={handleNewProduct}>
-              <i className="fas fa-plus"></i> Add Product
-            </button>
-          </div>
+    <div className="manage-products-container">
+      <div className="admin-header">
+        <h1>Manage Products</h1>
+        <div className="admin-actions">
+          <button
+            className="action-button undo-button"
+            disabled={undoStack.length === 0}
+            onClick={handleUndo}
+          >
+            <i className="fas fa-undo"></i> Undo
+          </button>
+          <button
+            className="action-button redo-button"
+            disabled={redoStack.length === 0}
+            onClick={handleRedo}
+          >
+            <i className="fas fa-redo"></i> Redo
+          </button>
+          <button className="action-button primary-button" onClick={handleNewProduct}>
+            <i className="fas fa-plus"></i> Add Product
+          </button>
         </div>
+      </div>
 
-        {isEditing ? (
-          <div className="edit-product-panel">
-            <div className="panel-header">
-              <h2>{editingProduct.id ? "Edit Product" : "New Product"}</h2>
-              <div className="panel-actions">
-                <button className="action-button" onClick={handleCancelEdit}>
-                  Cancel
-                </button>
-                <button className="action-button primary-button" onClick={handleSaveProduct}>
-                  Save Product
-                </button>
-              </div>
-            </div>
-
-            <div className="panel-content">
-              <div className="product-edit-form">
-                <div className="form-section">
-                  <h3>Product Information</h3>
-                  <ProductForm product={editingProduct} setProduct={setEditingProduct} categories={categories} />
-                </div>
-
-                <div className="form-section">
-                  <h3>Product Images</h3>
-                  <ImageUploader
-                    images={editingProduct.images}
-                    setImages={(images) => setEditingProduct({ ...editingProduct, images })}
-                  />
-                </div>
-              </div>
+      {isEditing ? (
+        <div className="edit-product-panel">
+          <div className="panel-header">
+            <h2>{editingProduct.id ? "Edit Product" : "New Product"}</h2>
+            <div className="panel-actions">
+              <button className="action-button" onClick={handleCancelEdit}>
+                Cancel
+              </button>
+              <button className="action-button primary-button" onClick={handleSaveProduct}>
+                Save Product
+              </button>
             </div>
           </div>
-        ) : (
-          <>
-            <div className="filter-bar">
-              <div className="search-box">
-                <input
-                  type="text"
-                  placeholder="Search products..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                <i className="fas fa-search"></i>
-              </div>
 
-              <div className="filter-options">
-                <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)}>
-                  <option value="">All Categories</option>
-                  {categories.map((category) => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
-                    </option>
-                  ))}
-                </select>
-
-                <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
-                  <option value="">All Statuses</option>
-                  <option value="active">Active</option>
-                  <option value="draft">Draft</option>
-                  <option value="archived">Archived</option>
-                </select>
-              </div>
-            </div>
-
-            {selectedProducts.length > 0 && (
-              <div className="bulk-actions">
-                <span>{selectedProducts.length} products selected</span>
-                <div className="action-buttons">
-                  <button className="action-button" onClick={() => handleBulkAction("activate")}>
-                    Activate
-                  </button>
-                  <button className="action-button" onClick={() => handleBulkAction("deactivate")}>
-                    Deactivate
-                  </button>
-                  <button className="action-button" onClick={() => handleBulkAction("feature")}>
-                    Feature
-                  </button>
-                  <button className="action-button" onClick={() => handleBulkAction("unfeature")}>
-                    Unfeature
-                  </button>
-                  <button className="action-button danger-button" onClick={() => handleBulkAction("delete")}>
-                    Delete
-                  </button>
-                </div>
+          <div className="panel-content">
+            {Object.keys(errors).length > 0 && (
+              <div className="error-messages">
+                {Object.values(errors).map((error, index) => (
+                  <p key={index} className="error-message">
+                    {error}
+                  </p>
+                ))}
               </div>
             )}
+            <ProductForm
+              product={editingProduct}
+              setProduct={setEditingProduct}
+              categories={categories}
+            />
+          </div>
+        </div>
+      ) : (
+        <>
+          <div className="filter-bar">
+            <div className="search-box">
+              <input
+                type="text"
+                placeholder="Search products..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <i className="fas fa-search"></i>
+            </div>
 
-            <div className="products-table">
-              <table>
-                <thead>
-                  <tr>
-                    <th className="checkbox-column">
-                      <input
-                        type="checkbox"
-                        checked={selectedProducts.length === filteredProducts.length && filteredProducts.length > 0}
-                        onChange={toggleSelectAll}
-                      />
-                    </th>
-                    <th className="image-column">Image</th>
-                    <th
-                      className={`sortable ${sortField === "name" ? "sorted" : ""}`}
-                      onClick={() => handleSort("name")}
-                    >
-                      Name
-                      {sortField === "name" && (
-                        <i className={`fas fa-sort-${sortDirection === "asc" ? "up" : "down"}`}></i>
-                      )}
-                    </th>
-                    <th
-                      className={`sortable ${sortField === "category" ? "sorted" : ""}`}
-                      onClick={() => handleSort("category")}
-                    >
-                      Category
-                      {sortField === "category" && (
-                        <i className={`fas fa-sort-${sortDirection === "asc" ? "up" : "down"}`}></i>
-                      )}
-                    </th>
-                    <th
-                      className={`sortable ${sortField === "price" ? "sorted" : ""}`}
-                      onClick={() => handleSort("price")}
-                    >
-                      Price
-                      {sortField === "price" && (
-                        <i className={`fas fa-sort-${sortDirection === "asc" ? "up" : "down"}`}></i>
-                      )}
-                    </th>
-                    <th
-                      className={`sortable ${sortField === "stock" ? "sorted" : ""}`}
-                      onClick={() => handleSort("stock")}
-                    >
-                      Stock
-                      {sortField === "stock" && (
-                        <i className={`fas fa-sort-${sortDirection === "asc" ? "up" : "down"}`}></i>
-                      )}
-                    </th>
-                    <th>Tags</th>
-                    <th
-                      className={`sortable ${sortField === "status" ? "sorted" : ""}`}
-                      onClick={() => handleSort("status")}
-                    >
-                      Status
-                      {sortField === "status" && (
-                        <i className={`fas fa-sort-${sortDirection === "asc" ? "up" : "down"}`}></i>
-                      )}
-                    </th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
+            <div className="filter-options">
+              <select
+                value={filterCategory}
+                onChange={(e) => setFilterCategory(e.target.value)}
+              >
+                <option value="">All Categories</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+              >
+                <option value="">All Statuses</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+                <option value="out-of-stock">Out of Stock</option>
+              </select>
+            </div>
+          </div>
+
+          {selectedProducts.length > 0 && (
+            <div className="bulk-actions">
+              <span>{selectedProducts.length} products selected</span>
+              <div className="action-buttons">
+                <button
+                  className="action-button"
+                  onClick={() => handleBulkAction("active")}
+                >
+                  Set Active
+                </button>
+                <button
+                  className="action-button"
+                  onClick={() => handleBulkAction("inactive")}
+                >
+                  Set Inactive
+                </button>
+                <button
+                  className="action-button"
+                  onClick={() => handleBulkAction("feature")}
+                >
+                  Feature
+                </button>
+                <button
+                  className="action-button danger-button"
+                  onClick={() => handleBulkAction("delete")}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          )}
+
+          <div className="products-table">
+            <table>
+              <thead>
+                <tr>
+                  <th className="checkbox-column">
+                    <input
+                      type="checkbox"
+                      checked={
+                        selectedProducts.length === filteredProducts.length &&
+                        filteredProducts.length > 0
+                      }
+                      onChange={toggleSelectAll}
+                    />
+                  </th>
+                  <th className="image-column">Image</th>
+                  <th
+                    className={`sortable ${sortField === "name" ? "sorted" : ""}`}
+                    onClick={() => handleSort("name")}
+                  >
+                    Name
+                    {sortField === "name" && (
+                      <i
+                        className={`fas fa-sort-${
+                          sortDirection === "asc" ? "up" : "down"
+                        }`}
+                      ></i>
+                    )}
+                  </th>
+                  <th
+                    className={`sortable ${sortField === "category" ? "sorted" : ""}`}
+                    onClick={() => handleSort("category")}
+                  >
+                    Category
+                    {sortField === "category" && (
+                      <i
+                        className={`fas fa-sort-${
+                          sortDirection === "asc" ? "up" : "down"
+                        }`}
+                      ></i>
+                    )}
+                  </th>
+                  <th
+                    className={`sortable ${sortField === "price" ? "sorted" : ""}`}
+                    onClick={() => handleSort("price")}
+                  >
+                    Price
+                    {sortField === "price" && (
+                      <i
+                        className={`fas fa-sort-${
+                          sortDirection === "asc" ? "up" : "down"
+                        }`}
+                      ></i>
+                    )}
+                  </th>
+                  <th
+                    className={`sortable ${sortField === "stock" ? "sorted" : ""}`}
+                    onClick={() => handleSort("stock")}
+                  >
+                    Stock
+                    {sortField === "stock" && (
+                      <i
+                        className={`fas fa-sort-${
+                          sortDirection === "asc" ? "up" : "down"
+                        }`}
+                      ></i>
+                    )}
+                  </th>
+                  <th>Tags</th>
+                  <th
+                    className={`sortable ${sortField === "status" ? "sorted" : ""}`}
+                    onClick={() => handleSort("status")}
+                  >
+                    Status
+                    {sortField === "status" && (
+                      <i
+                        className={`fas fa-sort-${
+                          sortDirection === "asc" ? "up" : "down"
+                        }`}
+                      ></i>
+                    )}
+                  </th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <AnimatePresence>
                   {filteredProducts.map((product) => (
                     <motion.tr
                       key={product.id}
@@ -963,14 +1098,25 @@ const ManageProducts = () => {
                         />
                       </td>
                       <td className="image-column">
-                        {product.images.length > 0 ? (
-                          <img src={product.images[0] || "/placeholder.svg"} alt={product.name} />
+                        {product.images[0] ? (
+                          <img
+                            src={product.images[0] || "/placeholder.svg"}
+                            alt={product.name}
+                          />
                         ) : (
                           <div className="no-image">No Image</div>
                         )}
                       </td>
-                      <td>{product.name}</td>
-                      <td>{categories.find((c) => c.id === product.category)?.name || product.category}</td>
+                      <td className="name-column">
+                        <div className="product-name">{product.name}</div>
+                        <div className="product-description">
+                          {product.description.substring(0, 60)}...
+                        </div>
+                      </td>
+                      <td>
+                        {categories.find((c) => c.id === product.category)?.name ||
+                          product.category}
+                      </td>
                       <td>${product.price.toFixed(2)}</td>
                       <td>{product.stock}</td>
                       <td className="tags-column">
@@ -982,12 +1128,17 @@ const ManageProducts = () => {
                       </td>
                       <td>
                         <span className={`status-badge ${product.status}`}>
-                          {product.status.charAt(0).toUpperCase() + product.status.slice(1)}
+                          {product.status
+                            .split("-")
+                            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                            .join(" ")}
                         </span>
-                        {product.featured && <span className="featured-badge">Featured</span>}
                       </td>
                       <td className="actions-column">
-                        <button className="action-icon-button" onClick={() => handleEditProduct(product)}>
+                        <button
+                          className="action-icon-button"
+                          onClick={() => handleEditProduct(product)}
+                        >
                           <i className="fas fa-edit"></i>
                         </button>
                         <button
@@ -1002,56 +1153,61 @@ const ManageProducts = () => {
                       </td>
                     </motion.tr>
                   ))}
-                </tbody>
-              </table>
-            </div>
-          </>
-        )}
+                </AnimatePresence>
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
 
-        {/* Confirmation dialog */}
-        {confirmationAction && (
-          <div className="confirmation-dialog">
-            <div className="confirmation-content">
-              <h3>Confirm Action</h3>
-              <p>
-                {confirmationAction.type === "delete"
-                  ? `Are you sure you want to delete ${selectedProducts.length} product(s)?`
-                  : `Are you sure you want to ${confirmationAction.type} ${selectedProducts.length} product(s)?`}
-              </p>
-              <div className="confirmation-actions">
-                <button className="action-button" onClick={() => setConfirmationAction(null)}>
-                  Cancel
-                </button>
-                <button
-                  className={`action-button ${confirmationAction.type === "delete" ? "danger-button" : "primary-button"}`}
-                  onClick={() => {
-                    confirmationAction.callback()
-                    setConfirmationAction(null)
-                  }}
-                >
-                  Confirm
-                </button>
-              </div>
+      {/* Confirmation dialog */}
+      {confirmationAction && (
+        <div className="confirmation-dialog">
+          <div className="confirmation-content">
+            <h3>Confirm Action</h3>
+            <p>
+              {confirmationAction.type === "delete"
+                ? `Are you sure you want to delete ${selectedProducts.length} product(s)?`
+                : `Are you sure you want to set ${selectedProducts.length} product(s) as ${confirmationAction.type}?`}
+            </p>
+            <div className="confirmation-actions">
+              <button
+                className="action-button"
+                onClick={() => setConfirmationAction(null)}
+              >
+                Cancel
+              </button>
+              <button
+                className={`action-button ${
+                  confirmationAction.type === "delete" ? "danger-button" : "primary-button"
+                }`}
+                onClick={() => {
+                  confirmationAction.callback()
+                  setConfirmationAction(null)
+                }}
+              >
+                Confirm
+              </button>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* Success notification */}
-        <AnimatePresence>
-          {showConfirmation && (
-            <motion.div
-              className="success-notification"
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 50 }}
-            >
-              <i className="fas fa-check-circle"></i>
-              <span>Changes saved successfully!</span>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </DndProvider>
+      {/* Success notification */}
+      <AnimatePresence>
+        {showConfirmation && (
+          <motion.div
+            className="success-notification"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+          >
+            <i className="fas fa-check-circle"></i>
+            <span>Changes saved successfully!</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   )
 }
 
