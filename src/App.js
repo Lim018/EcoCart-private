@@ -14,6 +14,7 @@ import ManageProducts from "./pages/ManageProducts"
 import ManageUsers from "./pages/ManageUsers"
 import ManageTransactions from "./pages/ManageTransactions"
 import Dashboard from "./pages/Dashboard"
+import Authentication from "./pages/Authentication"
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
           <Route path="/admin/users" element={<ManageUsers />} />
           <Route path="/admin/transactions" element={<ManageTransactions />} />
           <Route path="/admin/dashboard" element={<Dashboard />} />
+          <Route path="/auth" element={<Authentication />} />
         </Routes>
       </main>
       <Footer />
