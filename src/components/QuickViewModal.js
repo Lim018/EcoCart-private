@@ -16,6 +16,11 @@ const QuickViewModal = ({ product, onClose }) => {
     "/placeholder.svg?key=wspvl",
   ]
 
+  // Format price in IDR
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price);
+  }
+
   // Close modal when Escape key is pressed
   useEffect(() => {
     const handleEscape = (e) => {
@@ -69,7 +74,7 @@ const QuickViewModal = ({ product, onClose }) => {
                   className={`thumbnail ${activeImage === index ? "active" : ""}`}
                   onClick={() => setActiveImage(index)}
                 >
-                  <img src={image || "/placeholder.svg"} alt={`${product.name} - View ${index + 1}`} />
+                  <img src={image || "/placeholder.svg"} alt={`${product.name} - Tampilan ${index + 1}`} />
                 </div>
               ))}
             </div>
@@ -78,17 +83,17 @@ const QuickViewModal = ({ product, onClose }) => {
           <div className="modal-info">
             <h2>{product.name}</h2>
 
-            <div className="modal-price">${product.price.toFixed(2)}</div>
+            <div className="modal-price">{formatPrice(product.price)}</div>
 
             <div className="modal-rating">
               <div className="stars" style={{ "--rating": product.rating }}></div>
-              <span className="review-count">{product.reviewCount} reviews</span>
+              <span className="review-count">{product.reviewCount} ulasan</span>
             </div>
 
             <div className="modal-description">{product.description}</div>
 
             <div className="sustainability-impact">
-              <h4>Environmental Impact</h4>
+              <h4>Dampak Lingkungan</h4>
               <div className="impact-meter">
                 <div className="impact-bar">
                   <div className="impact-fill" style={{ width: `${product.sustainabilityScore}%` }}></div>
@@ -116,13 +121,13 @@ const QuickViewModal = ({ product, onClose }) => {
               </div>
 
               <button className="btn btn-primary add-to-cart-btn">
-                <i className="fas fa-shopping-cart"></i> Add to Cart
+                <i className="fas fa-shopping-cart"></i> Tambahkan ke Keranjang
               </button>
             </div>
 
             <div className="modal-footer">
               <Link to={`/products/${product.id}`} className="view-details">
-                View Full Details <i className="fas fa-arrow-right"></i>
+                Lihat Detail Lengkap <i className="fas fa-arrow-right"></i>
               </Link>
             </div>
           </div>

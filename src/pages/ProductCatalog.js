@@ -19,38 +19,38 @@ const ProductCatalog = () => {
 
   // Sample categories
   const categories = [
-    { id: "all", name: "All Products" },
-    { id: "home", name: "Home & Living" },
-    { id: "fashion", name: "Eco Fashion" },
-    { id: "beauty", name: "Natural Beauty" },
-    { id: "food", name: "Organic Food" },
-    { id: "gifts", name: "Sustainable Gifts" },
+    { id: "all", name: "Semua Kategori" },
+    { id: "home", name: "Rumah & Hidup" },
+    { id: "fashion", name: "Fashion Ramah Lingkungan" },
+    { id: "beauty", name: "Kecantikan Alami" },
+    { id: "food", name: "Makanan Organik" },
+    { id: "gifts", name: "Hadiah Berkelanjutan" },
   ]
 
   // Sample price ranges
   const priceRanges = [
-    { id: "all", name: "All Prices" },
-    { id: "under25", name: "Under $25" },
-    { id: "25to50", name: "$ 25 - $ 50" },
-    { id: "50to100", name: "$ 50 - $ 100" },
-    { id: "over100", name: "Over $ 100" },
+    { id: "all", name: "Semua Harga" },
+    { id: "under25", name: "Di bawah Rp375.000" },
+    { id: "25to50", name: "Rp375.000 - Rp750.000" },
+    { id: "50to100", name: "Rp750.000 - Rp1.500.000" },
+    { id: "over100", name: "Di atas Rp1.500.000" },
   ]
 
   // Sample sort options
   const sortOptions = [
-    { id: "popular", name: "Most Popular" },
-    { id: "newest", name: "Newest Arrivals" },
-    { id: "priceAsc", name: "Price: Low to High" },
-    { id: "priceDesc", name: "Price: High to Low" },
-    { id: "impact", name: "Environmental Impact" },
+    { id: "popular", name: "Paling Populer" },
+    { id: "newest", name: "Terbaru" },
+    { id: "priceAsc", name: "Harga: Rendah ke Tinggi" },
+    { id: "priceDesc", name: "Harga: Tinggi ke Rendah" },
+    { id: "impact", name: "Dampak Lingkungan" },
   ]
 
-  // Sample products data
+  // Sample products data with converted prices to IDR
   const products = [
     {
       id: 1,
-      name: "Bamboo Toothbrush Set",
-      price: 12.99,
+      name: "Set Sikat Gigi Bambu",
+      price: 194850, // 12.99 USD * 15000
       image: "/bamboo-toothbrush-set.png",
       comparisonImage: "/plastic-toothbrush-comparison.png",
       category: "home",
@@ -59,23 +59,23 @@ const ProductCatalog = () => {
       isNew: true,
       isBestseller: true,
       sustainabilityScore: 95,
-      description: "Set of 4 biodegradable bamboo toothbrushes with plant-based bristles.",
+      description: "Set 4 sikat gigi bambu biodegradable dengan bulu sikat berbahan nabati.",
       features: [
-        "100% biodegradable bamboo handle",
-        "BPA-free nylon bristles",
-        "Plastic-free packaging",
-        "Lasts as long as conventional toothbrushes",
+        "Gagang bambu 100% biodegradable",
+        "Bulu sikat nilon bebas BPA",
+        "Kemasan bebas plastik",
+        "Tahan lama seperti sikat gigi konvensional",
       ],
       impact: {
-        plasticSaved: "30g plastic saved per toothbrush",
-        co2Reduced: "80% less carbon footprint than plastic alternatives",
-        biodegradable: "Fully biodegradable handle",
+        plasticSaved: "30g plastik dihemat per sikat gigi",
+        co2Reduced: "80% lebih sedikit jejak karbon dibanding alternatif plastik",
+        biodegradable: "Gagang sepenuhnya biodegradable",
       },
     },
     {
       id: 2,
-      name: "Organic Cotton T-Shirt",
-      price: 29.99,
+      name: "Kaos Katun Organik",
+      price: 449850, // 29.99 USD * 15000
       image: "/organic-cotton-tshirt.png",
       comparisonImage: "/conventional-cotton-comparison.png",
       category: "fashion",
@@ -84,23 +84,23 @@ const ProductCatalog = () => {
       isNew: false,
       isBestseller: true,
       sustainabilityScore: 90,
-      description: "Soft, breathable t-shirt made from 100% GOTS certified organic cotton.",
+      description: "Kaos lembut dan nyaman terbuat dari 100% katun organik bersertifikat GOTS.",
       features: [
-        "100% GOTS certified organic cotton",
-        "No toxic dyes or chemicals",
-        "Fair trade certified manufacturing",
-        "Durable and long-lasting",
+        "100% katun organik bersertifikat GOTS",
+        "Tanpa pewarna beracun atau bahan kimia",
+        "Produksi bersertifikat fair trade",
+        "Tahan lama dan awet",
       ],
       impact: {
-        waterSaved: "2,700 liters of water saved compared to conventional cotton",
-        pesticideReduced: "No pesticides or harmful chemicals used",
-        fairLabor: "Produced in fair labor certified facilities",
+        waterSaved: "2.700 liter air dihemat dibanding katun konvensional",
+        pesticideReduced: "Tanpa pestisida atau bahan kimia berbahaya",
+        fairLabor: "Diproduksi di fasilitas bersertifikat fair labor",
       },
     },
     {
       id: 3,
-      name: "Reusable Produce Bags",
-      price: 15.99,
+      name: "Kantong Belanja Reusable",
+      price: 239850, // 15.99 USD * 15000
       image: "/reusable-produce-bags.png",
       comparisonImage: "/plastic-produce-bags-comparison.png",
       category: "home",
@@ -109,23 +109,23 @@ const ProductCatalog = () => {
       isNew: false,
       isBestseller: true,
       sustainabilityScore: 98,
-      description: "Set of 5 mesh produce bags made from organic cotton for grocery shopping.",
+      description: "Set 5 kantong jaring terbuat dari katun organik untuk belanja bahan makanan.",
       features: [
-        "Organic cotton mesh material",
-        "Machine washable and durable",
-        "Transparent enough for cashiers to see contents",
-        "Drawstring closure",
+        "Bahan jaring katun organik",
+        "Dapat dicuci dengan mesin dan tahan lama",
+        "Cukup transparan untuk kasir melihat isinya",
+        "Penutup tali serut",
       ],
       impact: {
-        plasticSaved: "Eliminates need for 500+ plastic bags per year",
-        reusable: "Lasts for years with proper care",
-        biodegradable: "Fully biodegradable at end of life",
+        plasticSaved: "Menghilangkan kebutuhan lebih dari 500 kantong plastik per tahun",
+        reusable: "Bertahan selama bertahun-tahun dengan perawatan yang tepat",
+        biodegradable: "Sepenuhnya biodegradable di akhir masa pakai",
       },
     },
     {
       id: 4,
-      name: "Solar Power Bank",
-      price: 45.99,
+      name: "Power Bank Tenaga Surya",
+      price: 689850, // 45.99 USD * 15000
       image: "/solar-power-bank.png",
       comparisonImage: "/conventional-powerbank-comparison.png",
       category: "gifts",
@@ -134,18 +134,18 @@ const ProductCatalog = () => {
       isNew: true,
       isBestseller: false,
       sustainabilityScore: 85,
-      description: "10,000mAh power bank with integrated solar panel for eco-friendly charging.",
-      features: ["Integrated solar panel", "10,000mAh capacity", "Dual USB outputs", "Recycled plastic casing"],
+      description: "Power bank 10.000mAh dengan panel surya terintegrasi untuk pengisian ramah lingkungan.",
+      features: ["Panel surya terintegrasi", "Kapasitas 10.000mAh", "Dual output USB", "Casing plastik daur ulang"],
       impact: {
-        energySaved: "Harnesses renewable solar energy",
-        recycledMaterials: "Casing made from 80% recycled plastics",
-        carbonReduced: "Reduces carbon footprint from grid charging",
+        energySaved: "Memanfaatkan energi surya terbarukan",
+        recycledMaterials: "Casing terbuat dari 80% plastik daur ulang",
+        carbonReduced: "Mengurangi jejak karbon dari pengisian listrik",
       },
     },
     {
       id: 5,
-      name: "Beeswax Food Wraps",
-      price: 18.99,
+      name: "Pembungkus Makanan Beeswax",
+      price: 284850, // 18.99 USD * 15000
       image: "/beeswax-food-wraps.png",
       comparisonImage: "/plastic-wrap-comparison.png",
       category: "home",
@@ -154,23 +154,23 @@ const ProductCatalog = () => {
       isNew: false,
       isBestseller: true,
       sustainabilityScore: 95,
-      description: "Set of 3 reusable beeswax food wraps to replace plastic wrap.",
+      description: "Set 3 pembungkus makanan beeswax reusable untuk menggantikan plastik pembungkus.",
       features: [
-        "Made with organic cotton, beeswax, and tree resin",
-        "Reusable for up to 1 year",
-        "Washable with cold water",
-        "Natural antibacterial properties",
+        "Terbuat dari katun organik, lilin lebah, dan resin pohon",
+        "Dapat digunakan kembali hingga 1 tahun",
+        "Dapat dicuci dengan air dingin",
+        "Memiliki sifat antibakteri alami",
       ],
       impact: {
-        plasticSaved: "Replaces approximately 250 meters of plastic wrap annually",
-        biodegradable: "Fully compostable at end of life",
-        naturalMaterials: "Made from sustainable, natural ingredients",
+        plasticSaved: "Menggantikan sekitar 250 meter plastik pembungkus setiap tahun",
+        biodegradable: "Sepenuhnya dapat dikompos di akhir masa pakai",
+        naturalMaterials: "Terbuat dari bahan alami dan berkelanjutan",
       },
     },
     {
       id: 6,
-      name: "Recycled Paper Notebook",
-      price: 9.99,
+      name: "Buku Catatan Kertas Daur Ulang",
+      price: 149850, // 9.99 USD * 15000
       image: "/recycled-paper-notebook.png",
       comparisonImage: "/virgin-paper-notebook-comparison.png",
       category: "gifts",
@@ -179,18 +179,18 @@ const ProductCatalog = () => {
       isNew: false,
       isBestseller: false,
       sustainabilityScore: 88,
-      description: "A5 notebook made from 100% post-consumer recycled paper.",
-      features: ["100% recycled paper", "Soy-based ink printing", "Plastic-free binding", "80 sheets/160 pages"],
+      description: "Buku catatan A5 terbuat dari 100% kertas daur ulang pasca-konsumen.",
+      features: ["100% kertas daur ulang", "Pencetakan dengan tinta berbasis kedelai", "Penjilidan bebas plastik", "80 lembar/160 halaman"],
       impact: {
-        treesSaved: "Saves trees by using recycled materials",
-        waterSaved: "Uses 60% less water in production than virgin paper",
-        energySaved: "Requires 40% less energy to produce",
+        treesSaved: "Menyelamatkan pohon dengan menggunakan bahan daur ulang",
+        waterSaved: "Menggunakan 60% lebih sedikit air dalam produksi dibanding kertas virgin",
+        energySaved: "Membutuhkan 40% lebih sedikit energi untuk diproduksi",
       },
     },
     {
       id: 7,
-      name: "Natural Deodorant",
-      price: 14.99,
+      name: "Deodoran Alami",
+      price: 224850, // 14.99 USD * 15000
       image: "/natural-deodorant.png",
       comparisonImage: "/conventional-deodorant-comparison.png",
       category: "beauty",
@@ -199,23 +199,23 @@ const ProductCatalog = () => {
       isNew: true,
       isBestseller: false,
       sustainabilityScore: 92,
-      description: "Aluminum-free natural deodorant in a compostable paper tube.",
+      description: "Deodoran alami bebas aluminium dalam tabung kertas yang dapat dikompos.",
       features: [
-        "Aluminum and paraben-free",
-        "Compostable paper packaging",
-        "Vegan and cruelty-free",
-        "Essential oil fragrance",
+        "Bebas aluminium dan paraben",
+        "Kemasan kertas yang dapat dikompos",
+        "Vegan dan bebas uji hewan",
+        "Wewangian minyak esensial",
       ],
       impact: {
-        chemicalReduced: "No harmful chemicals that can enter waterways",
-        plasticSaved: "Zero plastic packaging waste",
-        biodegradable: "Fully biodegradable container",
+        chemicalReduced: "Tanpa bahan kimia berbahaya yang dapat masuk ke saluran air",
+        plasticSaved: "Nol limbah kemasan plastik",
+        biodegradable: "Wadah sepenuhnya biodegradable",
       },
     },
     {
       id: 8,
-      name: "Organic Herb Garden Kit",
-      price: 34.99,
+      name: "Kit Kebun Herbal Organik",
+      price: 524850, // 34.99 USD * 15000
       image: "/herb-garden-kit.png",
       comparisonImage: "/store-bought-herbs-comparison.png",
       category: "food",
@@ -224,17 +224,17 @@ const ProductCatalog = () => {
       isNew: false,
       isBestseller: true,
       sustainabilityScore: 97,
-      description: "Grow your own organic herbs with this complete starter kit.",
+      description: "Tumbuhkan herbal organik Anda sendiri dengan kit pemula lengkap ini.",
       features: [
-        "Includes 5 types of organic herb seeds",
-        "Biodegradable growing pots",
-        "Organic soil discs",
-        "Bamboo plant markers",
+        "Termasuk 5 jenis benih herbal organik",
+        "Pot tanam biodegradable",
+        "Cakram tanah organik",
+        "Penanda tanaman bambu",
       ],
       impact: {
-        foodMiles: "Reduces food miles by growing at home",
-        plasticSaved: "Eliminates plastic packaging from store-bought herbs",
-        organicGrowing: "No pesticides or chemicals in your food",
+        foodMiles: "Mengurangi jarak tempuh makanan dengan menanam di rumah",
+        plasticSaved: "Menghilangkan kemasan plastik dari herbal yang dibeli di toko",
+        organicGrowing: "Tanpa pestisida atau bahan kimia dalam makanan Anda",
       },
     },
   ]
@@ -252,16 +252,16 @@ const ProductCatalog = () => {
     if (activePriceRange !== "all") {
       switch (activePriceRange) {
         case "under25":
-          result = result.filter((product) => product.price < 25)
+          result = result.filter((product) => product.price < 375000)
           break
         case "25to50":
-          result = result.filter((product) => product.price >= 25 && product.price <= 50)
+          result = result.filter((product) => product.price >= 375000 && product.price <= 750000)
           break
         case "50to100":
-          result = result.filter((product) => product.price > 50 && product.price <= 100)
+          result = result.filter((product) => product.price > 750000 && product.price <= 1500000)
           break
         case "over100":
-          result = result.filter((product) => product.price > 100)
+          result = result.filter((product) => product.price > 1500000)
           break
         default:
           break
@@ -328,12 +328,17 @@ const ProductCatalog = () => {
     setIsFilterOpen(!isFilterOpen)
   }
 
+  // Format price in IDR
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price);
+  }
+
   return (
     <div className="product-catalog">
       <div className="catalog-header">
         <div className="container">
-          <h1>Eco-Friendly Products</h1>
-          <p>Discover sustainable alternatives for everyday items</p>
+          <h1>Produk Ramah Lingkungan</h1>
+          <p>Temukan alternatif berkelanjutan untuk barang sehari-hari</p>
         </div>
       </div>
 
@@ -342,14 +347,14 @@ const ProductCatalog = () => {
           {/* Filter Sidebar */}
           <aside className={`filter-sidebar ${isFilterOpen ? "open" : ""}`} ref={filterRef}>
             <div className="filter-header">
-              <h2>Filters</h2>
+              <h2>Filter</h2>
               <button className="close-filter" onClick={toggleFilter}>
                 <i className="fas fa-times"></i>
               </button>
             </div>
 
             <div className="filter-section">
-              <h3>Categories</h3>
+              <h3>Kategori</h3>
               <div className="filter-options">
                 {categories.map((category) => (
                   <button
@@ -365,7 +370,7 @@ const ProductCatalog = () => {
             </div>
 
             <div className="filter-section">
-              <h3>Price Range</h3>
+              <h3>Rentang Harga</h3>
               <div className="filter-options">
                 {priceRanges.map((range) => (
                   <button
@@ -381,12 +386,12 @@ const ProductCatalog = () => {
             </div>
 
             <div className="filter-section">
-              <h3>Sustainability Features</h3>
+              <h3>Fitur Keberlanjutan</h3>
               <div className="filter-checkboxes">
                 <label className="filter-checkbox">
                   <input type="checkbox" name="plastic-free" />
                   <span className="checkbox-custom"></span>
-                  Plastic-Free
+                  Bebas Plastik
                 </label>
                 <label className="filter-checkbox">
                   <input type="checkbox" name="biodegradable" />
@@ -396,12 +401,12 @@ const ProductCatalog = () => {
                 <label className="filter-checkbox">
                   <input type="checkbox" name="organic" />
                   <span className="checkbox-custom"></span>
-                  Organic
+                  Organik
                 </label>
                 <label className="filter-checkbox">
                   <input type="checkbox" name="recycled" />
                   <span className="checkbox-custom"></span>
-                  Recycled Materials
+                  Bahan Daur Ulang
                 </label>
                 <label className="filter-checkbox">
                   <input type="checkbox" name="fair-trade" />
@@ -412,29 +417,29 @@ const ProductCatalog = () => {
             </div>
 
             <div className="filter-section">
-              <h3>Environmental Impact</h3>
+              <h3>Dampak Lingkungan</h3>
               <div className="impact-slider">
                 <input type="range" min="1" max="5" defaultValue="3" className="slider" />
                 <div className="impact-labels">
-                  <span>Lower</span>
-                  <span>Higher</span>
+                  <span>Rendah</span>
+                  <span>Tinggi</span>
                 </div>
               </div>
             </div>
 
-            <button className="btn btn-primary apply-filters">Apply Filters</button>
-            <button className="btn btn-outline reset-filters">Reset All</button>
+            <button className="btn btn-primary apply-filters">Terapkan Filter</button>
+            <button className="btn btn-outline reset-filters">Reset Semua</button>
           </aside>
 
           {/* Main Content */}
           <div className="catalog-content">
             <div className="catalog-toolbar">
               <button className="filter-toggle" onClick={toggleFilter}>
-                <i className="fas fa-filter"></i> Filters
+                <i className="fas fa-filter"></i> Filter
               </button>
 
               <div className="catalog-sort">
-                <label>Sort by:</label>
+                <label>Urutkan:</label>
                 <select value={activeSort} onChange={(e) => setActiveSort(e.target.value)} className="sort-select">
                   {sortOptions.map((option) => (
                     <option key={option.id} value={option.id}>
@@ -456,26 +461,26 @@ const ProductCatalog = () => {
 
             <div className="catalog-results">
               <p>
-                <span className="result-count">{filteredProducts.length}</span> products found
+                <span className="result-count">{filteredProducts.length}</span> produk ditemukan
               </p>
             </div>
 
             {/* Featured Comparison */}
             <div className="featured-comparison">
-              <h2>See the Difference</h2>
-              <p>Compare eco-friendly products with conventional alternatives</p>
+              <h2>Lihat Perbedaannya</h2>
+              <p>Bandingkan produk ramah lingkungan dengan alternatif konvensional</p>
 
               <ComparisonSlider
                 beforeImage="/eco-friendly-oral-care.png"
                 afterImage="/plastic-toothbrush-comparison.png"
-                beforeLabel="Eco-Friendly"
-                afterLabel="Conventional"
+                beforeLabel="Ramah Lingkungan"
+                afterLabel="Konvensional"
               />
 
               <div className="comparison-info">
                 <div className="comparison-stat">
                   <span className="stat-value">80%</span>
-                  <span className="stat-label">Less Plastic</span>
+                  <span className="stat-label">Lebih Sedikit Plastik</span>
                 </div>
                 <div className="comparison-stat">
                   <span className="stat-value">100%</span>
@@ -483,7 +488,7 @@ const ProductCatalog = () => {
                 </div>
                 <div className="comparison-stat">
                   <span className="stat-value">2x</span>
-                  <span className="stat-label">Longer Lasting</span>
+                  <span className="stat-label">Lebih Tahan Lama</span>
                 </div>
               </div>
             </div>
@@ -495,8 +500,8 @@ const ProductCatalog = () => {
                   <div className="product-image">
                     <img src={product.image || "/placeholder.svg"} alt={product.name} />
 
-                    {product.isNew && <div className="product-badge new">New</div>}
-                    {product.isBestseller && <div className="product-badge bestseller">Bestseller</div>}
+                    {product.isNew && <div className="product-badge new">Baru</div>}
+                    {product.isBestseller && <div className="product-badge bestseller">Terlaris</div>}
 
                     <div className="product-actions">
                       <button
@@ -504,11 +509,11 @@ const ProductCatalog = () => {
                           animatingWishlistId === product.id ? "animate" : ""
                         }`}
                         onClick={() => toggleWishlist(product.id)}
-                        aria-label="Add to wishlist"
+                        aria-label="Tambahkan ke wishlist"
                       >
                         <i className={`${wishlist.includes(product.id) ? "fas" : "far"} fa-heart`}></i>
                       </button>
-                      <button className="quickview-btn" onClick={() => openQuickView(product)} aria-label="Quick view">
+                      <button className="quickview-btn" onClick={() => openQuickView(product)} aria-label="Lihat cepat">
                         <i className="fas fa-eye"></i>
                       </button>
                     </div>
@@ -519,7 +524,7 @@ const ProductCatalog = () => {
                       <Link to={`/products/${product.id}`}>{product.name}</Link>
                     </h3>
 
-                    <div className="product-price">${product.price.toFixed(2)}</div>
+                    <div className="product-price">{formatPrice(product.price)}</div>
 
                     <div className="product-rating">
                       <div className="stars" style={{ "--rating": product.rating }}></div>
@@ -528,10 +533,10 @@ const ProductCatalog = () => {
 
                     <div className="sustainability-meter">
                       <div className="sustainability-fill" style={{ width: `${product.sustainabilityScore}%` }}></div>
-                      <span className="sustainability-label">Eco Impact</span>
+                      <span className="sustainability-label">Dampak Lingkungan</span>
                     </div>
 
-                    <button className="btn btn-primary add-to-cart">Add to Cart</button>
+                    <button className="btn btn-primary add-to-cart">Tambahkan ke Keranjang</button>
                   </div>
                 </div>
               ))}
@@ -539,7 +544,7 @@ const ProductCatalog = () => {
 
             {/* Load More Button */}
             <div className="load-more">
-              <button className="btn btn-outline">Load More Products</button>
+              <button className="btn btn-outline">Muat Lebih Banyak Produk</button>
             </div>
           </div>
         </div>
