@@ -7,29 +7,29 @@ import { CSS } from "@dnd-kit/utilities"
 import { motion, AnimatePresence } from "framer-motion"
 import "../styles/ManageArticles.css"
 
-// Mock data for articles
+// Data contoh untuk artikel
 const initialArticles = [
   {
     id: 1,
-    title: "The Impact of Fast Fashion on Our Environment",
-    slug: "impact-fast-fashion-environment",
+    title: "Dampak Fast Fashion terhadap Lingkungan Kita",
+    slug: "dampak-fast-fashion-lingkungan",
     excerpt:
-      "Exploring how the fast fashion industry contributes to environmental degradation and what consumers can do about it.",
+      "Mengeksplorasi bagaimana industri fast fashion berkontribusi terhadap degradasi lingkungan dan apa yang dapat dilakukan konsumen.",
     content: `
-      <h2>The Environmental Cost of Fast Fashion</h2>
-      <p>The fashion industry is one of the largest polluters in the world. Fast fashion, characterized by rapid production cycles and low-cost garments, has exacerbated this issue.</p>
-      <p>According to recent studies, the fashion industry is responsible for 10% of global carbon emissions, making it one of the most polluting industries worldwide.</p>
-      <img src="/circular-fashion-cycle.png" alt="Circular Fashion Cycle" />
-      <h2>Water Pollution and Consumption</h2>
-      <p>Textile dyeing is the second largest polluter of water globally. The process requires vast amounts of water, and many factories discharge untreated wastewater into rivers.</p>
-      <p>It takes about 2,000 gallons of water to produce a single pair of jeans. This is equivalent to the amount of water one person drinks over a 7-year period.</p>
-      <h2>Sustainable Alternatives</h2>
-      <p>Consumers can make a difference by choosing sustainable fashion options. This includes buying from ethical brands, purchasing second-hand clothing, and extending the lifespan of garments through proper care.</p>
-      <p>Many innovative companies are now developing eco-friendly fabrics and implementing circular business models to reduce waste and environmental impact.</p>
+      <h2>Biaya Lingkungan dari Fast Fashion</h2>
+      <p>Industri fashion adalah salah satu pencemar terbesar di dunia. Fast fashion, yang ditandai dengan siklus produksi cepat dan pakaian berbiaya rendah, telah memperburuk masalah ini.</p>
+      <p>Menurut studi terbaru, industri fashion bertanggung jawab atas 10% emisi karbon global, menjadikannya salah satu industri paling mencemari di seluruh dunia.</p>
+      <img src="/circular-fashion-cycle.png" alt="Siklus Fashion Sirkular" />
+      <h2>Polusi dan Konsumsi Air</h2>
+      <p>Pewarnaan tekstil adalah pencemar air terbesar kedua secara global. Proses ini membutuhkan banyak air, dan banyak pabrik membuang air limbah yang tidak diolah ke sungai.</p>
+      <p>Dibutuhkan sekitar 2.000 galon air untuk memproduksi satu celana jeans. Ini setara dengan jumlah air yang diminum satu orang selama periode 7 tahun.</p>
+      <h2>Alternatif Berkelanjutan</h2>
+      <p>Konsumen dapat membuat perbedaan dengan memilih opsi fashion berkelanjutan. Ini termasuk membeli dari merek etis, membeli pakaian bekas, dan memperpanjang umur pakaian melalui perawatan yang tepat.</p>
+      <p>Banyak perusahaan inovatif sekarang mengembangkan kain ramah lingkungan dan menerapkan model bisnis sirkular untuk mengurangi limbah dan dampak lingkungan.</p>
     `,
     author: "Emma Rodriguez",
     category: "sustainability",
-    tags: ["fashion", "environment", "sustainability"],
+    tags: ["fashion", "lingkungan", "keberlanjutan"],
     featuredImage: "/circular-fashion-cycle.png",
     status: "published",
     publishDate: "2023-05-15T10:00:00Z",
@@ -37,24 +37,24 @@ const initialArticles = [
   },
   {
     id: 2,
-    title: "Zero Waste Living: A Beginner's Guide",
-    slug: "zero-waste-living-beginners-guide",
-    excerpt: "Simple steps to reduce waste in your daily life and move towards a more sustainable lifestyle.",
+    title: "Hidup Zero Waste: Panduan untuk Pemula",
+    slug: "hidup-zero-waste-panduan-pemula",
+    excerpt: "Langkah-langkah sederhana untuk mengurangi limbah dalam kehidupan sehari-hari dan bergerak menuju gaya hidup yang lebih berkelanjutan.",
     content: `
-      <h2>Understanding Zero Waste</h2>
-      <p>Zero waste living is about reducing the amount of trash we send to landfills by making conscious choices about what we buy and how we dispose of items.</p>
-      <p>The concept follows a hierarchy: Refuse, Reduce, Reuse, Recycle, and Rot (compost).</p>
-      <img src="/backyard-compost-system.png" alt="Backyard Composting System" />
-      <h2>Getting Started</h2>
-      <p>Begin with simple swaps like using reusable shopping bags, water bottles, and coffee cups. These small changes can significantly reduce your plastic waste.</p>
-      <p>Next, consider your food packaging. Shop at bulk stores with your own containers and buy fresh produce without packaging when possible.</p>
-      <h2>Beyond the Basics</h2>
-      <p>As you progress, look at other areas of your home. Replace disposable items with reusable alternatives, such as cloth napkins, beeswax wraps, and safety razors.</p>
-      <p>Remember, zero waste is a journey, not a destination. Focus on progress, not perfection.</p>
+      <h2>Memahami Zero Waste</h2>
+      <p>Hidup zero waste adalah tentang mengurangi jumlah sampah yang kita kirim ke tempat pembuangan sampah dengan membuat pilihan sadar tentang apa yang kita beli dan bagaimana kita membuang barang.</p>
+      <p>Konsep ini mengikuti hierarki: Tolak, Kurangi, Gunakan Kembali, Daur Ulang, dan Kompos.</p>
+      <img src="/backyard-compost-system.png" alt="Sistem Kompos Halaman Belakang" />
+      <h2>Memulai</h2>
+      <p>Mulailah dengan penggantian sederhana seperti menggunakan tas belanja yang dapat digunakan kembali, botol air, dan cangkir kopi. Perubahan kecil ini dapat secara signifikan mengurangi limbah plastik Anda.</p>
+      <p>Selanjutnya, pertimbangkan kemasan makanan Anda. Belanja di toko curah dengan wadah Anda sendiri dan beli produk segar tanpa kemasan bila memungkinkan.</p>
+      <h2>Melampaui Dasar-dasar</h2>
+      <p>Seiring kemajuan Anda, lihat area lain di rumah Anda. Ganti barang sekali pakai dengan alternatif yang dapat digunakan kembali, seperti serbet kain, pembungkus lilin lebah, dan pisau cukur keselamatan.</p>
+      <p>Ingat, zero waste adalah perjalanan, bukan tujuan. Fokus pada kemajuan, bukan kesempurnaan.</p>
     `,
     author: "Michael Chang",
     category: "lifestyle",
-    tags: ["zero-waste", "sustainability", "lifestyle"],
+    tags: ["zero-waste", "keberlanjutan", "gaya-hidup"],
     featuredImage: "/backyard-compost-system.png",
     status: "published",
     publishDate: "2023-06-10T09:15:00Z",
@@ -62,24 +62,24 @@ const initialArticles = [
   },
   {
     id: 3,
-    title: "Understanding Carbon Footprints",
-    slug: "understanding-carbon-footprints",
-    excerpt: "What carbon footprints are, how they're calculated, and why they matter for our planet's future.",
+    title: "Memahami Jejak Karbon",
+    slug: "memahami-jejak-karbon",
+    excerpt: "Apa itu jejak karbon, bagaimana cara menghitungnya, dan mengapa penting untuk masa depan planet kita.",
     content: `
-      <h2>What is a Carbon Footprint?</h2>
-      <p>A carbon footprint is the total amount of greenhouse gases (including carbon dioxide and methane) that are generated by our actions.</p>
-      <p>The average carbon footprint for a person in the United States is 16 tons, one of the highest rates in the world.</p>
-      <img src="/global-carbon-cycle.png" alt="Global Carbon Cycle" />
-      <h2>Calculating Your Impact</h2>
-      <p>Carbon footprints can be measured by undertaking a greenhouse gas emissions assessment. Various online calculators can help individuals determine their carbon footprint.</p>
-      <p>Major contributors to an individual's carbon footprint include transportation, housing, and food.</p>
-      <h2>Reducing Your Footprint</h2>
-      <p>There are many ways to reduce your carbon footprint, such as using public transportation, eating locally-sourced foods, and improving home energy efficiency.</p>
-      <p>Carbon offsets can also be purchased to balance out emissions that cannot be eliminated.</p>
+      <h2>Apa itu Jejak Karbon?</h2>
+      <p>Jejak karbon adalah jumlah total gas rumah kaca (termasuk karbon dioksida dan metana) yang dihasilkan oleh tindakan kita.</p>
+      <p>Jejak karbon rata-rata untuk seseorang di Amerika Serikat adalah 16 ton, salah satu tingkat tertinggi di dunia.</p>
+      <img src="/global-carbon-cycle.png" alt="Siklus Karbon Global" />
+      <h2>Menghitung Dampak Anda</h2>
+      <p>Jejak karbon dapat diukur dengan melakukan penilaian emisi gas rumah kaca. Berbagai kalkulator online dapat membantu individu menentukan jejak karbon mereka.</p>
+      <p>Kontributor utama jejak karbon individu termasuk transportasi, perumahan, dan makanan.</p>
+      <h2>Mengurangi Jejak Anda</h2>
+      <p>Ada banyak cara untuk mengurangi jejak karbon Anda, seperti menggunakan transportasi umum, makan makanan yang bersumber lokal, dan meningkatkan efisiensi energi rumah.</p>
+      <p>Offset karbon juga dapat dibeli untuk menyeimbangkan emisi yang tidak dapat dihilangkan.</p>
     `,
     author: "Dr. James Wilson",
     category: "climate",
-    tags: ["carbon-footprint", "climate-change", "sustainability"],
+    tags: ["jejak-karbon", "perubahan-iklim", "keberlanjutan"],
     featuredImage: "/global-carbon-cycle.png",
     status: "draft",
     publishDate: null,
@@ -87,25 +87,25 @@ const initialArticles = [
   },
   {
     id: 4,
-    title: "Plastic Alternatives for Everyday Items",
-    slug: "plastic-alternatives-everyday-items",
+    title: "Alternatif Plastik untuk Barang Sehari-hari",
+    slug: "alternatif-plastik-barang-sehari-hari",
     excerpt:
-      "Discover eco-friendly alternatives to common plastic products that can help reduce your environmental impact.",
+      "Temukan alternatif ramah lingkungan untuk produk plastik umum yang dapat membantu mengurangi dampak lingkungan Anda.",
     content: `
-      <h2>The Plastic Problem</h2>
-      <p>Plastic pollution is one of the most pressing environmental issues of our time. Every year, millions of tons of plastic end up in our oceans, harming marine life and ecosystems.</p>
-      <p>Single-use plastics, in particular, contribute significantly to this problem due to their short lifespan and poor recycling rates.</p>
-      <img src="/cascading-plastic-alternatives.png" alt="Plastic Alternatives" />
-      <h2>Kitchen Alternatives</h2>
-      <p>In the kitchen, consider using beeswax wraps instead of plastic wrap, stainless steel or glass containers instead of plastic ones, and bamboo utensils instead of plastic utensils.</p>
-      <p>For grocery shopping, bring your own cloth bags, produce bags, and containers for bulk items.</p>
-      <h2>Bathroom Alternatives</h2>
-      <p>In the bathroom, switch to bamboo toothbrushes, bar soap instead of liquid soap in plastic bottles, and solid shampoo and conditioner bars.</p>
-      <p>Menstrual products also have eco-friendly alternatives, such as menstrual cups, cloth pads, and period underwear.</p>
+      <h2>Masalah Plastik</h2>
+      <p>Polusi plastik adalah salah satu masalah lingkungan yang paling mendesak saat ini. Setiap tahun, jutaan ton plastik berakhir di lautan kita, membahayakan kehidupan laut dan ekosistem.</p>
+      <p>Plastik sekali pakai, khususnya, berkontribusi secara signifikan terhadap masalah ini karena umur pendeknya dan tingkat daur ulang yang buruk.</p>
+      <img src="/cascading-plastic-alternatives.png" alt="Alternatif Plastik" />
+      <h2>Alternatif Dapur</h2>
+      <p>Di dapur, pertimbangkan untuk menggunakan pembungkus lilin lebah alih-alih plastik pembungkus, wadah stainless steel atau kaca alih-alih plastik, dan peralatan bambu alih-alih peralatan plastik.</p>
+      <p>Untuk belanja bahan makanan, bawa tas kain Anda sendiri, kantong produk, dan wadah untuk barang curah.</p>
+      <h2>Alternatif Kamar Mandi</h2>
+      <p>Di kamar mandi, beralih ke sikat gigi bambu, sabun batang alih-alih sabun cair dalam botol plastik, dan sampo dan kondisioner padat.</p>
+      <p>Produk menstruasi juga memiliki alternatif ramah lingkungan, seperti cangkir menstruasi, pembalut kain, dan celana dalam periode.</p>
     `,
     author: "Sophia Lee",
     category: "lifestyle",
-    tags: ["plastic-free", "sustainability", "eco-friendly"],
+    tags: ["bebas-plastik", "keberlanjutan", "ramah-lingkungan"],
     featuredImage: "/cascading-plastic-alternatives.png",
     status: "scheduled",
     publishDate: "2023-08-20T08:00:00Z",
@@ -113,25 +113,25 @@ const initialArticles = [
   },
   {
     id: 5,
-    title: "The Rise of Sustainable Fashion Brands",
-    slug: "rise-sustainable-fashion-brands",
+    title: "Kebangkitan Merek Fashion Berkelanjutan",
+    slug: "kebangkitan-merek-fashion-berkelanjutan",
     excerpt:
-      "How innovative fashion brands are leading the way in sustainability and changing the industry for the better.",
+      "Bagaimana merek fashion inovatif memimpin jalan dalam keberlanjutan dan mengubah industri menjadi lebih baik.",
     content: `
-      <h2>A Shift in the Fashion Industry</h2>
-      <p>In recent years, there has been a significant shift in the fashion industry towards more sustainable practices. This change is driven by both consumer demand and a growing awareness of environmental issues.</p>
-      <p>Sustainable fashion brands focus on ethical production, fair labor practices, and environmentally friendly materials.</p>
-      <img src="/interconnected-eco-production.png" alt="Eco-friendly Production" />
-      <h2>Innovative Materials</h2>
-      <p>Many sustainable brands are experimenting with innovative materials, such as fabrics made from recycled plastic bottles, agricultural waste, and even mushrooms.</p>
-      <p>These materials not only reduce waste but often have a lower carbon footprint compared to conventional fabrics.</p>
-      <h2>Transparency and Traceability</h2>
-      <p>A key aspect of sustainable fashion is transparency. Brands are increasingly sharing information about their supply chains, allowing consumers to make more informed choices.</p>
-      <p>Some companies are even using blockchain technology to provide complete traceability from raw material to finished product.</p>
+      <h2>Pergeseran dalam Industri Fashion</h2>
+      <p>Dalam beberapa tahun terakhir, telah terjadi pergeseran signifikan dalam industri fashion menuju praktik yang lebih berkelanjutan. Perubahan ini didorong oleh permintaan konsumen dan kesadaran yang berkembang tentang masalah lingkungan.</p>
+      <p>Merek fashion berkelanjutan berfokus pada produksi etis, praktik tenaga kerja yang adil, dan bahan ramah lingkungan.</p>
+      <img src="/interconnected-eco-production.png" alt="Produksi Ramah Lingkungan" />
+      <h2>Bahan Inovatif</h2>
+      <p>Banyak merek berkelanjutan bereksperimen dengan bahan inovatif, seperti kain yang terbuat dari botol plastik daur ulang, limbah pertanian, dan bahkan jamur.</p>
+      <p>Bahan-bahan ini tidak hanya mengurangi limbah tetapi sering kali memiliki jejak karbon yang lebih rendah dibandingkan dengan kain konvensional.</p>
+      <h2>Transparansi dan Keterlacakan</h2>
+      <p>Aspek kunci dari fashion berkelanjutan adalah transparansi. Merek semakin berbagi informasi tentang rantai pasokan mereka, memungkinkan konsumen untuk membuat pilihan yang lebih terinformasi.</p>
+      <p>Beberapa perusahaan bahkan menggunakan teknologi blockchain untuk memberikan keterlacakan lengkap dari bahan baku hingga produk jadi.</p>
     `,
     author: "Emma Rodriguez",
     category: "fashion",
-    tags: ["fashion", "sustainability", "ethical-brands"],
+    tags: ["fashion", "keberlanjutan", "merek-etis"],
     featuredImage: "/interconnected-eco-production.png",
     status: "published",
     publishDate: "2023-07-08T11:30:00Z",
@@ -139,90 +139,96 @@ const initialArticles = [
   },
 ]
 
-// Available article categories
+// Kategori artikel yang tersedia
 const categories = [
-  { id: "sustainability", name: "Sustainability" },
-  { id: "lifestyle", name: "Lifestyle" },
-  { id: "climate", name: "Climate" },
+  { id: "sustainability", name: "Keberlanjutan" },
+  { id: "lifestyle", name: "Gaya Hidup" },
+  { id: "climate", name: "Iklim" },
   { id: "fashion", name: "Fashion" },
-  { id: "technology", name: "Technology" },
-  { id: "food", name: "Food & Nutrition" },
+  { id: "technology", name: "Teknologi" },
+  { id: "food", name: "Makanan & Nutrisi" },
 ]
 
-// Available tags for autocomplete
+// Tag yang tersedia untuk autocomplete
 const availableTags = [
-  "sustainability",
-  "environment",
-  "eco-friendly",
+  "keberlanjutan",
+  "lingkungan",
+  "ramah-lingkungan",
   "zero-waste",
-  "plastic-free",
-  "climate-change",
-  "carbon-footprint",
-  "renewable-energy",
+  "bebas-plastik",
+  "perubahan-iklim",
+  "jejak-karbon",
+  "energi-terbarukan",
   "fashion",
-  "ethical-brands",
+  "merek-etis",
   "slow-fashion",
-  "minimalism",
-  "lifestyle",
-  "wellness",
-  "health",
-  "organic",
+  "minimalisme",
+  "gaya-hidup",
+  "kesehatan",
+  "kesejahteraan",
+  "organik",
   "vegan",
-  "technology",
-  "innovation",
-  "green-tech",
-  "solar",
-  "recycling",
-  "food",
-  "plant-based",
-  "local",
-  "seasonal",
+  "teknologi",
+  "inovasi",
+  "teknologi-hijau",
+  "tenaga-surya",
+  "daur-ulang",
+  "makanan",
+  "nabati",
+  "lokal",
+  "musiman",
   "fair-trade",
 ]
 
-// Media library items
+// Item perpustakaan media
 const initialMediaItems = [
   {
     id: 1,
-    name: "Circular Fashion Cycle",
+    name: "Siklus Fashion Sirkular",
     type: "image",
     url: "/circular-fashion-cycle.png",
     uploadDate: "2023-05-10T09:30:00Z",
   },
   {
     id: 2,
-    name: "Backyard Compost System",
+    name: "Sistem Kompos Halaman Belakang",
     type: "image",
     url: "/backyard-compost-system.png",
     uploadDate: "2023-06-05T14:20:00Z",
   },
   {
     id: 3,
-    name: "Global Carbon Cycle",
+    name: "Siklus Karbon Global",
     type: "image",
     url: "/global-carbon-cycle.png",
     uploadDate: "2023-06-28T11:15:00Z",
   },
   {
     id: 4,
-    name: "Cascading Plastic Alternatives",
+    name: "Alternatif Plastik Bertingkat",
     type: "image",
     url: "/cascading-plastic-alternatives.png",
     uploadDate: "2023-07-15T16:40:00Z",
   },
   {
     id: 5,
-    name: "Interconnected Eco Production",
+    name: "Produksi Eko Saling Terhubung",
     type: "image",
     url: "/interconnected-eco-production.png",
     uploadDate: "2023-07-02T10:50:00Z",
   },
-  { id: 6, name: "Emerald Canopy", type: "image", url: "/emerald-canopy.png", uploadDate: "2023-04-18T13:25:00Z" },
-  { id: 7, name: "Serene Gaze", type: "image", url: "/serene-gaze.png", uploadDate: "2023-05-22T15:10:00Z" },
-  { id: 8, name: "Thoughtful Gaze", type: "image", url: "/thoughtful-gaze.png", uploadDate: "2023-06-14T09:05:00Z" },
+  { id: 6, name: "Kanopi Zamrud", type: "image", url: "/emerald-canopy.png", uploadDate: "2023-04-18T13:25:00Z" },
+  { id: 7, name: "Tatapan Tenang", type: "image", url: "/serene-gaze.png", uploadDate: "2023-05-22T15:10:00Z" },
+  {
+    id: 8,
+    name: "Tatapan Penuh Pemikiran",
+    type: "image",
+    url: "/thoughtful-gaze.png",
+    uploadDate: "2023-06-14T09:05:00Z",
+  },
 ]
 
-// Draggable content block component
+// Komponen blok konten yang dapat diseret
 const ContentBlock = ({ id, content, index, handleContentChange, handleDeleteBlock }) => {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id })
   const style = {
@@ -231,7 +237,7 @@ const ContentBlock = ({ id, content, index, handleContentChange, handleDeleteBlo
     opacity: transform ? 0.5 : 1,
   }
 
-  // Determine if the block is a paragraph, heading, or image
+  // Tentukan apakah blok adalah paragraf, judul, atau gambar
   const getBlockType = () => {
     if (content.startsWith("<h")) return "heading"
     if (content.startsWith("<img")) return "image"
@@ -240,7 +246,7 @@ const ContentBlock = ({ id, content, index, handleContentChange, handleDeleteBlo
 
   const blockType = getBlockType()
 
-  // Extract content for editing
+  // Ekstrak konten untuk pengeditan
   const getEditableContent = () => {
     if (blockType === "heading") {
       const match = content.match(/<h\d>(.*?)<\/h\d>/)
@@ -259,7 +265,7 @@ const ContentBlock = ({ id, content, index, handleContentChange, handleDeleteBlo
     return ""
   }
 
-  // Handle content change based on block type
+  // Tangani perubahan konten berdasarkan jenis blok
   const onContentChange = (e) => {
     let newContent
     if (blockType === "heading") {
@@ -270,7 +276,7 @@ const ContentBlock = ({ id, content, index, handleContentChange, handleDeleteBlo
     handleContentChange(index, newContent)
   }
 
-  // Render different inputs based on block type
+  // Render input yang berbeda berdasarkan jenis blok
   const renderBlockInput = () => {
     if (blockType === "heading") {
       return (
@@ -278,7 +284,7 @@ const ContentBlock = ({ id, content, index, handleContentChange, handleDeleteBlo
           type="text"
           value={getEditableContent()}
           onChange={onContentChange}
-          placeholder="Heading text"
+          placeholder="Teks judul"
           className="block-input heading-input"
         />
       )
@@ -287,7 +293,7 @@ const ContentBlock = ({ id, content, index, handleContentChange, handleDeleteBlo
         <textarea
           value={getEditableContent()}
           onChange={onContentChange}
-          placeholder="Paragraph text"
+          placeholder="Teks paragraf"
           className="block-input paragraph-input"
         />
       )
@@ -304,7 +310,7 @@ const ContentBlock = ({ id, content, index, handleContentChange, handleDeleteBlo
                 const newContent = content.replace(/alt="(.*?)"/, `alt="${e.target.value}"`)
                 handleContentChange(index, newContent)
               }}
-              placeholder="Image alt text"
+              placeholder="Teks alt gambar"
               className="block-input image-alt-input"
             />
           </div>
@@ -320,13 +326,13 @@ const ContentBlock = ({ id, content, index, handleContentChange, handleDeleteBlo
           {blockType === "heading" && <i className="fas fa-heading"></i>}
           {blockType === "paragraph" && <i className="fas fa-paragraph"></i>}
           {blockType === "image" && <i className="fas fa-image"></i>}
-          <span>{blockType.charAt(0).toUpperCase() + blockType.slice(1)}</span>
+          <span>{blockType === "heading" ? "Judul" : blockType === "paragraph" ? "Paragraf" : "Gambar"}</span>
         </div>
         <div className="block-actions">
-          <button className="block-action-btn" title="Drag to reorder" {...attributes} {...listeners}>
+          <button className="block-action-btn" title="Seret untuk mengatur ulang" {...attributes} {...listeners}>
             <i className="fas fa-grip-lines"></i>
           </button>
-          <button className="block-action-btn delete-btn" onClick={() => handleDeleteBlock(index)} title="Delete block">
+          <button className="block-action-btn delete-btn" onClick={() => handleDeleteBlock(index)} title="Hapus blok">
             <i className="fas fa-trash-alt"></i>
           </button>
         </div>
@@ -336,7 +342,7 @@ const ContentBlock = ({ id, content, index, handleContentChange, handleDeleteBlo
   )
 }
 
-// Tag selector component
+// Komponen pemilih tag
 const TagSelector = ({ selectedTags, setSelectedTags }) => {
   const [inputValue, setInputValue] = useState("")
   const [suggestions, setSuggestions] = useState([])
@@ -394,7 +400,7 @@ const TagSelector = ({ selectedTags, setSelectedTags }) => {
           type="text"
           value={inputValue}
           onChange={handleInputChange}
-          placeholder="Add tags..."
+          placeholder="Tambahkan tag..."
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               e.preventDefault()
@@ -421,7 +427,7 @@ const TagSelector = ({ selectedTags, setSelectedTags }) => {
   )
 }
 
-// Media library component
+// Komponen perpustakaan media
 const MediaLibrary = ({ mediaItems, onSelectMedia, onClose }) => {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedItem, setSelectedItem] = useState(null)
@@ -441,7 +447,7 @@ const MediaLibrary = ({ mediaItems, onSelectMedia, onClose }) => {
     <div className="media-library-overlay">
       <div className="media-library">
         <div className="media-library-header">
-          <h3>Media Library</h3>
+          <h3>Perpustakaan Media</h3>
           <button className="close-btn" onClick={onClose}>
             ×
           </button>
@@ -449,7 +455,7 @@ const MediaLibrary = ({ mediaItems, onSelectMedia, onClose }) => {
         <div className="media-search">
           <input
             type="text"
-            placeholder="Search media..."
+            placeholder="Cari media..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -473,14 +479,14 @@ const MediaLibrary = ({ mediaItems, onSelectMedia, onClose }) => {
         </div>
         <div className="media-library-footer">
           <button className="action-button" onClick={onClose}>
-            Cancel
+            Batal
           </button>
           <button
             className="action-button primary-button"
             onClick={handleSelect}
             disabled={!selectedItem}
           >
-            Select
+            Pilih
           </button>
         </div>
       </div>
@@ -488,9 +494,9 @@ const MediaLibrary = ({ mediaItems, onSelectMedia, onClose }) => {
   )
 }
 
-// Rich text editor component
+// Komponen editor teks kaya
 const RichTextEditor = ({ content, setContent }) => {
-  // Parse content into blocks
+  // Parse konten menjadi blok
   const parseContent = () => {
     if (!content) return []
     const parser = new DOMParser()
@@ -502,12 +508,12 @@ const RichTextEditor = ({ content, setContent }) => {
   const [contentBlocks, setContentBlocks] = useState(parseContent())
   const sensors = useSensors(useSensor(PointerSensor))
 
-  // Update parent content when blocks change
+  // Perbarui konten induk saat blok berubah
   useEffect(() => {
     setContent(contentBlocks.join("\n"))
   }, [contentBlocks, setContent])
 
-  // Handle drag end
+  // Tangani akhir seret
   const handleDragEnd = (event) => {
     const { active, over } = event
     if (active.id !== over.id) {
@@ -519,29 +525,29 @@ const RichTextEditor = ({ content, setContent }) => {
     }
   }
 
-  // Handle content change
+  // Tangani perubahan konten
   const handleContentChange = (index, newContent) => {
     const newBlocks = [...contentBlocks]
     newBlocks[index] = newContent
     setContentBlocks(newBlocks)
   }
 
-  // Handle delete block
+  // Tangani hapus blok
   const handleDeleteBlock = (index) => {
     const newBlocks = [...contentBlocks]
     newBlocks.splice(index, 1)
     setContentBlocks(newBlocks)
   }
 
-  // Add new block
+  // Tambahkan blok baru
   const addBlock = (type) => {
     let newBlock
     switch (type) {
       case "heading":
-        newBlock = "<h2>New Heading</h2>"
+        newBlock = "<h2>Judul Baru</h2>"
         break
       case "paragraph":
-        newBlock = "<p>New paragraph text...</p>"
+        newBlock = "<p>Teks paragraf baru...</p>"
         break
       case "image":
         setShowMediaLibrary(true)
@@ -552,7 +558,7 @@ const RichTextEditor = ({ content, setContent }) => {
     setContentBlocks([...contentBlocks, newBlock])
   }
 
-  // Handle media selection
+  // Tangani pemilihan media
   const [showMediaLibrary, setShowMediaLibrary] = useState(false)
 
   const handleSelectMedia = (media) => {
@@ -566,21 +572,21 @@ const RichTextEditor = ({ content, setContent }) => {
         <button
           className="toolbar-btn"
           onClick={() => addBlock("heading")}
-          title="Add Heading"
+          title="Tambah Judul"
         >
           <i className="fas fa-heading"></i>
         </button>
         <button
           className="toolbar-btn"
           onClick={() => addBlock("paragraph")}
-          title="Add Paragraph"
+          title="Tambah Paragraf"
         >
           <i className="fas fa-paragraph"></i>
         </button>
         <button
           className="toolbar-btn"
           onClick={() => addBlock("image")}
-          title="Add Image"
+          title="Tambah Gambar"
         >
           <i className="fas fa-image"></i>
         </button>
@@ -607,7 +613,7 @@ const RichTextEditor = ({ content, setContent }) => {
             ))}
             {contentBlocks.length === 0 && (
               <div className="empty-editor">
-                <p>Start adding content blocks using the toolbar above.</p>
+                <p>Mulai menambahkan blok konten menggunakan toolbar di atas.</p>
               </div>
             )}
           </div>
@@ -624,12 +630,12 @@ const RichTextEditor = ({ content, setContent }) => {
   )
 }
 
-// Content preview component
+// Komponen pratinjau konten
 const ContentPreview = ({ content }) => {
-  // Log content for debugging
-  console.log("Preview content:", content)
+  // Log konten untuk debugging
+  console.log("Konten pratinjau:", content)
 
-  // Attempt to render content, fallback if malformed
+  // Coba render konten, fallback jika salah bentuk
   try {
     return (
       <div className="content-preview">
@@ -643,13 +649,13 @@ const ContentPreview = ({ content }) => {
     console.error("Error rendering preview:", error)
     return (
       <div className="content-preview">
-        <p>Error rendering preview: Malformed content</p>
+        <p>Error rendering preview: Konten salah bentuk</p>
       </div>
     )
   }
 }
 
-// Scheduling calendar component
+// Komponen kalender penjadwalan
 const SchedulingCalendar = ({ publishDate, setPublishDate }) => {
   const [showCalendar, setShowCalendar] = useState(false)
   const [selectedDate, setSelectedDate] = useState(
@@ -684,12 +690,12 @@ const SchedulingCalendar = ({ publishDate, setPublishDate }) => {
   }
 
   const formatDate = (dateString) => {
-    if (!dateString) return "Not scheduled"
+    if (!dateString) return "Belum dijadwalkan"
     const date = new Date(dateString)
     return date.toLocaleString()
   }
 
-  // Generate calendar days
+  // Generate hari kalender
   const generateCalendarDays = () => {
     const year = selectedDate.getFullYear()
     const month = selectedDate.getMonth()
@@ -708,20 +714,20 @@ const SchedulingCalendar = ({ publishDate, setPublishDate }) => {
   }
 
   const days = generateCalendarDays()
-  const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+  const weekdays = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"]
   const months = [
-    "January",
-    "February",
-    "March",
+    "Januari",
+    "Februari",
+    "Maret",
     "April",
-    "May",
-    "June",
-    "July",
-    "August",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
     "September",
-    "October",
+    "Oktober",
     "November",
-    "December",
+    "Desember",
   ]
 
   return (
@@ -787,7 +793,7 @@ const SchedulingCalendar = ({ publishDate, setPublishDate }) => {
             ))}
           </div>
           <div className="time-selector">
-            <label>Time:</label>
+            <label>Waktu:</label>
             <input
               type="time"
               value={selectedTime}
@@ -802,13 +808,13 @@ const SchedulingCalendar = ({ publishDate, setPublishDate }) => {
                 setShowCalendar(false)
               }}
             >
-              Clear
+              Hapus
             </button>
             <button
               className="action-button primary-button"
               onClick={handleSave}
             >
-              Set Date & Time
+              Atur Tanggal & Waktu
             </button>
           </div>
         </div>
@@ -817,7 +823,7 @@ const SchedulingCalendar = ({ publishDate, setPublishDate }) => {
   )
 }
 
-// Main component
+// Komponen utama
 const ManageArticles = () => {
   const [articles, setArticles] = useState(initialArticles)
   const [selectedArticles, setSelectedArticles] = useState([])
@@ -835,7 +841,7 @@ const ManageArticles = () => {
   const [mediaItems, setMediaItems] = useState(initialMediaItems)
   const [showMediaLibrary, setShowMediaLibrary] = useState(false)
 
-  // Filter and sort articles
+  // Filter dan urutkan artikel
   const filteredArticles = articles
     .filter((article) => {
       const matchesSearch =
@@ -868,7 +874,7 @@ const ManageArticles = () => {
       }
     })
 
-  // Handle sort change
+  // Tangani perubahan pengurutan
   const handleSort = (field) => {
     if (sortField === field) {
       setSortDirection(sortDirection === "asc" ? "desc" : "asc")
@@ -878,7 +884,7 @@ const ManageArticles = () => {
     }
   }
 
-  // Handle article selection
+  // Tangani pemilihan artikel
   const toggleArticleSelection = (articleId) => {
     if (selectedArticles.includes(articleId)) {
       setSelectedArticles(selectedArticles.filter((id) => id !== articleId))
@@ -887,7 +893,7 @@ const ManageArticles = () => {
     }
   }
 
-  // Handle select all
+  // Tangani pilih semua
   const toggleSelectAll = () => {
     if (selectedArticles.length === filteredArticles.length) {
       setSelectedArticles([])
@@ -896,13 +902,13 @@ const ManageArticles = () => {
     }
   }
 
-  // Handle edit article
+  // Tangani edit artikel
   const handleEditArticle = (article) => {
     setEditingArticle({ ...article })
     setIsEditing(true)
   }
 
-  // Generate slug from title
+  // Hasilkan slug dari judul
   const generateSlug = (title) => {
     return title
       .toLowerCase()
@@ -910,7 +916,7 @@ const ManageArticles = () => {
       .replace(/\s+/g, "-")
   }
 
-  // Handle save article
+  // Tangani simpan artikel
   const handleSaveArticle = () => {
     setUndoStack([...undoStack, [...articles]])
     setRedoStack([])
@@ -940,13 +946,13 @@ const ManageArticles = () => {
     setTimeout(() => setShowConfirmation(false), 3000)
   }
 
-  // Handle cancel edit
+  // Tangani batal edit
   const handleCancelEdit = () => {
     setIsEditing(false)
     setEditingArticle(null)
   }
 
-  // Handle new article
+  // Tangani artikel baru
   const handleNewArticle = () => {
     setEditingArticle({
       title: "",
@@ -964,7 +970,7 @@ const ManageArticles = () => {
     setIsEditing(true)
   }
 
-  // Handle bulk actions
+  // Tangani tindakan massal
   const handleBulkAction = (action) => {
     setConfirmationAction({
       type: action,
@@ -1009,7 +1015,7 @@ const ManageArticles = () => {
     })
   }
 
-  // Handle undo/redo
+  // Tangani undo/redo
   const handleUndo = () => {
     if (undoStack.length > 0) {
       const prevState = undoStack[undoStack.length - 1]
@@ -1028,7 +1034,7 @@ const ManageArticles = () => {
     }
   }
 
-  // Handle featured image selection
+  // Tangani pemilihan gambar unggulan
   const handleSelectFeaturedImage = (media) => {
     setEditingArticle({ ...editingArticle, featuredImage: media.url })
     setShowMediaLibrary(false)
@@ -1036,47 +1042,47 @@ const ManageArticles = () => {
 
   return (
     <div className="manage-articles-container">
-      {/* Admin Header */}
+      {/* Header Admin */}
       <div className="admin-header">
-        <h1>Manage Articles</h1>
+        <h1>Kelola Artikel</h1>
         <div className="admin-actions">
           <button
             className="action-button undo-button"
             disabled={undoStack.length === 0}
             onClick={handleUndo}
           >
-            <i className="fas fa-undo"></i> Undo
+            <i className="fas fa-undo"></i> Batalkan
           </button>
           <button
             className="action-button redo-button"
             disabled={redoStack.length === 0}
             onClick={handleRedo}
           >
-            <i className="fas fa-redo"></i> Redo
+            <i className="fas fa-redo"></i> Ulangi
           </button>
           <button
             className="action-button primary-button"
             onClick={handleNewArticle}
           >
-            <i className="fas fa-plus"></i> Add Article
+            <i className="fas fa-plus"></i> Tambah Artikel
           </button>
         </div>
       </div>
 
-      {/* Editing Panel or Article List */}
+      {/* Panel Pengeditan atau Daftar Artikel */}
       {isEditing ? (
         <div className="edit-article-panel">
           <div className="panel-header">
-            <h2>{editingArticle.id ? "Edit Article" : "New Article"}</h2>
+            <h2>{editingArticle.id ? "Edit Artikel" : "Artikel Baru"}</h2>
             <div className="panel-actions">
               <button className="action-button" onClick={handleCancelEdit}>
-                Cancel
+                Batal
               </button>
               <button
                 className="action-button primary-button"
                 onClick={handleSaveArticle}
               >
-                Save Article
+                Simpan Artikel
               </button>
             </div>
           </div>
@@ -1084,7 +1090,7 @@ const ManageArticles = () => {
             <div className="article-edit-form">
               <div className="form-section article-info">
                 <div className="form-group">
-                  <label>Title</label>
+                  <label>Judul</label>
                   <input
                     type="text"
                     value={editingArticle.title}
@@ -1094,11 +1100,11 @@ const ManageArticles = () => {
                         title: e.target.value,
                       })
                     }
-                    placeholder="Article title"
+                    placeholder="Judul artikel"
                   />
                 </div>
                 <div className="form-group">
-                  <label>Excerpt</label>
+                  <label>Ringkasan</label>
                   <textarea
                     value={editingArticle.excerpt}
                     onChange={(e) =>
@@ -1107,12 +1113,12 @@ const ManageArticles = () => {
                         excerpt: e.target.value,
                       })
                     }
-                    placeholder="Brief summary of the article"
+                    placeholder="Ringkasan singkat artikel"
                   />
                 </div>
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Category</label>
+                    <label>Kategori</label>
                     <select
                       value={editingArticle.category}
                       onChange={(e) =>
@@ -1122,7 +1128,7 @@ const ManageArticles = () => {
                         })
                       }
                     >
-                      <option value="">Select Category</option>
+                      <option value="">Pilih Kategori</option>
                       {categories.map((category) => (
                         <option key={category.id} value={category.id}>
                           {category.name}
@@ -1131,7 +1137,7 @@ const ManageArticles = () => {
                     </select>
                   </div>
                   <div className="form-group">
-                    <label>Author</label>
+                    <label>Penulis</label>
                     <input
                       type="text"
                       value={editingArticle.author}
@@ -1141,12 +1147,12 @@ const ManageArticles = () => {
                           author: e.target.value,
                         })
                       }
-                      placeholder="Article author"
+                      placeholder="Penulis artikel"
                     />
                   </div>
                 </div>
                 <div className="form-group">
-                  <label>Tags</label>
+                  <label>Tag</label>
                   <TagSelector
                     selectedTags={editingArticle.tags}
                     setSelectedTags={(tags) =>
@@ -1175,12 +1181,12 @@ const ManageArticles = () => {
                       }}
                     >
                       <option value="draft">Draft</option>
-                      <option value="published">Published</option>
-                      <option value="scheduled">Scheduled</option>
+                      <option value="published">Dipublikasikan</option>
+                      <option value="scheduled">Dijadwalkan</option>
                     </select>
                   </div>
                   <div className="form-group">
-                    <label>Publish Date</label>
+                    <label>Tanggal Publikasi</label>
                     <SchedulingCalendar
                       publishDate={editingArticle.publishDate}
                       setPublishDate={(date) => {
@@ -1203,13 +1209,13 @@ const ManageArticles = () => {
                   </div>
                 </div>
                 <div className="form-group">
-                  <label>Featured Image</label>
+                  <label>Gambar Unggulan</label>
                   <div className="featured-image-selector">
                     {editingArticle.featuredImage ? (
                       <div className="featured-image-preview">
                         <img
                           src={editingArticle.featuredImage || "/placeholder.svg"}
-                          alt="Featured"
+                          alt="Unggulan"
                         />
                         <button
                           className="remove-image-btn"
@@ -1229,7 +1235,7 @@ const ManageArticles = () => {
                         onClick={() => setShowMediaLibrary(true)}
                       >
                         <i className="fas fa-image"></i>
-                        <span>Select Featured Image</span>
+                        <span>Pilih Gambar Unggulan</span>
                       </button>
                     )}
                   </div>
@@ -1238,10 +1244,10 @@ const ManageArticles = () => {
               <div className="form-section article-content">
                 <div className="editor-container">
                   <div className="editor-header">
-                    <h3>Content</h3>
+                    <h3>Konten</h3>
                     <div className="editor-tabs">
                       <button className="editor-tab active">Edit</button>
-                      <button className="editor-tab">Preview</button>
+                      <button className="editor-tab">Pratinjau</button>
                     </div>
                   </div>
                   <div className="editor-preview-container">
@@ -1264,7 +1270,7 @@ const ManageArticles = () => {
             <div className="search-box">
               <input
                 type="text"
-                placeholder="Search articles..."
+                placeholder="Cari artikel..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -1275,7 +1281,7 @@ const ManageArticles = () => {
                 value={filterCategory}
                 onChange={(e) => setFilterCategory(e.target.value)}
               >
-                <option value="">All Categories</option>
+                <option value="">Semua Kategori</option>
                 {categories.map((category) => (
                   <option key={category.id} value={category.id}>
                     {category.name}
@@ -1286,34 +1292,34 @@ const ManageArticles = () => {
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
               >
-                <option value="">All Statuses</option>
-                <option value="published">Published</option>
+                <option value="">Semua Status</option>
+                <option value="published">Dipublikasikan</option>
                 <option value="draft">Draft</option>
-                <option value="scheduled">Scheduled</option>
+                <option value="scheduled">Dijadwalkan</option>
               </select>
             </div>
           </div>
           {selectedArticles.length > 0 && (
             <div className="bulk-actions">
-              <span>{selectedArticles.length} articles selected</span>
+              <span>{selectedArticles.length} artikel dipilih</span>
               <div className="action-buttons">
                 <button
                   className="action-button"
                   onClick={() => handleBulkAction("publish")}
                 >
-                  Publish
+                  Publikasikan
                 </button>
                 <button
                   className="action-button"
                   onClick={() => handleBulkAction("draft")}
                 >
-                  Move to Draft
+                  Pindahkan ke Draft
                 </button>
                 <button
                   className="action-button danger-button"
                   onClick={() => handleBulkAction("delete")}
                 >
-                  Delete
+                  Hapus
                 </button>
               </div>
             </div>
@@ -1332,12 +1338,12 @@ const ManageArticles = () => {
                       onChange={toggleSelectAll}
                     />
                   </th>
-                  <th className="image-column">Image</th>
+                  <th className="image-column">Gambar</th>
                   <th
                     className={`sortable ${sortField === "title" ? "sorted" : ""}`}
                     onClick={() => handleSort("title")}
                   >
-                    Title
+                    Judul
                     {sortField === "title" && (
                       <i
                         className={`fas fa-sort-${
@@ -1350,7 +1356,7 @@ const ManageArticles = () => {
                     className={`sortable ${sortField === "author" ? "sorted" : ""}`}
                     onClick={() => handleSort("author")}
                   >
-                    Author
+                    Penulis
                     {sortField === "author" && (
                       <i
                         className={`fas fa-sort-${
@@ -1365,7 +1371,7 @@ const ManageArticles = () => {
                     }`}
                     onClick={() => handleSort("category")}
                   >
-                    Category
+                    Kategori
                     {sortField === "category" && (
                       <i
                         className={`fas fa-sort-${
@@ -1374,7 +1380,7 @@ const ManageArticles = () => {
                       ></i>
                     )}
                   </th>
-                  <th>Tags</th>
+                  <th>Tag</th>
                   <th
                     className={`sortable ${sortField === "status" ? "sorted" : ""}`}
                     onClick={() => handleSort("status")}
@@ -1394,7 +1400,7 @@ const ManageArticles = () => {
                     }`}
                     onClick={() => handleSort("publishDate")}
                   >
-                    Published
+                    Dipublikasikan
                     {sortField === "publishDate" && (
                       <i
                         className={`fas fa-sort-${
@@ -1403,7 +1409,7 @@ const ManageArticles = () => {
                       ></i>
                     )}
                   </th>
-                  <th>Actions</th>
+                  <th>Tindakan</th>
                 </tr>
               </thead>
               <tbody>
@@ -1432,7 +1438,7 @@ const ManageArticles = () => {
                             alt={article.title}
                           />
                         ) : (
-                          <div className="no-image">No Image</div>
+                          <div className="no-image">Tidak Ada Gambar</div>
                         )}
                       </td>
                       <td className="title-column">
@@ -1455,14 +1461,19 @@ const ManageArticles = () => {
                       </td>
                       <td>
                         <span className={`status-badge ${article.status}`}>
-                          {article.status.charAt(0).toUpperCase() +
-                            article.status.slice(1)}
+                          {article.status === "published"
+                            ? "Dipublikasikan"
+                            : article.status === "draft"
+                            ? "Draft"
+                            : article.status === "scheduled"
+                            ? "Dijadwalkan"
+                            : article.status}
                         </span>
                       </td>
                       <td>
                         {article.publishDate
                           ? new Date(article.publishDate).toLocaleDateString()
-                          : "Not published"}
+                          : "Belum dipublikasikan"}
                       </td>
                       <td className="actions-column">
                         <button
@@ -1490,42 +1501,42 @@ const ManageArticles = () => {
         </>
       )}
 
-      {/* Confirmation Dialog */}
+      {/* Dialog Konfirmasi */}
       {confirmationAction && (
         <div className="confirmation-dialog">
           <div className="confirmation-content">
-            <h3>Confirm Action</h3>
+            <h3>Konfirmasi Tindakan</h3>
             <p>
               {confirmationAction.type === "delete"
-                ? `Are you sure you want to delete ${selectedArticles.length} article(s)?`
-                : `Are you sure you want to ${confirmationAction.type} ${selectedArticles.length} article(s)?`}
+                ? `Apakah Anda yakin ingin menghapus ${selectedArticles.length} artikel?`
+                : `Apakah Anda yakin ingin ${
+                    confirmationAction.type === "publish" ? "mempublikasikan" : "memindahkan ke draft"
+                  } ${selectedArticles.length} artikel?`}
             </p>
             <div className="confirmation-actions">
               <button
                 className="action-button"
                 onClick={() => setConfirmationAction(null)}
               >
-                Cancel
+                Batal
               </button>
               <button
                 className={`action-button ${
-                  confirmationAction.type === "delete"
-                    ? "danger-button"
-                    : "primary-button"
+                  confirmationAction.type === "delete" ? "danger-button" : "primary-button"
                 }`}
                 onClick={() => {
                   confirmationAction.callback()
                   setConfirmationAction(null)
                 }}
               >
-                Confirm
+                Konfirmasi
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Media Library */}
+      {/* Perpustakaan Media */}
       {showMediaLibrary && (
         <div className="media-library-overlay">
           <MediaLibrary
@@ -1536,7 +1547,7 @@ const ManageArticles = () => {
         </div>
       )}
 
-      {/* Success Notification */}
+      {/* Notifikasi Sukses */}
       <AnimatePresence>
         {showConfirmation && (
           <motion.div
@@ -1546,7 +1557,7 @@ const ManageArticles = () => {
             exit={{ opacity: 0, y: 50 }}
           >
             <i className="fas fa-check-circle"></i>
-            <span>Changes saved successfully!</span>
+            <span>Perubahan berhasil disimpan!</span>
           </motion.div>
         )}
       </AnimatePresence>
