@@ -31,7 +31,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: url("/placeholder.svg?height=400&width=1200&query=abstract%20green%20pattern");
+    background-image: url("/public/placeholder.svg?height=400&width=1200&query=abstract%20green%20pattern");
     background-size: cover;
     background-position: center;
     opacity: 0.1;
