@@ -13,8 +13,8 @@ const mockArticleData = {
   date: "12 Mei 2023",
   readingTime: "8 menit",
   heroImage: "/emerald-canopy.png",
-  category: "Sustainability",
-  tags: ["eco-friendly", "carbon footprint", "sustainable living"],
+  category: "Keberlanjutan",
+  tags: ["ramah-lingkungan", "jejak-karbon", "hidup-berkelanjutan"],
   content: `
     <h2 id="section-introduction">Pendahuluan</h2>
     <p>Perubahan iklim menjadi salah satu tantangan terbesar yang dihadapi planet kita. Setiap produk yang kita beli dan gunakan memiliki dampak lingkungan, atau yang sering disebut sebagai "jejak karbon". Artikel ini akan membahas bagaimana beralih ke produk ramah lingkungan dapat secara signifikan mengurangi jejak karbon personal Anda.</p>
@@ -418,7 +418,7 @@ const ArticleDetail = () => {
   const shareHighlightedText = (platform) => {
     if (!selectedText) return
 
-    const shareText = encodeURIComponent(`"${selectedText.text}" - From article: ${article.title}`)
+    const shareText = encodeURIComponent(`"${selectedText.text}" - Dari artikel: ${article.title}`)
     let shareUrl
 
     switch (platform) {
@@ -432,8 +432,8 @@ const ArticleDetail = () => {
         shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`
         break
       case "copy":
-        navigator.clipboard.writeText(`"${selectedText.text}" - From article: ${article.title} ${window.location.href}`)
-        alert("Text copied to clipboard!")
+        navigator.clipboard.writeText(`"${selectedText.text}" - Dari artikel: ${article.title} ${window.location.href}`)
+        alert("Teks disalin ke clipboard!")
         setSelectedText(null)
         return
       default:
@@ -451,7 +451,7 @@ const ArticleDetail = () => {
 
     const newCommentObj = {
       id: `c${comments.length + 1}`,
-      user: "You",
+      user: "Anda",
       avatar: "/serene-gaze.png",
       date: new Date().toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" }),
       content: newComment,
@@ -477,13 +477,13 @@ const ArticleDetail = () => {
     return (
       <div className="article-loading">
         <div className="loading-spinner"></div>
-        <p>Loading article...</p>
+        <p>Memuat artikel...</p>
       </div>
     )
   }
 
   if (!article) {
-    return <div className="article-error">Article not found</div>
+    return <div className="article-error">Artikel tidak ditemukan</div>
   }
 
   return (
@@ -571,7 +571,7 @@ const ArticleDetail = () => {
 
           {/* Article Tags */}
           <div className="article-footer-tags">
-            <h3>Tags:</h3>
+            <h3>Tag:</h3>
             <div className="tags-container">
               {article.tags.map((tag, index) => (
                 <Link key={index} to={`/articles/tag/${tag}`} className="tag-link">
