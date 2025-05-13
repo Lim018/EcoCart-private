@@ -1,79 +1,89 @@
 "use client"
 
-import React, { useState, useCallback } from "react"
+import { useState, useCallback } from "react"
 import { DndContext, closestCenter, useSensor, useSensors, PointerSensor } from "@dnd-kit/core"
 import { SortableContext, useSortable, arrayMove, rectSortingStrategy } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import { motion, AnimatePresence } from "framer-motion"
 import "../styles/ManageProducts.css"
 
-// Mock data for products
+// Format harga dalam Rupiah
+const formatPrice = (price) => {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(price * 15000) // Konversi USD ke IDR
+}
+
+// Data contoh untuk produk
 const initialProducts = [
   {
     id: 1,
-    name: "Bamboo Toothbrush Set",
+    name: "Set Sikat Gigi Bambu",
     category: "personal-care",
     price: 12.99,
     stock: 150,
-    tags: ["bathroom", "eco-friendly", "plastic-free"],
+    tags: ["kamar-mandi", "ramah-lingkungan", "bebas-plastik"],
     images: ["/bamboo-toothbrush-set.png"],
-    description: "Set of 4 eco-friendly bamboo toothbrushes with charcoal-infused bristles.",
+    description: "Set 4 sikat gigi bambu ramah lingkungan dengan bulu sikat yang mengandung arang.",
     specifications: {
-      material: "Bamboo",
+      material: "Bambu",
       dimensions: "19cm x 2cm x 2cm",
       weight: "15g",
-      packaging: "Recyclable cardboard",
+      packaging: "Kardus daur ulang",
     },
     featured: true,
     status: "active",
   },
   {
     id: 2,
-    name: "Organic Cotton T-Shirt",
+    name: "Kaos Katun Organik",
     category: "clothing",
     price: 24.99,
     stock: 75,
-    tags: ["apparel", "organic", "fair-trade"],
+    tags: ["pakaian", "organik", "fair-trade"],
     images: ["/organic-cotton-tshirt.png"],
-    description: "Soft, comfortable t-shirt made from 100% organic cotton.",
+    description: "Kaos lembut dan nyaman yang terbuat dari 100% katun organik.",
     specifications: {
-      material: "100% Organic Cotton",
+      material: "100% Katun Organik",
       sizes: ["S", "M", "L", "XL"],
-      colors: ["Natural", "Blue", "Green"],
-      certification: "GOTS Certified",
+      colors: ["Natural", "Biru", "Hijau"],
+      certification: "Bersertifikat GOTS",
     },
     featured: false,
     status: "active",
   },
   {
     id: 3,
-    name: "Reusable Produce Bags",
+    name: "Kantong Belanja Reusable",
     category: "kitchen",
     price: 15.99,
     stock: 200,
-    tags: ["kitchen", "shopping", "zero-waste"],
+    tags: ["dapur", "belanja", "zero-waste"],
     images: ["/reusable-produce-bags.png"],
-    description: "Set of 5 mesh bags for grocery shopping, perfect for fruits and vegetables.",
+    description: "Set 5 kantong jaring untuk belanja bahan makanan, sempurna untuk buah dan sayuran.",
     specifications: {
-      material: "Organic Cotton Mesh",
-      dimensions: "Various sizes",
-      weight: "10g per bag",
-      washable: "Machine washable",
+      material: "Jaring Katun Organik",
+      dimensions: "Berbagai ukuran",
+      weight: "10g per kantong",
+      washable: "Dapat dicuci dengan mesin",
     },
     featured: true,
     status: "active",
   },
   {
     id: 4,
-    name: "Solar Power Bank",
+    name: "Power Bank Tenaga Surya",
     category: "electronics",
     price: 39.99,
     stock: 50,
-    tags: ["tech", "solar", "travel"],
+    tags: ["teknologi", "tenaga-surya", "travel"],
     images: ["/solar-power-bank.png"],
-    description: "Portable charger with solar panels for eco-friendly charging on the go.",
+    description: "Pengisi daya portabel dengan panel surya untuk pengisian ramah lingkungan saat bepergian.",
     specifications: {
-      capacity: "10,000 mAh",
+      capacity: "10.000 mAh",
       inputs: "USB-C, Solar",
       outputs: "2x USB-A",
       dimensions: "14cm x 7cm x 1.5cm",
@@ -83,64 +93,65 @@ const initialProducts = [
   },
   {
     id: 5,
-    name: "Beeswax Food Wraps",
+    name: "Pembungkus Makanan Beeswax",
     category: "kitchen",
     price: 18.99,
     stock: 120,
-    tags: ["kitchen", "food-storage", "plastic-free"],
+    tags: ["dapur", "penyimpanan-makanan", "bebas-plastik"],
     images: ["/beeswax-food-wraps.png"],
-    description: "Reusable food wraps made from organic cotton and beeswax. A sustainable alternative to plastic wrap.",
+    description:
+      "Pembungkus makanan reusable yang terbuat dari katun organik dan lilin lebah. Alternatif berkelanjutan untuk plastik pembungkus.",
     specifications: {
-      material: "Organic Cotton, Beeswax, Jojoba Oil",
+      material: "Katun Organik, Lilin Lebah, Minyak Jojoba",
       sizes: ["S", "M", "L"],
-      quantity: "Set of 3",
-      washable: "Hand wash with cold water",
+      quantity: "Set isi 3",
+      washable: "Cuci tangan dengan air dingin",
     },
     featured: true,
     status: "active",
   },
 ]
 
-// Available product categories
+// Kategori produk yang tersedia
 const categories = [
-  { id: "personal-care", name: "Personal Care" },
-  { id: "clothing", name: "Clothing" },
-  { id: "kitchen", name: "Kitchen" },
-  { id: "electronics", name: "Electronics" },
-  { id: "home", name: "Home" },
-  { id: "outdoor", name: "Outdoor" },
+  { id: "personal-care", name: "Perawatan Pribadi" },
+  { id: "clothing", name: "Pakaian" },
+  { id: "kitchen", name: "Dapur" },
+  { id: "electronics", name: "Elektronik" },
+  { id: "home", name: "Rumah" },
+  { id: "outdoor", name: "Luar Ruangan" },
 ]
 
-// Available tags for autocomplete
+// Tag yang tersedia untuk autocomplete
 const availableTags = [
-  "bathroom",
-  "eco-friendly",
-  "plastic-free",
-  "apparel",
-  "organic",
+  "kamar-mandi",
+  "ramah-lingkungan",
+  "bebas-plastik",
+  "pakaian",
+  "organik",
   "fair-trade",
-  "kitchen",
-  "shopping",
+  "dapur",
+  "belanja",
   "zero-waste",
-  "tech",
-  "solar",
+  "teknologi",
+  "tenaga-surya",
   "travel",
-  "food-storage",
+  "penyimpanan-makanan",
   "reusable",
-  "sustainable",
+  "berkelanjutan",
   "biodegradable",
-  "compostable",
-  "recycled",
+  "dapat-dikompos",
+  "daur-ulang",
   "vegan",
-  "cruelty-free",
-  "natural",
-  "handmade",
-  "local",
-  "ethical",
-  "minimalist",
+  "bebas-kekejaman",
+  "alami",
+  "buatan-tangan",
+  "lokal",
+  "etis",
+  "minimalis",
 ]
 
-// Draggable image component
+// Komponen gambar yang dapat diseret
 const DraggableImage = ({ image, index, removeImage }) => {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: `image-${index}` })
   const style = {
@@ -151,16 +162,12 @@ const DraggableImage = ({ image, index, removeImage }) => {
 
   return (
     <div ref={setNodeRef} style={style} className="product-image-preview">
-      <img src={image || "/placeholder.svg"} alt={`Product ${index + 1}`} />
+      <img src={image || "/placeholder.svg"} alt={`Produk ${index + 1}`} />
       <div className="image-overlay">
-        <button className="image-action-btn" {...attributes} {...listeners} title="Drag to reorder">
+        <button className="image-action-btn" {...attributes} {...listeners} title="Seret untuk mengatur ulang">
           <i className="fas fa-arrows-alt"></i>
         </button>
-        <button
-          className="image-action-btn danger"
-          onClick={() => removeImage(index)}
-          title="Delete image"
-        >
+        <button className="image-action-btn danger" onClick={() => removeImage(index)} title="Hapus gambar">
           <i className="fas fa-trash-alt"></i>
         </button>
       </div>
@@ -168,7 +175,7 @@ const DraggableImage = ({ image, index, removeImage }) => {
   )
 }
 
-// Tag selector component
+// Komponen pemilih tag
 const TagSelector = ({ selectedTags, setSelectedTags }) => {
   const [inputValue, setInputValue] = useState("")
   const [suggestions, setSuggestions] = useState([])
@@ -208,13 +215,7 @@ const TagSelector = ({ selectedTags, setSelectedTags }) => {
       <div className="selected-tags">
         <AnimatePresence>
           {selectedTags.map((tag, index) => (
-            <motion.div
-              key={index}
-              className="tag"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0 }}
-            >
+            <motion.div key={index} className="tag" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
               <span>{tag}</span>
               <button onClick={() => removeTag(tag)}>×</button>
             </motion.div>
@@ -226,7 +227,7 @@ const TagSelector = ({ selectedTags, setSelectedTags }) => {
           type="text"
           value={inputValue}
           onChange={handleInputChange}
-          placeholder="Add tags..."
+          placeholder="Tambahkan tag..."
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               e.preventDefault()
@@ -238,11 +239,7 @@ const TagSelector = ({ selectedTags, setSelectedTags }) => {
         {showSuggestions && suggestions.length > 0 && (
           <div className="tag-suggestions">
             {suggestions.map((suggestion, index) => (
-              <div
-                key={index}
-                className="tag-suggestion"
-                onClick={() => addTag(suggestion)}
-              >
+              <div key={index} className="tag-suggestion" onClick={() => addTag(suggestion)}>
                 {suggestion}
               </div>
             ))}
@@ -253,24 +250,22 @@ const TagSelector = ({ selectedTags, setSelectedTags }) => {
   )
 }
 
-// Image uploader component
+// Komponen pengunggah gambar
 const ImageUploader = ({ images, setImages }) => {
   const sensors = useSensors(useSensor(PointerSensor))
 
   const onDrop = useCallback(
     (acceptedFiles) => {
-      // Validate and convert files to image URLs
-      const validImages = acceptedFiles.filter((file) =>
-        ["image/jpeg", "image/png", "image/gif"].includes(file.type)
-      )
+      // Validasi dan konversi file ke URL gambar
+      const validImages = acceptedFiles.filter((file) => ["image/jpeg", "image/png", "image/gif"].includes(file.type))
       if (validImages.length === 0) {
-        alert("Please upload valid image files (JPEG, PNG, GIF).")
+        alert("Silakan unggah file gambar yang valid (JPEG, PNG, GIF).")
         return
       }
       const newImages = validImages.map((file) => URL.createObjectURL(file))
       setImages([...images, ...newImages])
     },
-    [images, setImages]
+    [images, setImages],
   )
 
   const removeImage = (index) => {
@@ -304,8 +299,8 @@ const ImageUploader = ({ images, setImages }) => {
         />
         <div className="dropzone-content">
           <i className="fas fa-cloud-upload-alt"></i>
-          <p>Drag & drop images here or click to browse</p>
-          <p className="dropzone-note">(JPEG, PNG, GIF only)</p>
+          <p>Seret & lepas gambar di sini atau klik untuk menjelajah</p>
+          <p className="dropzone-note">(JPEG, PNG, GIF saja)</p>
         </div>
       </div>
 
@@ -325,12 +320,8 @@ const ImageUploader = ({ images, setImages }) => {
                   </motion.div>
                 ))
               ) : (
-                <motion.div
-                  className="empty-previews"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                >
-                  <p>No images uploaded yet.</p>
+                <motion.div className="empty-previews" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                  <p>Belum ada gambar yang diunggah.</p>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -341,9 +332,9 @@ const ImageUploader = ({ images, setImages }) => {
   )
 }
 
-// Product form component
+// Komponen formulir produk
 const ProductForm = ({ product, setProduct, categories }) => {
-  // Get fields based on category
+  // Dapatkan bidang berdasarkan kategori
   const getCategoryFields = () => {
     switch (product.category) {
       case "personal-care":
@@ -363,7 +354,7 @@ const ProductForm = ({ product, setProduct, categories }) => {
               />
             </div>
             <div className="form-group">
-              <label>Ingredients</label>
+              <label>Bahan</label>
               <textarea
                 value={product.specifications?.ingredients || ""}
                 onChange={(e) =>
@@ -375,7 +366,7 @@ const ProductForm = ({ product, setProduct, categories }) => {
               />
             </div>
             <div className="form-group">
-              <label>Certifications</label>
+              <label>Sertifikasi</label>
               <input
                 type="text"
                 value={product.specifications?.certification || ""}
@@ -406,7 +397,7 @@ const ProductForm = ({ product, setProduct, categories }) => {
               />
             </div>
             <div className="form-group">
-              <label>Sizes</label>
+              <label>Ukuran</label>
               <div className="checkbox-group">
                 {["XS", "S", "M", "L", "XL", "XXL"].map((size) => (
                   <label key={size} className="checkbox-label">
@@ -434,9 +425,9 @@ const ProductForm = ({ product, setProduct, categories }) => {
               </div>
             </div>
             <div className="form-group">
-              <label>Colors</label>
+              <label>Warna</label>
               <div className="color-selector">
-                {["Natural", "Black", "White", "Blue", "Green", "Red"].map((color) => (
+                {["Natural", "Hitam", "Putih", "Biru", "Hijau", "Merah"].map((color) => (
                   <div
                     key={color}
                     className={`color-option ${(product.specifications?.colors || []).includes(color) ? "selected" : ""}`}
@@ -480,7 +471,7 @@ const ProductForm = ({ product, setProduct, categories }) => {
               />
             </div>
             <div className="form-group">
-              <label>Dimensions</label>
+              <label>Dimensi</label>
               <input
                 type="text"
                 value={product.specifications?.dimensions || ""}
@@ -493,7 +484,7 @@ const ProductForm = ({ product, setProduct, categories }) => {
               />
             </div>
             <div className="form-group">
-              <label>Care Instructions</label>
+              <label>Petunjuk Perawatan</label>
               <textarea
                 value={product.specifications?.careInstructions || ""}
                 onChange={(e) =>
@@ -510,7 +501,7 @@ const ProductForm = ({ product, setProduct, categories }) => {
         return (
           <div className="category-specific-fields">
             <div className="form-group">
-              <label>Power Source</label>
+              <label>Sumber Daya</label>
               <select
                 value={product.specifications?.powerSource || ""}
                 onChange={(e) =>
@@ -520,16 +511,16 @@ const ProductForm = ({ product, setProduct, categories }) => {
                   })
                 }
               >
-                <option value="">Select Power Source</option>
-                <option value="Solar">Solar</option>
-                <option value="Battery">Battery</option>
+                <option value="">Pilih Sumber Daya</option>
+                <option value="Solar">Tenaga Surya</option>
+                <option value="Battery">Baterai</option>
                 <option value="USB">USB</option>
                 <option value="AC">AC</option>
-                <option value="Multiple">Multiple</option>
+                <option value="Multiple">Beberapa</option>
               </select>
             </div>
             <div className="form-group">
-              <label>Technical Specifications</label>
+              <label>Spesifikasi Teknis</label>
               <textarea
                 value={product.specifications?.technical || ""}
                 onChange={(e) =>
@@ -541,7 +532,7 @@ const ProductForm = ({ product, setProduct, categories }) => {
               />
             </div>
             <div className="form-group">
-              <label>Warranty (months)</label>
+              <label>Garansi (bulan)</label>
               <input
                 type="number"
                 value={product.specifications?.warranty || ""}
@@ -563,7 +554,7 @@ const ProductForm = ({ product, setProduct, categories }) => {
   return (
     <div className="product-form">
       <div className="form-group">
-        <label>Product Name</label>
+        <label>Nama Produk</label>
         <input
           type="text"
           value={product.name}
@@ -573,13 +564,13 @@ const ProductForm = ({ product, setProduct, categories }) => {
       </div>
 
       <div className="form-group">
-        <label>Category</label>
+        <label>Kategori</label>
         <select
           value={product.category}
           onChange={(e) => setProduct({ ...product, category: e.target.value })}
           required
         >
-          <option value="">Select Category</option>
+          <option value="">Pilih Kategori</option>
           {categories.map((category) => (
             <option key={category.id} value={category.id}>
               {category.name}
@@ -589,7 +580,7 @@ const ProductForm = ({ product, setProduct, categories }) => {
       </div>
 
       <div className="form-group">
-        <label>Price ($)</label>
+        <label>Harga (Rp)</label>
         <input
           type="number"
           step="0.01"
@@ -600,7 +591,7 @@ const ProductForm = ({ product, setProduct, categories }) => {
       </div>
 
       <div className="form-group">
-        <label>Stock</label>
+        <label>Stok</label>
         <input
           type="number"
           value={product.stock || ""}
@@ -609,7 +600,7 @@ const ProductForm = ({ product, setProduct, categories }) => {
       </div>
 
       <div className="form-group">
-        <label>Description</label>
+        <label>Deskripsi</label>
         <textarea
           value={product.description}
           onChange={(e) => setProduct({ ...product, description: e.target.value })}
@@ -617,17 +608,17 @@ const ProductForm = ({ product, setProduct, categories }) => {
       </div>
 
       <div className="form-group">
-        <label>Tags</label>
+        <label>Tag</label>
         <TagSelector selectedTags={product.tags} setSelectedTags={(tags) => setProduct({ ...product, tags })} />
       </div>
 
       <div className="form-group">
-        <label>Images</label>
+        <label>Gambar</label>
         <ImageUploader images={product.images} setImages={(images) => setProduct({ ...product, images })} />
       </div>
 
       <div className="form-group">
-        <label>Featured</label>
+        <label>Produk Unggulan</label>
         <input
           type="checkbox"
           checked={product.featured}
@@ -637,19 +628,16 @@ const ProductForm = ({ product, setProduct, categories }) => {
 
       <div className="form-group">
         <label>Status</label>
-        <select
-          value={product.status}
-          onChange={(e) => setProduct({ ...product, status: e.target.value })}
-        >
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
-          <option value="out-of-stock">Out of Stock</option>
+        <select value={product.status} onChange={(e) => setProduct({ ...product, status: e.target.value })}>
+          <option value="active">Aktif</option>
+          <option value="inactive">Tidak Aktif</option>
+          <option value="out-of-stock">Stok Habis</option>
         </select>
       </div>
 
       {product.category && (
         <div className="form-group">
-          <label>Category-Specific Details</label>
+          <label>Detail Khusus Kategori</label>
           {getCategoryFields()}
         </div>
       )}
@@ -657,7 +645,7 @@ const ProductForm = ({ product, setProduct, categories }) => {
   )
 }
 
-// Main component
+// Komponen utama
 const ManageProducts = () => {
   const [products, setProducts] = useState(initialProducts)
   const [selectedProducts, setSelectedProducts] = useState([])
@@ -674,7 +662,7 @@ const ManageProducts = () => {
   const [sortDirection, setSortDirection] = useState("asc")
   const [errors, setErrors] = useState({})
 
-  // Filter and sort products
+  // Filter dan urutkan produk
   const filteredProducts = products
     .filter((product) => {
       const matchesSearch =
@@ -703,7 +691,7 @@ const ManageProducts = () => {
       }
     })
 
-  // Handle sort change
+  // Tangani perubahan pengurutan
   const handleSort = (field) => {
     if (sortField === field) {
       setSortDirection(sortDirection === "asc" ? "desc" : "asc")
@@ -713,7 +701,7 @@ const ManageProducts = () => {
     }
   }
 
-  // Handle product selection
+  // Tangani pemilihan produk
   const toggleProductSelection = (productId) => {
     if (selectedProducts.includes(productId)) {
       setSelectedProducts(selectedProducts.filter((id) => id !== productId))
@@ -722,7 +710,7 @@ const ManageProducts = () => {
     }
   }
 
-  // Handle select all
+  // Tangani pilih semua
   const toggleSelectAll = () => {
     if (selectedProducts.length === filteredProducts.length) {
       setSelectedProducts([])
@@ -731,14 +719,14 @@ const ManageProducts = () => {
     }
   }
 
-  // Handle edit product
+  // Tangani edit produk
   const handleEditProduct = (product) => {
     setEditingProduct({ ...product, specifications: { ...product.specifications } })
     setIsEditing(true)
     setErrors({})
   }
 
-  // Handle new product
+  // Tangani produk baru
   const handleNewProduct = () => {
     setEditingProduct({
       id: null,
@@ -757,16 +745,16 @@ const ManageProducts = () => {
     setErrors({})
   }
 
-  // Validate product
+  // Validasi produk
   const validateProduct = (product) => {
     const newErrors = {}
-    if (!product.name.trim()) newErrors.name = "Product name is required"
-    if (!product.category) newErrors.category = "Category is required"
-    if (!product.price || product.price <= 0) newErrors.price = "Valid price is required"
+    if (!product.name.trim()) newErrors.name = "Nama produk wajib diisi"
+    if (!product.category) newErrors.category = "Kategori wajib diisi"
+    if (!product.price || product.price <= 0) newErrors.price = "Harga yang valid wajib diisi"
     return newErrors
   }
 
-  // Handle save product
+  // Tangani simpan produk
   const handleSaveProduct = () => {
     const validationErrors = validateProduct(editingProduct)
     if (Object.keys(validationErrors).length > 0) {
@@ -774,15 +762,15 @@ const ManageProducts = () => {
       return
     }
 
-    // Save to undo stack
+    // Simpan ke tumpukan undo
     setUndoStack([...undoStack, [...products]])
     setRedoStack([])
 
     if (editingProduct.id) {
-      // Update existing product
+      // Perbarui produk yang ada
       setProducts(products.map((p) => (p.id === editingProduct.id ? editingProduct : p)))
     } else {
-      // Add new product
+      // Tambahkan produk baru
       const newProduct = {
         ...editingProduct,
         id: Math.max(...products.map((p) => p.id)) + 1,
@@ -794,24 +782,24 @@ const ManageProducts = () => {
     setEditingProduct(null)
     setErrors({})
 
-    // Show confirmation
+    // Tampilkan konfirmasi
     setShowConfirmation(true)
     setTimeout(() => setShowConfirmation(false), 3000)
   }
 
-  // Handle cancel edit
+  // Tangani batal edit
   const handleCancelEdit = () => {
     setIsEditing(false)
     setEditingProduct(null)
     setErrors({})
   }
 
-  // Handle bulk actions
+  // Tangani tindakan massal
   const handleBulkAction = (action) => {
     setConfirmationAction({
       type: action,
       callback: () => {
-        // Save to undo stack
+        // Simpan ke tumpukan undo
         setUndoStack([...undoStack, [...products]])
         setRedoStack([])
 
@@ -820,25 +808,16 @@ const ManageProducts = () => {
             setProducts(products.filter((p) => !selectedProducts.includes(p.id)))
             break
           case "active":
-            setProducts(
-              products.map((p) =>
-                selectedProducts.includes(p.id) ? { ...p, status: "active" } : p
-              )
-            )
+            setProducts(products.map((p) => (selectedProducts.includes(p.id) ? { ...p, status: "active" } : p)))
             break
           case "inactive":
-            setProducts(
-              products.map((p) =>
-                selectedProducts.includes(p.id) ? { ...p, status: "inactive" } : p
-              )
-            )
+            setProducts(products.map((p) => (selectedProducts.includes(p.id) ? { ...p, status: "inactive" } : p)))
             break
           case "feature":
-            setProducts(
-              products.map((p) =>
-                selectedProducts.includes(p.id) ? { ...p, featured: true } : p
-              )
-            )
+            setProducts(products.map((p) => (selectedProducts.includes(p.id) ? { ...p, featured: true } : p)))
+            break
+          case "unfeature":
+            setProducts(products.map((p) => (selectedProducts.includes(p.id) ? { ...p, featured: false } : p)))
             break
           default:
             break
@@ -851,7 +830,7 @@ const ManageProducts = () => {
     })
   }
 
-  // Handle undo/redo
+  // Tangani undo/redo
   const handleUndo = () => {
     if (undoStack.length > 0) {
       const prevState = undoStack[undoStack.length - 1]
@@ -873,24 +852,16 @@ const ManageProducts = () => {
   return (
     <div className="manage-products-container">
       <div className="admin-header">
-        <h1>Manage Products</h1>
+        <h1>Kelola Produk</h1>
         <div className="admin-actions">
-          <button
-            className="action-button undo-button"
-            disabled={undoStack.length === 0}
-            onClick={handleUndo}
-          >
-            <i className="fas fa-undo"></i> Undo
+          <button className="action-button undo-button" disabled={undoStack.length === 0} onClick={handleUndo}>
+            <i className="fas fa-undo"></i> Batalkan
           </button>
-          <button
-            className="action-button redo-button"
-            disabled={redoStack.length === 0}
-            onClick={handleRedo}
-          >
-            <i className="fas fa-redo"></i> Redo
+          <button className="action-button redo-button" disabled={redoStack.length === 0} onClick={handleRedo}>
+            <i className="fas fa-redo"></i> Ulangi
           </button>
           <button className="action-button primary-button" onClick={handleNewProduct}>
-            <i className="fas fa-plus"></i> Add Product
+            <i className="fas fa-plus"></i> Tambah Produk
           </button>
         </div>
       </div>
@@ -898,13 +869,13 @@ const ManageProducts = () => {
       {isEditing ? (
         <div className="edit-product-panel">
           <div className="panel-header">
-            <h2>{editingProduct.id ? "Edit Product" : "New Product"}</h2>
+            <h2>{editingProduct.id ? "Edit Produk" : "Produk Baru"}</h2>
             <div className="panel-actions">
               <button className="action-button" onClick={handleCancelEdit}>
-                Cancel
+                Batal
               </button>
               <button className="action-button primary-button" onClick={handleSaveProduct}>
-                Save Product
+                Simpan Produk
               </button>
             </div>
           </div>
@@ -919,11 +890,7 @@ const ManageProducts = () => {
                 ))}
               </div>
             )}
-            <ProductForm
-              product={editingProduct}
-              setProduct={setEditingProduct}
-              categories={categories}
-            />
+            <ProductForm product={editingProduct} setProduct={setEditingProduct} categories={categories} />
           </div>
         </div>
       ) : (
@@ -932,7 +899,7 @@ const ManageProducts = () => {
             <div className="search-box">
               <input
                 type="text"
-                placeholder="Search products..."
+                placeholder="Cari produk..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -940,11 +907,8 @@ const ManageProducts = () => {
             </div>
 
             <div className="filter-options">
-              <select
-                value={filterCategory}
-                onChange={(e) => setFilterCategory(e.target.value)}
-              >
-                <option value="">All Categories</option>
+              <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)}>
+                <option value="">Semua Kategori</option>
                 {categories.map((category) => (
                   <option key={category.id} value={category.id}>
                     {category.name}
@@ -952,45 +916,33 @@ const ManageProducts = () => {
                 ))}
               </select>
 
-              <select
-                value={filterStatus}
-                onChange={(e) => setFilterStatus(e.target.value)}
-              >
-                <option value="">All Statuses</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-                <option value="out-of-stock">Out of Stock</option>
+              <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
+                <option value="">Semua Status</option>
+                <option value="active">Aktif</option>
+                <option value="inactive">Tidak Aktif</option>
+                <option value="out-of-stock">Stok Habis</option>
               </select>
             </div>
           </div>
 
           {selectedProducts.length > 0 && (
             <div className="bulk-actions">
-              <span>{selectedProducts.length} products selected</span>
+              <span>{selectedProducts.length} produk dipilih</span>
               <div className="action-buttons">
-                <button
-                  className="action-button"
-                  onClick={() => handleBulkAction("active")}
-                >
-                  Set Active
+                <button className="action-button" onClick={() => handleBulkAction("active")}>
+                  Aktifkan
                 </button>
-                <button
-                  className="action-button"
-                  onClick={() => handleBulkAction("inactive")}
-                >
-                  Set Inactive
+                <button className="action-button" onClick={() => handleBulkAction("inactive")}>
+                  Nonaktifkan
                 </button>
-                <button
-                  className="action-button"
-                  onClick={() => handleBulkAction("feature")}
-                >
-                  Feature
+                <button className="action-button" onClick={() => handleBulkAction("feature")}>
+                  Jadikan Unggulan
                 </button>
-                <button
-                  className="action-button danger-button"
-                  onClick={() => handleBulkAction("delete")}
-                >
-                  Delete
+                <button className="action-button" onClick={() => handleBulkAction("unfeature")}>
+                  Hapus Unggulan
+                </button>
+                <button className="action-button danger-button" onClick={() => handleBulkAction("delete")}>
+                  Hapus
                 </button>
               </div>
             </div>
@@ -1003,81 +955,55 @@ const ManageProducts = () => {
                   <th className="checkbox-column">
                     <input
                       type="checkbox"
-                      checked={
-                        selectedProducts.length === filteredProducts.length &&
-                        filteredProducts.length > 0
-                      }
+                      checked={selectedProducts.length === filteredProducts.length && filteredProducts.length > 0}
                       onChange={toggleSelectAll}
                     />
                   </th>
-                  <th className="image-column">Image</th>
-                  <th
-                    className={`sortable ${sortField === "name" ? "sorted" : ""}`}
-                    onClick={() => handleSort("name")}
-                  >
-                    Name
+                  <th className="image-column">Gambar</th>
+                  <th className={`sortable ${sortField === "name" ? "sorted" : ""}`} onClick={() => handleSort("name")}>
+                    Nama
                     {sortField === "name" && (
-                      <i
-                        className={`fas fa-sort-${
-                          sortDirection === "asc" ? "up" : "down"
-                        }`}
-                      ></i>
+                      <i className={`fas fa-sort-${sortDirection === "asc" ? "up" : "down"}`}></i>
                     )}
                   </th>
                   <th
                     className={`sortable ${sortField === "category" ? "sorted" : ""}`}
                     onClick={() => handleSort("category")}
                   >
-                    Category
+                    Kategori
                     {sortField === "category" && (
-                      <i
-                        className={`fas fa-sort-${
-                          sortDirection === "asc" ? "up" : "down"
-                        }`}
-                      ></i>
+                      <i className={`fas fa-sort-${sortDirection === "asc" ? "up" : "down"}`}></i>
                     )}
                   </th>
                   <th
                     className={`sortable ${sortField === "price" ? "sorted" : ""}`}
                     onClick={() => handleSort("price")}
                   >
-                    Price
+                    Harga
                     {sortField === "price" && (
-                      <i
-                        className={`fas fa-sort-${
-                          sortDirection === "asc" ? "up" : "down"
-                        }`}
-                      ></i>
+                      <i className={`fas fa-sort-${sortDirection === "asc" ? "up" : "down"}`}></i>
                     )}
                   </th>
                   <th
                     className={`sortable ${sortField === "stock" ? "sorted" : ""}`}
                     onClick={() => handleSort("stock")}
                   >
-                    Stock
+                    Stok
                     {sortField === "stock" && (
-                      <i
-                        className={`fas fa-sort-${
-                          sortDirection === "asc" ? "up" : "down"
-                        }`}
-                      ></i>
+                      <i className={`fas fa-sort-${sortDirection === "asc" ? "up" : "down"}`}></i>
                     )}
                   </th>
-                  <th>Tags</th>
+                  <th>Tag</th>
                   <th
                     className={`sortable ${sortField === "status" ? "sorted" : ""}`}
                     onClick={() => handleSort("status")}
                   >
                     Status
                     {sortField === "status" && (
-                      <i
-                        className={`fas fa-sort-${
-                          sortDirection === "asc" ? "up" : "down"
-                        }`}
-                      ></i>
+                      <i className={`fas fa-sort-${sortDirection === "asc" ? "up" : "down"}`}></i>
                     )}
                   </th>
-                  <th>Actions</th>
+                  <th>Tindakan</th>
                 </tr>
               </thead>
               <tbody>
@@ -1099,25 +1025,17 @@ const ManageProducts = () => {
                       </td>
                       <td className="image-column">
                         {product.images[0] ? (
-                          <img
-                            src={product.images[0] || "/placeholder.svg"}
-                            alt={product.name}
-                          />
+                          <img src={product.images[0] || "/placeholder.svg"} alt={product.name} />
                         ) : (
-                          <div className="no-image">No Image</div>
+                          <div className="no-image">Tidak Ada Gambar</div>
                         )}
                       </td>
                       <td className="name-column">
                         <div className="product-name">{product.name}</div>
-                        <div className="product-description">
-                          {product.description.substring(0, 60)}...
-                        </div>
+                        <div className="product-description">{product.description.substring(0, 60)}...</div>
                       </td>
-                      <td>
-                        {categories.find((c) => c.id === product.category)?.name ||
-                          product.category}
-                      </td>
-                      <td>${product.price.toFixed(2)}</td>
+                      <td>{categories.find((c) => c.id === product.category)?.name || product.category}</td>
+                      <td>{formatPrice(product.price)}</td>
                       <td>{product.stock}</td>
                       <td className="tags-column">
                         {product.tags.map((tag, index) => (
@@ -1128,17 +1046,18 @@ const ManageProducts = () => {
                       </td>
                       <td>
                         <span className={`status-badge ${product.status}`}>
-                          {product.status
-                            .split("-")
-                            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                            .join(" ")}
+                          {product.status === "active"
+                            ? "Aktif"
+                            : product.status === "inactive"
+                              ? "Tidak Aktif"
+                              : product.status === "out-of-stock"
+                                ? "Stok Habis"
+                                : product.status}
                         </span>
+                        {product.featured && <span className="featured-badge">Unggulan</span>}
                       </td>
                       <td className="actions-column">
-                        <button
-                          className="action-icon-button"
-                          onClick={() => handleEditProduct(product)}
-                        >
+                        <button className="action-icon-button" onClick={() => handleEditProduct(product)}>
                           <i className="fas fa-edit"></i>
                         </button>
                         <button
@@ -1160,40 +1079,45 @@ const ManageProducts = () => {
         </>
       )}
 
-      {/* Confirmation dialog */}
+      {/* Dialog konfirmasi */}
       {confirmationAction && (
         <div className="confirmation-dialog">
           <div className="confirmation-content">
-            <h3>Confirm Action</h3>
+            <h3>Konfirmasi Tindakan</h3>
             <p>
               {confirmationAction.type === "delete"
-                ? `Are you sure you want to delete ${selectedProducts.length} product(s)?`
-                : `Are you sure you want to set ${selectedProducts.length} product(s) as ${confirmationAction.type}?`}
+                ? `Apakah Anda yakin ingin menghapus ${selectedProducts.length} produk?`
+                : `Apakah Anda yakin ingin ${
+                    confirmationAction.type === "active"
+                      ? "mengaktifkan"
+                      : confirmationAction.type === "inactive"
+                        ? "menonaktifkan"
+                        : confirmationAction.type === "feature"
+                          ? "menjadikan unggulan"
+                          : confirmationAction.type === "unfeature"
+                            ? "menghapus status unggulan"
+                            : confirmationAction.type
+                  } ${selectedProducts.length} produk?`}
             </p>
             <div className="confirmation-actions">
-              <button
-                className="action-button"
-                onClick={() => setConfirmationAction(null)}
-              >
-                Cancel
+              <button className="action-button" onClick={() => setConfirmationAction(null)}>
+                Batal
               </button>
               <button
-                className={`action-button ${
-                  confirmationAction.type === "delete" ? "danger-button" : "primary-button"
-                }`}
+                className={`action-button ${confirmationAction.type === "delete" ? "danger-button" : "primary-button"}`}
                 onClick={() => {
                   confirmationAction.callback()
                   setConfirmationAction(null)
                 }}
               >
-                Confirm
+                Konfirmasi
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Success notification */}
+      {/* Notifikasi sukses */}
       <AnimatePresence>
         {showConfirmation && (
           <motion.div
@@ -1203,7 +1127,7 @@ const ManageProducts = () => {
             exit={{ opacity: 0, y: 50 }}
           >
             <i className="fas fa-check-circle"></i>
-            <span>Changes saved successfully!</span>
+            <span>Perubahan berhasil disimpan!</span>
           </motion.div>
         )}
       </AnimatePresence>
