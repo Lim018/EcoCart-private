@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom"
 import Navbar from "./components/Navbar"
 import Footer from "./components/Footer"
 import LandingPage from "./pages/LandingPage"
+import AboutUs from "./pages/AboutUs"
 import ArticleArchive from "./pages/ArticleArchive"
 import ArticleDetail from "./pages/ArticleDetail"
 import ProductCatalog from "./pages/ProductCatalog"
@@ -23,6 +24,7 @@ function App() {
       <main>
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/about" element={<AboutUs />} />
           <Route path="/articles" element={<ArticleArchive />} />
           <Route path="/articles/:id" element={<ArticleDetail />} />
           <Route path="/products" element={<ProductCatalog />} />

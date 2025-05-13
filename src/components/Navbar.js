@@ -26,19 +26,19 @@ const Navbar = () => {
     setIsMobileMenuOpen(false)
   }, [location])
 
-  const hiddenPaths = ["/auth", "/login", "/register"]
-  const dynamicPathBases = ["/articles", "/products"]
+  // Don't render Navbar on specific pages or dynamic routes
+  const hiddenPaths = ["/auth", "/login", "/register", "/about"] // Added /about
+  const dynamicPathBases = ["/articles"] // Base paths for dynamic routes
   const isDynamicPath = dynamicPathBases.some(
     (base) =>
       location.pathname.startsWith(base) &&
-      location.pathname !== base &&
+      location.pathname !== base && // Exclude exact match
       location.pathname.split("/").filter(Boolean).length > base.split("/").filter(Boolean).length
   )
 
   if (hiddenPaths.includes(location.pathname) || isDynamicPath) {
     return null
   }
-
 
   return (
     <nav className={`navbar ${isScrolled ? "scrolled" : ""}`}>
