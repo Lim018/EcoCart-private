@@ -47,6 +47,16 @@ const SortableItem = ({ id, children }) => {
   )
 }
 
+// Format harga dalam Rupiah
+const formatPrice = (price) => {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(price * 15000) // Konversi USD ke IDR
+}
+
 const salesData = [
   { name: "Jan", eco: 4000, conventional: 2400 },
   { name: "Feb", eco: 3000, conventional: 1398 },
@@ -68,11 +78,11 @@ const customerData = [
 ]
 
 const productCategoryData = [
-  { name: "Personal Care", value: 400 },
-  { name: "Home Goods", value: 300 },
-  { name: "Apparel", value: 300 },
-  { name: "Food & Drink", value: 200 },
-  { name: "Accessories", value: 100 },
+  { name: "Perawatan Pribadi", value: 400 },
+  { name: "Perlengkapan Rumah", value: 300 },
+  { name: "Pakaian", value: 300 },
+  { name: "Makanan & Minuman", value: 200 },
+  { name: "Aksesoris", value: 100 },
 ]
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"]
@@ -137,11 +147,11 @@ const KPICard = ({ title, value, change, icon, color }) => {
 
 const Dashboard = () => {
   const [widgets, setWidgets] = useState([
-    { id: "kpi", title: "Key Performance Indicators", type: "kpi" },
-    { id: "sales", title: "Sales Overview", type: "sales" },
-    { id: "customers", title: "Customer Growth", type: "customers" },
-    { id: "categories", title: "Sales by Category", type: "categories" },
-    { id: "transactions", title: "Recent Transactions", type: "transactions" },
+    { id: "kpi", title: "Indikator Kinerja Utama", type: "kpi" },
+    { id: "sales", title: "Ikhtisar Penjualan", type: "sales" },
+    { id: "customers", title: "Pertumbuhan Pelanggan", type: "customers" },
+    { id: "categories", title: "Penjualan berdasarkan Kategori", type: "categories" },
+    { id: "transactions", title: "Transaksi Terbaru", type: "transactions" },
   ])
 
   const [maximizedWidget, setMaximizedWidget] = useState(null)
@@ -180,7 +190,7 @@ const Dashboard = () => {
   }
 
   const refreshData = () => {
-    console.log("Refreshing data...")
+    console.log("Menyegarkan data...")
   }
 
   const renderWidgetContent = (widget) => {
@@ -189,23 +199,29 @@ const Dashboard = () => {
         return (
           <div className="kpi-grid">
             <KPICard
-              title="Total Revenue"
-              value="$24,567"
+              title="Total Pendapatan"
+              value={formatPrice(24567)}
               change={12.5}
               icon={<DollarSign color="#4CAF50" />}
               color="#4CAF50"
             />
             <KPICard
-              title="Total Orders"
-              value="1,234"
+              title="Total Pesanan"
+              value="1.234"
               change={8.2}
               icon={<ShoppingBag color="#2196F3" />}
               color="#2196F3"
             />
-            <KPICard title="New Customers" value="356" change={-2.4} icon={<Users color="#FF9800" />} color="#FF9800" />
             <KPICard
-              title="Avg. Order Time"
-              value="42 min"
+              title="Pelanggan Baru"
+              value="356"
+              change={-2.4}
+              icon={<Users color="#FF9800" />}
+              color="#FF9800"
+            />
+            <KPICard
+              title="Waktu Pesanan Rata-rata"
+              value="42 menit"
               change={-5.1}
               icon={<Clock color="#9C27B0" />}
               color="#9C27B0"
@@ -229,10 +245,16 @@ const Dashboard = () => {
                   }}
                 />
                 <Legend />
-                <Bar dataKey="eco" name="Eco Products" fill="#4CAF50" radius={[4, 4, 0, 0]} animationDuration={1000} />
+                <Bar
+                  dataKey="eco"
+                  name="Produk Ramah Lingkungan"
+                  fill="#4CAF50"
+                  radius={[4, 4, 0, 0]}
+                  animationDuration={1000}
+                />
                 <Bar
                   dataKey="conventional"
-                  name="Conventional"
+                  name="Konvensional"
                   fill="#2196F3"
                   radius={[4, 4, 0, 0]}
                   animationDuration={1000}
@@ -261,7 +283,7 @@ const Dashboard = () => {
                 <Area
                   type="monotone"
                   dataKey="new"
-                  name="New Customers"
+                  name="Pelanggan Baru"
                   stackId="1"
                   stroke="#8884d8"
                   fill="#8884d8"
@@ -270,7 +292,7 @@ const Dashboard = () => {
                 <Area
                   type="monotone"
                   dataKey="returning"
-                  name="Returning Customers"
+                  name="Pelanggan Kembali"
                   stackId="1"
                   stroke="#82ca9d"
                   fill="#82ca9d"
@@ -319,9 +341,9 @@ const Dashboard = () => {
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Customer</th>
-                  <th>Amount</th>
-                  <th>Date</th>
+                  <th>Pelanggan</th>
+                  <th>Jumlah</th>
+                  <th>Tanggal</th>
                   <th>Status</th>
                   <th></th>
                 </tr>
@@ -331,11 +353,17 @@ const Dashboard = () => {
                   <tr key={tx.id} className={isUpdating && tx.id === "TX-1235" ? "updating" : ""}>
                     <td>{tx.id}</td>
                     <td>{tx.customer}</td>
-                    <td>${tx.amount.toFixed(2)}</td>
+                    <td>{formatPrice(tx.amount)}</td>
                     <td>{tx.date}</td>
                     <td>
                       <span className={`status-badge ${tx.status}`}>
-                        {tx.status.charAt(0).toUpperCase() + tx.status.slice(1)}
+                        {tx.status === "completed"
+                          ? "Selesai"
+                          : tx.status === "processing"
+                          ? "Diproses"
+                          : tx.status === "failed"
+                          ? "Gagal"
+                          : tx.status}
                       </span>
                     </td>
                     <td>
@@ -357,10 +385,10 @@ const Dashboard = () => {
   return (
     <div className="dashboard-container">
       <header className="dashboard-header">
-        <h1>Admin Dashboard</h1>
+        <h1>Dashboard Admin</h1>
         <div className="dashboard-actions">
-          <button className="action-button primary">Add Widget</button>
-          <button className="action-button">Export Data</button>
+          <button className="action-button primary">Tambah Widget</button>
+          <button className="action-button">Ekspor Data</button>
         </div>
       </header>
 
