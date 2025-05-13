@@ -22,10 +22,10 @@
     color: var(--dark-text);
   }
   
-  .dark-mode .mission-section,
-  .dark-mode .values-section,
-  .dark-mode .team-section,
-  .dark-mode .testimonials-section {
+  .dark-mode .about-mission-section,
+  .dark-mode .about-values-section,
+  .dark-mode .about-team-section,
+  .dark-mode .about-testimonials-section {
     background-color: var(--dark-surface);
   }
   
@@ -64,7 +64,7 @@
   }
   
   /* Hero Section */
-  .hero-section {
+  .about-hero-section {
     height: 80vh;
     background: linear-gradient(135deg, rgba(27, 94, 32, 0.8), rgba(13, 71, 161, 0.8)), url("/public/emerald-canopy.png")
       no-repeat center center;
@@ -77,20 +77,20 @@
     position: relative;
   }
   
-  .hero-content {
+  .about-hero-content {
     z-index: 2;
     max-width: 800px;
     padding: 0 20px;
   }
   
-  .hero-content h1 {
+  .about-hero-content h1 {
     font-size: 4rem;
     margin-bottom: 20px;
     font-weight: 700;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   }
   
-  .hero-content p {
+  .about-hero-content p {
     font-size: 1.5rem;
     margin-bottom: 30px;
     font-weight: 300;
@@ -98,18 +98,18 @@
   }
   
   /* Mission Section */
-  .mission-section {
+  .about-mission-section {
     padding: 100px 20px;
     background-color: var(--off-white);
     text-align: center;
   }
   
-  .mission-content {
+  .about-mission-content {
     max-width: 800px;
     margin: 0 auto;
   }
   
-  .mission-content h2 {
+  .about-mission-content h2 {
     font-size: 2.5rem;
     margin-bottom: 30px;
     color: var(--forest-green);
@@ -117,7 +117,7 @@
     display: inline-block;
   }
   
-  .mission-content h2:after {
+  .about-mission-content h2:after {
     content: "";
     position: absolute;
     bottom: -10px;
@@ -128,19 +128,19 @@
     background: linear-gradient(to right, var(--forest-green), var(--ocean-blue));
   }
   
-  .mission-content p {
+  .about-mission-content p {
     font-size: 1.2rem;
     line-height: 1.8;
   }
   
   /* Timeline Section */
-  .timeline-section {
+  .about-timeline-section {
     padding: 100px 20px;
     background: linear-gradient(to bottom, #fff, var(--off-white));
     text-align: center;
   }
   
-  .timeline-section h2 {
+  .about-timeline-section h2 {
     font-size: 2.5rem;
     margin-bottom: 50px;
     color: var(--forest-green);
@@ -166,6 +166,8 @@
     position: relative;
     width: 45%;
     margin-bottom: 60px;
+    z-index: 1;
+    transform: none !important; /* Prevent unwanted transforms */
   }
   
   .timeline-item.left {
@@ -182,7 +184,8 @@
     background: white;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    transition: var(--transition-smooth);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    z-index: 2;
   }
   
   .timeline-content:hover {
@@ -233,13 +236,13 @@
   }
   
   /* Values Section */
-  .values-section {
+  .about-values-section {
     padding: 100px 20px;
     background-color: white;
     text-align: center;
   }
   
-  .values-section h2 {
+  .about-values-section h2 {
     font-size: 2.5rem;
     margin-bottom: 50px;
     color: var(--forest-green);
@@ -305,13 +308,13 @@
   }
   
   /* Impact Section */
-  .impact-section {
+  .about-impact-section {
     padding: 100px 20px;
     background: linear-gradient(135deg, rgba(27, 94, 32, 0.05), rgba(13, 71, 161, 0.05));
     text-align: center;
   }
   
-  .impact-section h2 {
+  .about-impact-section h2 {
     font-size: 2.5rem;
     margin-bottom: 50px;
     color: var(--forest-green);
@@ -374,13 +377,13 @@
   }
   
   /* Team Section */
-  .team-section {
+  .about-team-section {
     padding: 100px 20px;
     background-color: var(--off-white);
     text-align: center;
   }
   
-  .team-section h2 {
+  .about-team-section h2 {
     font-size: 2.5rem;
     margin-bottom: 50px;
     color: var(--forest-green);
@@ -461,13 +464,13 @@
   }
   
   /* Testimonials Section */
-  .testimonials-section {
+  .about-testimonials-section {
     padding: 100px 20px;
     background: white;
     text-align: center;
   }
   
-  .testimonials-section h2 {
+  .about-testimonials-section h2 {
     font-size: 2.5rem;
     margin-bottom: 50px;
     color: var(--forest-green);
@@ -571,7 +574,7 @@
   }
   
   /* CTA Section */
-  .cta-section {
+  .about-cta-section {
     padding: 100px 20px;
     background: linear-gradient(135deg, rgba(27, 94, 32, 0.9), rgba(13, 71, 161, 0.9)),
       url("/public/interconnected-eco-production.png") no-repeat center center;
@@ -580,30 +583,30 @@
     color: white;
   }
   
-  .cta-content {
+  .about-cta-content {
     max-width: 800px;
     margin: 0 auto;
   }
   
-  .cta-content h2 {
+  .about-cta-content h2 {
     font-size: 2.5rem;
     margin-bottom: 20px;
   }
   
-  .cta-content p {
+  .about-cta-content p {
     font-size: 1.2rem;
     margin-bottom: 40px;
   }
   
-  .cta-buttons {
+  .about-cta-buttons {
     display: flex;
     justify-content: center;
     gap: 20px;
     flex-wrap: wrap;
   }
   
-  .primary-button,
-  .secondary-button {
+  .about-primary-button,
+  .about-secondary-button {
     padding: 15px 30px;
     border-radius: 50px;
     font-size: 1rem;
@@ -612,39 +615,39 @@
     transition: var(--transition-smooth);
   }
   
-  .primary-button {
+  .about-primary-button {
     background: white;
     color: var(--forest-green);
     border: none;
   }
   
-  .secondary-button {
+  .about-secondary-button {
     background: transparent;
     color: white;
     border: 2px solid white;
   }
   
-  .primary-button:hover,
-  .secondary-button:hover {
+  .about-primary-button:hover,
+  .about-secondary-button:hover {
     transform: translateY(-3px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   }
   
-  .primary-button:hover {
+  .about-primary-button:hover {
     background: #f0f0f0;
   }
   
-  .secondary-button:hover {
+  .about-secondary-button:hover {
     background: rgba(255, 255, 255, 0.1);
   }
   
   /* Responsive Styles */
   @media (max-width: 1024px) {
-    .hero-content h1 {
+    .about-hero-content h1 {
       font-size: 3rem;
     }
   
-    .hero-content p {
+    .about-hero-content p {
       font-size: 1.2rem;
     }
   
@@ -665,17 +668,17 @@
   }
   
   @media (max-width: 768px) {
-    .hero-content h1 {
+    .about-hero-content h1 {
       font-size: 2.5rem;
     }
   
-    .mission-content h2,
-    .timeline-section h2,
-    .values-section h2,
-    .impact-section h2,
-    .team-section h2,
-    .testimonials-section h2,
-    .cta-content h2 {
+    .about-mission-content h2,
+    .about-timeline-section h2,
+    .about-values-section h2,
+    .about-impact-section h2,
+    .about-team-section h2,
+    .about-testimonials-section h2,
+    .about-cta-content h2 {
       font-size: 2rem;
     }
   
@@ -701,12 +704,12 @@
   }
   
   @media (max-width: 480px) {
-    .hero-content h1 {
+    .about-hero-content h1 {
       font-size: 2rem;
     }
   
-    .mission-content p,
-    .cta-content p {
+    .about-mission-content p,
+    .about-cta-content p {
       font-size: 1rem;
     }
   
@@ -722,8 +725,8 @@
       grid-template-columns: 1fr;
     }
   
-    .primary-button,
-    .secondary-button {
+    .about-primary-button,
+    .about-secondary-button {
       width: 100%;
     }
   }
@@ -785,5 +788,10 @@
       transform: translateX(0);
       opacity: 1;
     }
+  }
+  
+  /* Fix for parallax issues */
+  .parallax-item {
+    transform: none !important; /* Disable any transform that might be causing issues */
   }
   

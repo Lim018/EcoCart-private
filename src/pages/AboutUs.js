@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
+import { motion, useScroll, AnimatePresence } from "framer-motion"
 import "../styles/AboutUs.css"
 import { initParallaxEffects } from "../utils/parallax"
 
@@ -13,7 +13,6 @@ const AboutUs = () => {
   const timelineRef = useRef(null)
   const counterRef = useRef(null)
   const { scrollYProgress } = useScroll()
-  const opacity = useTransform(scrollYProgress, [0, 0.2], [0, 1])
 
   // Timeline data
   const timelineData = [
@@ -213,24 +212,18 @@ const AboutUs = () => {
 
   return (
     <div className="about-us-container">
-      {/* Hero Section with Parallax */}
-      <motion.section
-        className="hero-section"
-        style={{ opacity }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
-      >
-        <div className="hero-content">
+      {/* Hero Section - Static */}
+      <section className="about-hero-section">
+        <div className="about-hero-content">
           <h1>Tentang EcoCart</h1>
           <p>Memimpin revolusi e-commerce berkelanjutan</p>
         </div>
-      </motion.section>
+      </section>
 
       {/* Mission Statement */}
-      <section className="mission-section observe-me" id="mission">
+      <section className="about-mission-section observe-me" id="mission">
         <motion.div
-          className="mission-content"
+          className="about-mission-content"
           initial={{ y: 50, opacity: 0 }}
           animate={isVisible["mission"] ? { y: 0, opacity: 1 } : { y: 50, opacity: 0 }}
           transition={{ duration: 0.8 }}
@@ -246,7 +239,7 @@ const AboutUs = () => {
       </section>
 
       {/* Timeline Section */}
-      <section className="timeline-section observe-me" id="timeline" ref={timelineRef}>
+      <section className="about-timeline-section observe-me" id="timeline" ref={timelineRef}>
         <h2>Perjalanan Kami</h2>
         <div className="timeline">
           {timelineData.map((item, index) => (
@@ -272,7 +265,7 @@ const AboutUs = () => {
       </section>
 
       {/* Values Section */}
-      <section className="values-section observe-me" id="values">
+      <section className="about-values-section observe-me" id="values">
         <h2>Nilai-Nilai Kami</h2>
         <div className="values-container">
           {valueCards.map((card, index) => (
@@ -311,7 +304,7 @@ const AboutUs = () => {
       </section>
 
       {/* Impact Counter Section */}
-      <section className="impact-section observe-me" id="impact" ref={counterRef}>
+      <section className="about-impact-section observe-me" id="impact" ref={counterRef}>
         <h2>Dampak Kami</h2>
         <div className="impact-counter-container">
           <motion.div
@@ -341,7 +334,7 @@ const AboutUs = () => {
       </section>
 
       {/* Team Section */}
-      <section className="team-section observe-me" id="team">
+      <section className="about-team-section observe-me" id="team">
         <h2>Tim Kami</h2>
         <div className="team-gallery">
           {teamData.map((member, index) => (
@@ -368,7 +361,7 @@ const AboutUs = () => {
       </section>
 
       {/* Testimonials Section */}
-      <section className="testimonials-section observe-me" id="testimonials">
+      <section className="about-testimonials-section observe-me" id="testimonials">
         <h2>Apa Kata Mereka</h2>
         <div className="testimonial-slider">
           <div className="testimonial-track" style={{ transform: `translateX(-${activeTestimonial * 100}%)` }}>
@@ -404,9 +397,9 @@ const AboutUs = () => {
       </section>
 
       {/* Call to Action */}
-      <section className="cta-section observe-me" id="cta">
+      <section className="about-cta-section observe-me" id="cta">
         <motion.div
-          className="cta-content"
+          className="about-cta-content"
           initial={{ opacity: 0, y: 30 }}
           animate={isVisible["cta"] ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.8 }}
@@ -416,9 +409,9 @@ const AboutUs = () => {
             Bersama-sama, kita dapat menciptakan masa depan yang lebih berkelanjutan melalui pilihan belanja yang
             bertanggung jawab.
           </p>
-          <div className="cta-buttons">
-            <button className="primary-button">Jelajahi Produk</button>
-            <button className="secondary-button">Pelajari Lebih Lanjut</button>
+          <div className="about-cta-buttons">
+            <button className="about-primary-button">Jelajahi Produk</button>
+            <button className="about-secondary-button">Pelajari Lebih Lanjut</button>
           </div>
         </motion.div>
       </section>
