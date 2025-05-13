@@ -1,0 +1,336 @@
+.contact-page {
+    --primary-color: #81c784;
+    --primary-light: #e8f5e9;
+    --primary-dark: #4caf50;
+    --accent-color: #42a5f5;
+    --accent-light: #bbdefb;
+    --text-color: #333;
+    --text-light: #666;
+    --background-color: #fff;
+    --border-color: #e0e0e0;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --animation-duration: 0.3s;
+  
+    color: var(--text-color);
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .contact-hero {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 4rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .contact-hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("/placeholder.svg?height=400&width=1200&query=abstract%20green%20pattern");
+    background-size: cover;
+    background-position: center;
+    opacity: 0.1;
+    z-index: 0;
+  }
+  
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .contact-hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    animation: fadeInDown 1s ease-out;
+  }
+  
+  .contact-hero p {
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+    animation: fadeInUp 1s ease-out;
+  }
+  
+  .contact-main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  
+  .contact-tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .tab-btn {
+    background: none;
+    border: none;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    color: var(--text-light);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    transition: color var(--animation-duration) ease;
+  }
+  
+  .tab-btn svg {
+    transition: transform var(--animation-duration) ease;
+  }
+  
+  .tab-btn:hover {
+    color: var(--primary-color);
+  }
+  
+  .tab-btn:hover svg {
+    transform: scale(1.1);
+  }
+  
+  .tab-btn.active {
+    color: var(--primary-color);
+    font-weight: 600;
+  }
+  
+  .tab-btn.active::after {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--primary-color);
+    animation: slideIn var(--animation-duration) ease-out;
+  }
+  
+  .tab-content {
+    display: none;
+    animation: fadeIn 0.5s ease-out;
+  }
+  
+  .tab-content.active {
+    display: block;
+  }
+  
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+  
+  .contact-form-section,
+  .contact-map-section {
+    background-color: var(--background-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+    padding: 2rem;
+    transition: transform var(--animation-duration) ease, box-shadow var(--animation-duration) ease;
+  }
+  
+  .contact-form-section:hover,
+  .contact-map-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px var(--shadow-color);
+  }
+  
+  .contact-form-section h2,
+  .contact-map-section h2,
+  .tab-content h2 {
+    color: var(--primary-dark);
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+  }
+  
+  .contact-form-section p,
+  .contact-map-section p,
+  .tab-content p {
+    color: var(--text-light);
+    margin-bottom: 1.5rem;
+  }
+  
+  .contact-options-section,
+  .social-media-section {
+    max-width: 1200px;
+    margin: 3rem auto;
+    padding: 0 2rem;
+  }
+  
+  .chat-widget {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 100;
+    transition: all var(--animation-duration) ease;
+  }
+  
+  .chat-widget.open {
+    width: 350px;
+    height: 450px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  
+  .chat-toggle {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(66, 165, 245, 0.3);
+    transition: all var(--animation-duration) ease;
+  }
+  
+  .chat-toggle:hover {
+    background-color: #1e88e5;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(66, 165, 245, 0.4);
+  }
+  
+  .chat-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 99;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding: 2rem;
+  }
+  
+  .chat-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color var(--animation-duration) ease;
+  }
+  
+  .chat-close:hover {
+    background-color: white;
+  }
+  
+  .scroll-to-top {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    background-color: var(--primary-color);
+    color: white;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(129, 199, 132, 0.3);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all var(--animation-duration) ease;
+    border: none;
+  }
+  
+  .scroll-to-top.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .scroll-to-top:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(129, 199, 132, 0.4);
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes slideIn {
+    from {
+      width: 0;
+    }
+    to {
+      width: 100%;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .contact-grid {
+      grid-template-columns: 1fr;
+    }
+  
+    .contact-tabs {
+      flex-direction: column;
+      align-items: stretch;
+      border-bottom: none;
+    }
+  
+    .tab-btn {
+      border-bottom: 1px solid var(--border-color);
+    }
+  
+    .tab-btn.active::after {
+      display: none;
+    }
+  
+    .chat-widget.open {
+      width: 100%;
+      height: 100%;
+      bottom: 0;
+      right: 0;
+      border-radius: 0;
+    }
+  }
+  
