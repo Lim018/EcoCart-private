@@ -20,54 +20,64 @@ const LandingPage = () => {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
+  // Format harga dalam Rupiah
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(price * 15000); // Konversi USD ke IDR
+  };
+
   // Sample featured products data
   const featuredProducts = [
     {
       id: 1,
-      name: "Bamboo Toothbrush Set",
+      name: "Set Sikat Gigi Bambu",
       price: 12.99,
       image: "/eco-friendly-oral-care.png",
-      category: "Personal Care",
+      category: "Perawatan Pribadi",
       sustainability: {
-        materials: "Biodegradable bamboo handle, plant-based bristles",
-        packaging: "Plastic-free, compostable packaging",
-        impact: "Reduces plastic waste by 30g per toothbrush",
+        materials: "Gagang bambu biodegradable, bulu sikat berbahan nabati",
+        packaging: "Kemasan bebas plastik, dapat dikompos",
+        impact: "Mengurangi limbah plastik sebanyak 30g per sikat gigi",
       },
     },
     {
       id: 2,
-      name: "Organic Cotton T-Shirt",
+      name: "Kaos Katun Organik",
       price: 29.99,
       image: "/folded-organic-tee.png",
       category: "Fashion",
       sustainability: {
-        materials: "100% GOTS certified organic cotton",
-        packaging: "Recycled paper packaging",
-        impact: "Saves 2,700 liters of water compared to conventional cotton",
+        materials: "100% katun organik bersertifikat GOTS",
+        packaging: "Kemasan kertas daur ulang",
+        impact: "Menghemat 2.700 liter air dibandingkan dengan katun konvensional",
       },
     },
     {
       id: 3,
-      name: "Reusable Produce Bags",
+      name: "Kantong Belanja Reusable",
       price: 15.99,
       image: "/colorful-produce-bags.png",
-      category: "Kitchen",
+      category: "Dapur",
       sustainability: {
-        materials: "Organic cotton mesh",
-        packaging: "Zero-waste packaging",
-        impact: "Eliminates need for 500+ plastic bags per year",
+        materials: "Jaring katun organik",
+        packaging: "Kemasan zero-waste",
+        impact: "Menghilangkan kebutuhan lebih dari 500 kantong plastik per tahun",
       },
     },
     {
       id: 4,
-      name: "Solar Power Bank",
+      name: "Power Bank Tenaga Surya",
       price: 45.99,
       image: "/portable-solar-charging.png",
-      category: "Electronics",
+      category: "Elektronik",
       sustainability: {
-        materials: "Recycled plastic casing, solar panel",
-        packaging: "Minimal recycled cardboard",
-        impact: "Reduces carbon footprint by using renewable energy",
+        materials: "Casing plastik daur ulang, panel surya",
+        packaging: "Kardus daur ulang minimal",
+        impact: "Mengurangi jejak karbon dengan menggunakan energi terbarukan",
       },
     },
   ]
@@ -76,27 +86,27 @@ const LandingPage = () => {
   const impactData = [
     {
       icon: "fas fa-tree",
-      count: "10,000+",
-      label: "Trees Planted",
-      description: "Through our partnership with reforestation projects, we plant trees for every purchase.",
+      count: "10.000+",
+      label: "Pohon Ditanam",
+      description: "Melalui kemitraan dengan proyek reboisasi, kami menanam pohon untuk setiap pembelian.",
     },
     {
       icon: "fas fa-water",
-      count: "5M+",
-      label: "Gallons of Water Saved",
-      description: "Our sustainable production methods save millions of gallons of water annually.",
+      count: "5 Juta+",
+      label: "Liter Air Terhemat",
+      description: "Metode produksi berkelanjutan kami menghemat jutaan liter air setiap tahun.",
     },
     {
       icon: "fas fa-trash-alt",
-      count: "50,000+",
-      label: "Kg of Plastic Prevented",
-      description: "Our plastic-free packaging prevents thousands of kilograms of plastic waste.",
+      count: "50.000+",
+      label: "Kg Plastik Tercegah",
+      description: "Kemasan bebas plastik kami mencegah ribuan kilogram limbah plastik.",
     },
     {
       icon: "fas fa-bolt",
       count: "75%",
-      label: "Carbon Footprint Reduction",
-      description: "Our products have a 75% lower carbon footprint than conventional alternatives.",
+      label: "Pengurangan Jejak Karbon",
+      description: "Produk kami memiliki jejak karbon 75% lebih rendah dibandingkan alternatif konvensional.",
     },
   ]
 
@@ -112,18 +122,18 @@ const LandingPage = () => {
           }}
         ></div>
         <div className="hero-content">
-          <h1 className="hero-title animate-slideUp">Sustainable Shopping for a Better Planet</h1>
-          <p className="hero-subtitle animate-slideUp">Discover eco-friendly products that make a difference</p>
+          <h1 className="hero-title animate-slideUp">Belanja Berkelanjutan untuk Planet yang Lebih Baik</h1>
+          <p className="hero-subtitle animate-slideUp">Temukan produk ramah lingkungan yang membuat perbedaan</p>
           <div className="hero-buttons animate-slideUp">
             <Link to="/products" className="btn btn-primary">
-              Shop Now
+              Belanja Sekarang
             </Link>
             <Link to="/about" className="btn btn-outline">
-              Learn More
+              Pelajari Lebih Lanjut
             </Link>
           </div>
           <div className="hero-scroll-indicator">
-            <span>Scroll to explore</span>
+            <span>Gulir untuk menjelajah</span>
             <i className="fas fa-chevron-down"></i>
           </div>
         </div>
@@ -133,8 +143,8 @@ const LandingPage = () => {
       <section className="featured-products section" ref={featuredProductsRef}>
         <div className="container">
           <div className="section-header">
-            <h2>Featured Eco-Friendly Products</h2>
-            <p>Handpicked sustainable products that help reduce your environmental footprint</p>
+            <h2>Produk Ramah Lingkungan Unggulan</h2>
+            <p>Produk berkelanjutan pilihan yang membantu mengurangi jejak lingkungan Anda</p>
           </div>
 
           <div className="products-grid">
@@ -146,26 +156,26 @@ const LandingPage = () => {
                 </div>
                 <div className="product-info">
                   <h3 className="product-name">{product.name}</h3>
-                  <div className="product-price">${product.price}</div>
+                  <div className="product-price">{formatPrice(product.price)}</div>
                   <div className="product-sustainability-preview">
-                    <i className="fas fa-leaf"></i> Eco-friendly
+                    <i className="fas fa-leaf"></i> Ramah lingkungan
                   </div>
                 </div>
                 <div className="product-sustainability-details">
-                  <h4>Sustainability Details</h4>
+                  <h4>Detail Keberlanjutan</h4>
                   <ul>
                     <li>
-                      <strong>Materials:</strong> {product.sustainability.materials}
+                      <strong>Material:</strong> {product.sustainability.materials}
                     </li>
                     <li>
-                      <strong>Packaging:</strong> {product.sustainability.packaging}
+                      <strong>Kemasan:</strong> {product.sustainability.packaging}
                     </li>
                     <li>
-                      <strong>Impact:</strong> {product.sustainability.impact}
+                      <strong>Dampak:</strong> {product.sustainability.impact}
                     </li>
                   </ul>
                   <Link to={`/products/${product.id}`} className="btn btn-primary btn-sm">
-                    View Product
+                    Lihat Produk
                   </Link>
                 </div>
               </div>
@@ -174,7 +184,7 @@ const LandingPage = () => {
 
           <div className="view-all-container">
             <Link to="/products" className="btn btn-outline">
-              View All Products
+              Lihat Semua Produk
             </Link>
           </div>
         </div>
@@ -185,45 +195,45 @@ const LandingPage = () => {
         <div className="container">
           <div className="mission-content">
             <div className="mission-text">
-              <h2>Our Mission</h2>
+              <h2>Misi Kami</h2>
               <div className="mission-story">
                 <div className="story-step">
                   <div className="story-number">01</div>
-                  <h3>Sustainable Sourcing</h3>
+                  <h3>Sumber Berkelanjutan</h3>
                   <p>
-                    We carefully select products made from sustainable, renewable, or recycled materials that minimize
-                    environmental impact.
+                    Kami dengan hati-hati memilih produk yang terbuat dari bahan berkelanjutan, terbarukan, atau daur ulang
+                    yang meminimalkan dampak lingkungan.
                   </p>
                 </div>
                 <div className="story-step">
                   <div className="story-number">02</div>
-                  <h3>Ethical Production</h3>
+                  <h3>Produksi Etis</h3>
                   <p>
-                    We partner with manufacturers who prioritize fair labor practices, safe working conditions, and
-                    environmentally responsible production methods.
+                    Kami bermitra dengan produsen yang memprioritaskan praktik kerja yang adil, kondisi kerja yang aman,
+                    dan metode produksi yang bertanggung jawab terhadap lingkungan.
                   </p>
                 </div>
                 <div className="story-step">
                   <div className="story-number">03</div>
-                  <h3>Minimal Packaging</h3>
+                  <h3>Kemasan Minimal</h3>
                   <p>
-                    We're committed to reducing waste through plastic-free, biodegradable, or recyclable packaging for
-                    all our products.
+                    Kami berkomitmen untuk mengurangi limbah melalui kemasan bebas plastik, biodegradable, atau dapat
+                    didaur ulang untuk semua produk kami.
                   </p>
                 </div>
                 <div className="story-step">
                   <div className="story-number">04</div>
-                  <h3>Positive Impact</h3>
+                  <h3>Dampak Positif</h3>
                   <p>
-                    With every purchase, we contribute to environmental initiatives like tree planting, ocean cleanup,
-                    and renewable energy projects.
+                    Dengan setiap pembelian, kami berkontribusi pada inisiatif lingkungan seperti penanaman pohon,
+                    pembersihan laut, dan proyek energi terbarukan.
                   </p>
                 </div>
               </div>
             </div>
             <div className="mission-image">
               <div className="image-container">
-                <img src="/interconnected-eco-production.png" alt="Our sustainable mission" />
+                <img src="/interconnected-eco-production.png" alt="Misi berkelanjutan kami" />
               </div>
             </div>
           </div>
@@ -234,8 +244,8 @@ const LandingPage = () => {
       <section className="impact-section section" ref={impactRef}>
         <div className="container">
           <div className="section-header">
-            <h2>Our Environmental Impact</h2>
-            <p>Together with our customers, we're making a measurable difference</p>
+            <h2>Dampak Lingkungan Kami</h2>
+            <p>Bersama dengan pelanggan kami, kami membuat perbedaan yang terukur</p>
           </div>
 
           <div className="impact-grid">
@@ -257,23 +267,23 @@ const LandingPage = () => {
       <section className="testimonials-section section">
         <div className="container">
           <div className="section-header">
-            <h2>What Our Customers Say</h2>
-            <p>Join thousands of eco-conscious shoppers making a difference</p>
+            <h2>Apa Kata Pelanggan Kami</h2>
+            <p>Bergabunglah dengan ribuan pembeli sadar lingkungan yang membuat perbedaan</p>
           </div>
 
           <div className="testimonials-slider">
             <div className="testimonial">
               <div className="testimonial-content">
                 <p>
-                  "EcoCart has transformed how I shop. The products are high-quality and genuinely sustainable, and I
-                  love knowing my purchases are making a positive impact."
+                  "EcoCart telah mengubah cara saya berbelanja. Produknya berkualitas tinggi dan benar-benar berkelanjutan,
+                  dan saya senang mengetahui pembelian saya berdampak positif."
                 </p>
               </div>
               <div className="testimonial-author">
                 <img src="/serene-gaze.png" alt="Sarah J." className="author-image" />
                 <div className="author-info">
                   <div className="author-name">Sarah J.</div>
-                  <div className="author-location">Portland, OR</div>
+                  <div className="author-location">Jakarta, Indonesia</div>
                 </div>
               </div>
             </div>
@@ -281,15 +291,15 @@ const LandingPage = () => {
             <div className="testimonial">
               <div className="testimonial-content">
                 <p>
-                  "I've been searching for a one-stop shop for eco-friendly products, and EcoCart exceeds all my
-                  expectations. The transparency about each product's environmental impact is refreshing."
+                  "Saya telah mencari toko serba ada untuk produk ramah lingkungan, dan EcoCart melebihi semua harapan saya.
+                  Transparansi tentang dampak lingkungan setiap produk sangat menyegarkan."
                 </p>
               </div>
               <div className="testimonial-author">
                 <img src="/thoughtful-gaze.png" alt="Michael T." className="author-image" />
                 <div className="author-info">
                   <div className="author-name">Michael T.</div>
-                  <div className="author-location">Austin, TX</div>
+                  <div className="author-location">Surabaya, Indonesia</div>
                 </div>
               </div>
             </div>
@@ -301,10 +311,10 @@ const LandingPage = () => {
       <section className="cta-section">
         <div className="container">
           <div className="cta-content">
-            <h2>Join the Sustainable Shopping Movement</h2>
-            <p>Start making eco-friendly choices today and be part of the solution</p>
+            <h2>Bergabunglah dengan Gerakan Belanja Berkelanjutan</h2>
+            <p>Mulai membuat pilihan ramah lingkungan hari ini dan jadilah bagian dari solusi</p>
             <Link to="/products" className="btn btn-primary btn-lg">
-              Shop Now
+              Belanja Sekarang
             </Link>
           </div>
         </div>
