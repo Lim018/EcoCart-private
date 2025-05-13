@@ -27,7 +27,7 @@ const Navbar = () => {
   }, [location])
 
   const hiddenPaths = ["/auth", "/login", "/register"]
-  const dynamicPathBases = ["/articles"]
+  const dynamicPathBases = ["/articles", "/products"]
   const isDynamicPath = dynamicPathBases.some(
     (base) =>
       location.pathname.startsWith(base) &&
