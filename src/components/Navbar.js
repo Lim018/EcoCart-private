@@ -26,10 +26,19 @@ const Navbar = () => {
     setIsMobileMenuOpen(false)
   }, [location])
 
-  // Don't render Navbar on the authentication page
-  if (location.pathname === "/auth") {
+  const hiddenPaths = ["/auth", "/login", "/register"]
+  const dynamicPathBases = ["/articles"]
+  const isDynamicPath = dynamicPathBases.some(
+    (base) =>
+      location.pathname.startsWith(base) &&
+      location.pathname !== base &&
+      location.pathname.split("/").filter(Boolean).length > base.split("/").filter(Boolean).length
+  )
+
+  if (hiddenPaths.includes(location.pathname) || isDynamicPath) {
     return null
   }
+
 
   return (
     <nav className={`navbar ${isScrolled ? "scrolled" : ""}`}>
