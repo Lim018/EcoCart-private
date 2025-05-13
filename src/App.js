@@ -16,6 +16,7 @@ import ManageUsers from "./pages/ManageUsers"
 import ManageTransactions from "./pages/ManageTransactions"
 import Dashboard from "./pages/Dashboard"
 import Authentication from "./pages/Authentication"
+import ContactPage from "./pages/ContactPage"
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
           <Route path="/admin/transactions" element={<ManageTransactions />} />
           <Route path="/admin/dashboard" element={<Dashboard />} />
           <Route path="/auth" element={<Authentication />} />
+          <Route path="/contact" element={<ContactPage />} />
         </Routes>
       </main>
       <Footer />
