@@ -66,7 +66,7 @@
   /* Hero Section */
   .hero-section {
     height: 80vh;
-    background: linear-gradient(135deg, rgba(27, 94, 32, 0.8), rgba(13, 71, 161, 0.8)), url("../assets/emerald-canopy.png")
+    background: linear-gradient(135deg, rgba(27, 94, 32, 0.8), rgba(13, 71, 161, 0.8)), url("/public/emerald-canopy.png")
       no-repeat center center;
     background-size: cover;
     display: flex;
@@ -574,7 +574,7 @@
   .cta-section {
     padding: 100px 20px;
     background: linear-gradient(135deg, rgba(27, 94, 32, 0.9), rgba(13, 71, 161, 0.9)),
-      url("../assets/interconnected-eco-production.png") no-repeat center center;
+      url("/public/interconnected-eco-production.png") no-repeat center center;
     background-size: cover;
     text-align: center;
     color: white;
@@ -786,3 +786,4 @@
       opacity: 1;
     }
   }
+  

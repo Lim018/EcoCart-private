@@ -5,95 +5,84 @@ import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
 import "../styles/AboutUs.css"
 import { initParallaxEffects } from "../utils/parallax"
 
-// Import images from src/assets/
-import EcoFriendlyOralCare from "../assets/eco-friendly-oral-care.png"
-import FoldedOrganicTee from "../assets/folded-organic-tee.png"
-import ColorfulProduceBags from "../assets/colorful-produce-bags.png"
-import PortableSolarCharging from "../assets/portable-solar-charging.png"
-import EmeraldCanopy from "../assets/emerald-canopy.png"
-import InterconnectedEcoProduction from "../assets/interconnected-eco-production.png"
-import ThoughtfulGaze from "../assets/thoughtful-gaze.png"
-import SereneGaze from "../assets/serene-gaze.png"
-
 const AboutUs = () => {
   const [activeTestimonial, setActiveTestimonial] = useState(0)
   const [carbonSaved, setCarbonSaved] = useState(0)
   const [expandedCard, setExpandedCard] = useState(null)
   const [isVisible, setIsVisible] = useState({})
-  const [isDarkMode, setIsDarkMode] = useState(false) // Added dark mode state
   const timelineRef = useRef(null)
   const counterRef = useRef(null)
   const { scrollYProgress } = useScroll()
   const opacity = useTransform(scrollYProgress, [0, 0.2], [0, 1])
 
-  // Timeline data with imported images
+  // Timeline data
   const timelineData = [
     {
       year: 2018,
       title: "Awal Mula",
       description: "EcoCart didirikan dengan visi sederhana: membuat belanja online lebih ramah lingkungan.",
-      image: EcoFriendlyOralCare,
+      image: "/eco-friendly-oral-care.png",
     },
     {
       year: 2019,
       title: "Peluncuran Platform",
       description: "Peluncuran platform e-commerce pertama kami yang berfokus pada produk ramah lingkungan.",
-      image: FoldedOrganicTee,
+      image: "/folded-organic-tee.png",
     },
     {
       year: 2020,
       title: "Ekspansi Produk",
       description: "Memperluas katalog produk untuk mencakup lebih banyak kategori ramah lingkungan.",
-      image: ColorfulProduceBags,
+      image: "/colorful-produce-bags.png",
     },
     {
       year: 2021,
       title: "Sertifikasi Karbon Netral",
       description: "Mencapai sertifikasi karbon netral untuk seluruh operasi perusahaan.",
-      image: PortableSolarCharging,
+      image: "/portable-solar-charging.png",
     },
     {
       year: 2022,
       title: "Kemitraan Global",
       description: "Membangun kemitraan dengan organisasi lingkungan global untuk memperluas dampak.",
-      image: EmeraldCanopy,
+      image: "/emerald-canopy.png",
     },
     {
       year: 2023,
       title: "Inovasi Berkelanjutan",
       description: "Meluncurkan inisiatif penelitian untuk material berkelanjutan generasi berikutnya.",
-      image: InterconnectedEcoProduction,
+      image: "/interconnected-eco-production.png",
     },
   ]
 
-  // Team data with imported images
+  // Team data
   const teamData = [
     {
       name: "Sarah Johnson",
       role: "Founder & CEO",
       bio: "Visioner lingkungan dengan latar belakang di teknologi dan keberlanjutan. Sarah mendirikan EcoCart untuk mengatasi masalah limbah e-commerce.",
-      image: ThoughtfulGaze,
+      image: "/thoughtful-gaze.png",
       quote: "Keberlanjutan bukanlah pilihan, tetapi keharusan untuk masa depan kita.",
     },
     {
       name: "David Chen",
       role: "Chief Sustainability Officer",
       bio: "Ahli ekologi dengan pengalaman 15 tahun dalam pengembangan produk berkelanjutan dan inisiatif karbon netral.",
-      image: SereneGaze,
+      image: "/serene-gaze.png",
       quote: "Setiap produk yang kita buat adalah kesempatan untuk membuat dunia lebih baik.",
     },
     {
       name: "Amina Patel",
       role: "Head of Product",
       bio: "Spesialis produk dengan fokus pada desain ramah lingkungan dan pengalaman pengguna yang intuitif.",
-      image: ThoughtfulGaze,
+      image: "/thoughtful-gaze.png",
       quote: "Desain yang baik harus mempertimbangkan dampaknya terhadap planet ini.",
     },
     {
       name: "Michael Rodriguez",
       role: "Supply Chain Director",
       bio: "Ahli rantai pasok yang berspesialisasi dalam praktik pengadaan etis dan logistik rendah karbon.",
-      image: SereneGaze,
+      image: "/serene-gaze.png",
       quote: "Rantai pasok yang transparan adalah kunci untuk bisnis yang benar-benar berkelanjutan.",
     },
   ]
@@ -130,28 +119,28 @@ const AboutUs = () => {
     },
   ]
 
-  // Testimonials data with imported images
+  // Testimonials data
   const testimonials = [
     {
       name: "Jessica T.",
       role: "Pelanggan Setia",
       quote:
         "EcoCart telah mengubah cara saya berbelanja. Saya sekarang dapat membuat pilihan yang lebih baik untuk planet ini tanpa mengorbankan kualitas.",
-      image: ThoughtfulGaze,
+      image: "/thoughtful-gaze.png",
     },
     {
       name: "Marcus L.",
       role: "Mitra Bisnis",
       quote:
         "Bermitra dengan EcoCart adalah salah satu keputusan terbaik yang kami buat. Komitmen mereka terhadap keberlanjutan sejalan dengan nilai-nilai kami.",
-      image: SereneGaze,
+      image: "/serene-gaze.png",
     },
     {
       name: "Sophia R.",
       role: "Aktivis Lingkungan",
       quote:
         "EcoCart adalah contoh bagaimana bisnis dapat menjadi kekuatan untuk kebaikan. Model mereka menunjukkan bahwa profitabilitas dan keberlanjutan dapat berjalan beriringan.",
-      image: ThoughtfulGaze,
+      image: "/thoughtful-gaze.png",
     },
   ]
 
@@ -222,13 +211,8 @@ const AboutUs = () => {
     setExpandedCard(expandedCard === index ? null : index)
   }
 
-  // Toggle dark mode
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode)
-  }
-
   return (
-    <div className={`about-us-container ${isDarkMode ? "dark-mode" : ""}`}>
+    <div className="about-us-container">
       {/* Hero Section with Parallax */}
       <motion.section
         className="hero-section"
@@ -440,9 +424,9 @@ const AboutUs = () => {
       </section>
 
       {/* Dark Mode Toggle */}
-      <button className="dark-mode-toggle" onClick={toggleDarkMode}>
-        <span className="toggle-icon">{isDarkMode ? "☀️" : "🌓"}</span>
-        <span className="toggle-text">{isDarkMode ? "Light Mode" : "Dark Mode"}</span>
+      <button className="dark-mode-toggle">
+        <span className="toggle-icon">🌓</span>
+        <span className="toggle-text">Toggle Dark Mode</span>
       </button>
     </div>
   )
