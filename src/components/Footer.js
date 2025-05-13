@@ -12,16 +12,16 @@ const Footer = () => {
                 Eco<span className="logo-highlight">Cart</span>
               </span>
             </Link>
-            <p className="footer-tagline">Sustainable shopping for a better tomorrow</p>
+            <p className="footer-tagline">Belanja berkelanjutan untuk masa depan yang lebih baik</p>
           </div>
 
           <div className="footer-newsletter">
-            <h4>Join Our Newsletter</h4>
-            <p>Stay updated with our latest eco-friendly products and sustainability tips.</p>
+            <h4>Bergabung dengan Newsletter Kami</h4>
+            <p>Dapatkan informasi terbaru tentang produk ramah lingkungan dan tips keberlanjutan.</p>
             <form className="newsletter-form">
-              <input type="email" placeholder="Your email address" required />
+              <input type="email" placeholder="Alamat email Anda" required />
               <button type="submit" className="btn btn-primary">
-                Subscribe
+                Berlangganan
               </button>
             </form>
           </div>
@@ -29,70 +29,70 @@ const Footer = () => {
 
         <div className="footer-middle">
           <div className="footer-col">
-            <h5>Shop</h5>
+            <h5>Belanja</h5>
             <ul>
               <li>
-                <Link to="/products/category/home">Home & Living</Link>
+                <Link to="/products/category/home">Rumah & Kehidupan</Link>
               </li>
               <li>
-                <Link to="/products/category/fashion">Eco Fashion</Link>
+                <Link to="/products/category/fashion">Fashion Ramah Lingkungan</Link>
               </li>
               <li>
-                <Link to="/products/category/beauty">Natural Beauty</Link>
+                <Link to="/products/category/beauty">Kecantikan Alami</Link>
               </li>
               <li>
-                <Link to="/products/category/food">Organic Food</Link>
+                <Link to="/products/category/food">Makanan Organik</Link>
               </li>
               <li>
-                <Link to="/products/category/gifts">Sustainable Gifts</Link>
+                <Link to="/products/category/gifts">Hadiah Berkelanjutan</Link>
               </li>
             </ul>
           </div>
 
           <div className="footer-col">
-            <h5>About</h5>
+            <h5>Tentang Kami</h5>
             <ul>
               <li>
-                <Link to="/about">Our Story</Link>
+                <Link to="/about">Cerita Kami</Link>
               </li>
               <li>
-                <Link to="/mission">Our Mission</Link>
+                <Link to="/mission">Misi Kami</Link>
               </li>
               <li>
-                <Link to="/sustainability">Sustainability</Link>
+                <Link to="/sustainability">Keberlanjutan</Link>
               </li>
               <li>
-                <Link to="/partners">Partners</Link>
+                <Link to="/partners">Mitra</Link>
               </li>
               <li>
-                <Link to="/careers">Careers</Link>
+                <Link to="/careers">Karir</Link>
               </li>
             </ul>
           </div>
 
           <div className="footer-col">
-            <h5>Help</h5>
+            <h5>Bantuan</h5>
             <ul>
               <li>
                 <Link to="/faq">FAQ</Link>
               </li>
               <li>
-                <Link to="/shipping">Shipping & Returns</Link>
+                <Link to="/shipping">Pengiriman & Pengembalian</Link>
               </li>
               <li>
-                <Link to="/track-order">Track Order</Link>
+                <Link to="/track-order">Lacak Pesanan</Link>
               </li>
               <li>
-                <Link to="/contact">Contact Us</Link>
+                <Link to="/contact">Hubungi Kami</Link>
               </li>
               <li>
-                <Link to="/privacy">Privacy Policy</Link>
+                <Link to="/privacy">Kebijakan Privasi</Link>
               </li>
             </ul>
           </div>
 
           <div className="footer-col">
-            <h5>Connect</h5>
+            <h5>Terhubung</h5>
             <div className="social-links">
               <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
                 <i className="fab fa-facebook-f"></i>
@@ -108,19 +108,19 @@ const Footer = () => {
               </a>
             </div>
             <div className="footer-certifications">
-              <img src="/images/certification-1.png" alt="Eco Certification" />
-              <img src="/images/certification-2.png" alt="Organic Certification" />
-              <img src="/images/certification-3.png" alt="Fair Trade Certification" />
+              <img src="/images/certification-1.png" alt="Sertifikasi Eco" />
+              <img src="/images/certification-2.png" alt="Sertifikasi Organik" />
+              <img src="/images/certification-3.png" alt="Sertifikasi Fair Trade" />
             </div>
           </div>
         </div>
 
         <div className="footer-bottom">
-          <p>&copy; {new Date().getFullYear()} EcoCart. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} EcoCart. Hak Cipta Dilindungi.</p>
           <div className="footer-bottom-links">
-            <Link to="/terms">Terms of Service</Link>
-            <Link to="/privacy">Privacy Policy</Link>
-            <Link to="/cookies">Cookie Policy</Link>
+            <Link to="/terms">Syarat Layanan</Link>
+            <Link to="/privacy">Kebijakan Privasi</Link>
+            <Link to="/cookies">Kebijakan Cookie</Link>
           </div>
         </div>
       </div>
