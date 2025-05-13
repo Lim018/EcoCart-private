@@ -1,112 +1,79 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 import "../styles/TestimonialCarousel.css"
 
 const TestimonialCarousel = ({ testimonials }) => {
   const [activeIndex, setActiveIndex] = useState(0)
-  const [slideDirection, setSlideDirection] = useState("next")
-  const intervalRef = useRef(null)
 
   // Auto-rotate testimonials
   useEffect(() => {
-    intervalRef.current = setInterval(() => {
-      goToNext()
+    const interval = setInterval(() => {
+      setActiveIndex((prevIndex) => (prevIndex + 1) % testimonials.length)
     }, 5000)
 
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current)
-      }
-    }
-  }, [activeIndex, testimonials.length])
+    return () => clearInterval(interval)
+  }, [testimonials.length])
 
-  // Reset interval when user interacts
-  const resetInterval = () => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current)
-      intervalRef.current = setInterval(() => {
-        goToNext()
-      }, 5000)
-    }
+  // Navigate to specific testimonial
+  const goToTestimonial = (index) => {
+    setActiveIndex(index)
   }
 
-  // Go to next testimonial
-  const goToNext = () => {
-    setSlideDirection("next")
-    setActiveIndex((prevIndex) => (prevIndex + 1) % testimonials.length)
-  }
-
-  // Go to previous testimonial
-  const goToPrev = () => {
-    setSlideDirection("prev")
+  // Navigate to previous testimonial
+  const prevTestimonial = () => {
     setActiveIndex((prevIndex) => (prevIndex - 1 + testimonials.length) % testimonials.length)
   }
 
-  // Go to specific testimonial
-  const goToIndex = (index) => {
-    setSlideDirection(index > activeIndex ? "next" : "prev")
-    setActiveIndex(index)
-    resetInterval()
+  // Navigate to next testimonial
+  const nextTestimonial = () => {
+    setActiveIndex((prevIndex) => (prevIndex + 1) % testimonials.length)
   }
 
   return (
     <div className="testimonial-carousel">
-      <div className={`carousel-container ${slideDirection}`}>
-        {testimonials.map((testimonial, index) => (
-          <div key={testimonial.id} className={`carousel-item ${index === activeIndex ? "active" : ""}`}>
-            <div className="testimonial-content">
-              <div className="testimonial-rating">
-                {[...Array(5)].map((_, i) => (
-                  <i key={i} className={`${i < testimonial.rating ? "fas" : "far"} fa-star`}></i>
-                ))}
-              </div>
-              <p className="testimonial-text">{testimonial.comment}</p>
-              <div className="testimonial-author">
-                <div className="author-info">
-                  <div className="author-name">{testimonial.name}</div>
-                  <div className="author-location">{testimonial.location}</div>
-                </div>
-                {testimonial.verified && (
-                  <div className="verified-badge">
-                    <i className="fas fa-check-circle"></i> Verified Purchase
+      <div className="carousel-container">
+        <div className="carousel-track" style={{ transform: `translateX(-${activeIndex * 100}%)` }}>
+          {testimonials.map((testimonial, index) => (
+            <div key={index} className="carousel-slide">
+              <div className="testimonial-card">
+                <div className="testimonial-header">
+                  <div className="testimonial-avatar">
+                    <img src={testimonial.avatar || "/serene-gaze.png"} alt={testimonial.name} />
                   </div>
-                )}
+                  <div className="testimonial-info">
+                    <h4 className="testimonial-name">{testimonial.name}</h4>
+                    <div className="testimonial-location">{testimonial.location}</div>
+                    <div className="testimonial-date">{new Date(testimonial.date).toLocaleDateString()}</div>
+                  </div>
+                  <div className="testimonial-rating">
+                    <div className="stars" style={{ "--rating": testimonial.rating }}></div>
+                    {testimonial.verified && <span className="verified-badge">Terverifikasi</span>}
+                  </div>
+                </div>
+                <div className="testimonial-content">
+                  <p>"{testimonial.comment}"</p>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       <div className="carousel-controls">
-        <button
-          className="carousel-arrow prev"
-          onClick={() => {
-            goToPrev()
-            resetInterval()
-          }}
-        >
+        <button className="carousel-control prev" onClick={prevTestimonial}>
           <i className="fas fa-chevron-left"></i>
         </button>
-
-        <div className="carousel-dots">
+        <div className="carousel-indicators">
           {testimonials.map((_, index) => (
             <button
               key={index}
-              className={`carousel-dot ${index === activeIndex ? "active" : ""}`}
-              onClick={() => goToIndex(index)}
-              aria-label={`Go to testimonial ${index + 1}`}
+              className={`carousel-indicator ${index === activeIndex ? "active" : ""}`}
+              onClick={() => goToTestimonial(index)}
             ></button>
           ))}
         </div>
-
-        <button
-          className="carousel-arrow next"
-          onClick={() => {
-            goToNext()
-            resetInterval()
-          }}
-        >
+        <button className="carousel-control next" onClick={nextTestimonial}>
           <i className="fas fa-chevron-right"></i>
         </button>
       </div>
