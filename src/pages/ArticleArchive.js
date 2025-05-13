@@ -15,99 +15,99 @@ const ArticleArchive = () => {
 
   // Sample categories
   const categories = [
-    { id: "all", name: "All Articles" },
-    { id: "sustainability", name: "Sustainability" },
-    { id: "eco-living", name: "Eco Living" },
+    { id: "all", name: "Semua Artikel" },
+    { id: "sustainability", name: "Keberlanjutan" },
+    { id: "eco-living", name: "Hidup Ramah Lingkungan" },
     { id: "zero-waste", name: "Zero Waste" },
-    { id: "climate", name: "Climate Action" },
-    { id: "ethical-fashion", name: "Ethical Fashion" },
+    { id: "climate", name: "Aksi Iklim" },
+    { id: "ethical-fashion", name: "Fashion Etis" },
   ]
 
   // Sample articles data
   const sampleArticles = [
     {
       id: 1,
-      title: "10 Simple Ways to Reduce Your Plastic Footprint",
+      title: "10 Cara Sederhana Mengurangi Jejak Plastik Anda",
       excerpt:
-        "Practical tips for reducing plastic waste in your daily life and making a positive impact on the environment.",
+        "Tips praktis untuk mengurangi limbah plastik dalam kehidupan sehari-hari dan membuat dampak positif pada lingkungan.",
       image: "/cascading-plastic-alternatives.png",
       category: "zero-waste",
       author: "Emma Green",
       date: "2023-04-15",
-      readTime: "5 min read",
+      readTime: "5 menit baca",
     },
     {
       id: 2,
-      title: "The Rise of Sustainable Fashion: Beyond the Trends",
-      excerpt: "How sustainable fashion is transforming the industry and why it matters for our planet's future.",
+      title: "Kebangkitan Fashion Berkelanjutan: Di Balik Tren",
+      excerpt: "Bagaimana fashion berkelanjutan mengubah industri dan mengapa hal itu penting untuk masa depan planet kita.",
       image: "/circular-fashion-cycle.png",
       category: "ethical-fashion",
       author: "Michael Rivers",
       date: "2023-04-10",
-      readTime: "7 min read",
+      readTime: "7 menit baca",
     },
     {
       id: 3,
-      title: "Understanding Carbon Footprint: A Beginner's Guide",
-      excerpt: "Learn what carbon footprint means, how to calculate yours, and effective ways to reduce your impact.",
+      title: "Memahami Jejak Karbon: Panduan untuk Pemula",
+      excerpt: "Pelajari apa arti jejak karbon, cara menghitungnya, dan cara efektif untuk mengurangi dampak Anda.",
       image: "/global-carbon-cycle.png",
       category: "climate",
       author: "Dr. James Wilson",
       date: "2023-04-05",
-      readTime: "8 min read",
+      readTime: "8 menit baca",
     },
     {
       id: 4,
-      title: "Composting 101: Turn Kitchen Waste into Garden Gold",
-      excerpt: "A step-by-step guide to starting your own compost system and reducing food waste at home.",
+      title: "Kompos 101: Mengubah Limbah Dapur Menjadi Emas untuk Kebun",
+      excerpt: "Panduan langkah demi langkah untuk memulai sistem kompos Anda sendiri dan mengurangi limbah makanan di rumah.",
       image: "/backyard-compost-system.png",
       category: "eco-living",
       author: "Sophia Martinez",
       date: "2023-03-28",
-      readTime: "6 min read",
+      readTime: "6 menit baca",
     },
     {
       id: 5,
-      title: "The Hidden Environmental Cost of Fast Fashion",
+      title: "Biaya Lingkungan Tersembunyi dari Fast Fashion",
       excerpt:
-        "Exploring the true environmental impact of the fashion industry and how consumers can make better choices.",
-      image: "/placeholder.svg?height=400&width=600&query=fast fashion environmental impact",
+        "Mengeksplorasi dampak lingkungan sebenarnya dari industri fashion dan bagaimana konsumen dapat membuat pilihan yang lebih baik.",
+      image: "/placeholder.svg?key=hb2b6",
       category: "ethical-fashion",
       author: "Olivia Chen",
       date: "2023-03-20",
-      readTime: "9 min read",
+      readTime: "9 menit baca",
     },
     {
       id: 6,
-      title: "Sustainable Home Renovation: Eco-Friendly Materials and Practices",
+      title: "Renovasi Rumah Berkelanjutan: Material dan Praktik Ramah Lingkungan",
       excerpt:
-        "How to make environmentally conscious choices when renovating your home without compromising on style or quality.",
-      image: "/placeholder.svg?height=400&width=600&query=sustainable home renovation",
+        "Cara membuat pilihan sadar lingkungan saat merenovasi rumah Anda tanpa mengorbankan gaya atau kualitas.",
+      image: "/placeholder.svg?key=thl24",
       category: "eco-living",
       author: "Daniel Brooks",
       date: "2023-03-15",
-      readTime: "10 min read",
+      readTime: "10 menit baca",
     },
     {
       id: 7,
-      title: "The Science Behind Climate Change: Explained Simply",
-      excerpt: "Breaking down the complex science of climate change into understandable concepts for everyone.",
-      image: "/placeholder.svg?height=400&width=600&query=climate change science",
+      title: "Sains di Balik Perubahan Iklim: Dijelaskan dengan Sederhana",
+      excerpt: "Menguraikan sains kompleks perubahan iklim menjadi konsep yang dapat dipahami oleh semua orang.",
+      image: "/placeholder.svg?key=c7hgb",
       category: "climate",
       author: "Dr. Sarah Johnson",
       date: "2023-03-08",
-      readTime: "12 min read",
+      readTime: "12 menit baca",
     },
     {
       id: 8,
-      title: "Zero Waste Grocery Shopping: A Practical Guide",
+      title: "Belanja Bahan Makanan Zero Waste: Panduan Praktis",
       excerpt:
-        "Tips and tricks for reducing packaging waste when shopping for groceries, from preparation to checkout.",
-      image: "/placeholder.svg?height=400&width=600&query=zero waste grocery shopping",
+        "Tips dan trik untuk mengurangi limbah kemasan saat berbelanja bahan makanan, dari persiapan hingga pembayaran.",
+      image: "/placeholder.svg?key=7kwv8",
       category: "zero-waste",
       author: "Alex Turner",
       date: "2023-03-01",
-      readTime: "5 min read",
+      readTime: "5 menit baca",
     },
   ]
 
@@ -116,7 +116,7 @@ const ArticleArchive = () => {
     return sampleArticles.map((article) => ({
       ...article,
       id: article.id + page * 8,
-      title: `${article.title} - Part ${page}`,
+      title: `${article.title} - Bagian ${page}`,
     }))
   }
 
@@ -196,8 +196,8 @@ const ArticleArchive = () => {
     <div className="article-archive">
       <div className="archive-header">
         <div className="container">
-          <h1>Eco-Friendly Living Articles</h1>
-          <p>Discover tips, guides, and insights for a more sustainable lifestyle</p>
+          <h1>Artikel Hidup Ramah Lingkungan</h1>
+          <p>Temukan tips, panduan, dan wawasan untuk gaya hidup yang lebih berkelanjutan</p>
         </div>
       </div>
 
@@ -220,7 +220,7 @@ const ArticleArchive = () => {
           {loading && visibleArticles.length === 0 ? (
             <div className="loading-container">
               <div className="loading-spinner"></div>
-              <p>Loading articles...</p>
+              <p>Memuat artikel...</p>
             </div>
           ) : (
             <>
@@ -241,9 +241,9 @@ const ArticleArchive = () => {
                       <div className="article-meta">
                         <span className="article-author">{article.author}</span>
                         <span className="article-date">
-                          {new Date(article.date).toLocaleDateString("en-US", {
-                            month: "long",
+                          {new Date(article.date).toLocaleDateString("id-ID", {
                             day: "numeric",
+                            month: "long",
                             year: "numeric",
                           })}
                         </span>
@@ -255,7 +255,7 @@ const ArticleArchive = () => {
                         <h4>{article.title}</h4>
                         <p>{article.excerpt}</p>
                         <Link to={`/articles/${article.id}`} className="btn btn-primary btn-sm">
-                          Read Article
+                          Baca Artikel
                         </Link>
                       </div>
                     </div>
@@ -268,10 +268,10 @@ const ArticleArchive = () => {
                   {loading ? (
                     <div className="loading-container">
                       <div className="loading-spinner"></div>
-                      <p className="eco-loading-message">Loading more content saves paper... 🌱</p>
+                      <p className="eco-loading-message">Memuat lebih banyak konten menghemat kertas... 🌱</p>
                     </div>
                   ) : (
-                    <p className="scroll-message">Scroll for more articles</p>
+                    <p className="scroll-message">Gulir untuk lebih banyak artikel</p>
                   )}
                 </div>
               )}
