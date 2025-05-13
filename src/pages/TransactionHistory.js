@@ -18,35 +18,40 @@ const TransactionHistory = () => {
   const [filteredTransactions, setFilteredTransactions] = useState([])
   const [isFilterOpen, setIsFilterOpen] = useState(false)
 
-  // Sample transaction data
+  // Format price in IDR
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(price)
+  }
+
+  // Sample transaction data with converted prices to IDR
   const sampleTransactions = [
     {
       id: "order-123456",
       orderNumber: "ECO-123456",
       date: "2023-04-15",
-      total: 59.97,
+      total: 899550, // 59.97 USD * 15000
       status: "delivered",
-      paymentMethod: "Credit Card",
-      shippingMethod: "Standard Shipping",
+      paymentMethod: "Kartu Kredit",
+      shippingMethod: "Pengiriman Standar",
       items: [
         {
           id: "item1",
-          name: "Bamboo Toothbrush Set",
-          price: 12.99,
+          name: "Set Sikat Gigi Bambu",
+          price: 194850, // 12.99 USD * 15000
           quantity: 2,
           image: "/bamboo-toothbrush-set.png",
         },
         {
           id: "item2",
-          name: "Reusable Produce Bags",
-          price: 15.99,
+          name: "Kantong Belanja Reusable",
+          price: 239850, // 15.99 USD * 15000
           quantity: 1,
           image: "/reusable-produce-bags.png",
         },
         {
           id: "item3",
-          name: "Beeswax Food Wraps",
-          price: 18.99,
+          name: "Pembungkus Makanan Beeswax",
+          price: 284850, // 18.99 USD * 15000
           quantity: 1,
           image: "/beeswax-food-wraps.png",
         },
@@ -55,50 +60,50 @@ const TransactionHistory = () => {
         {
           status: "ordered",
           date: "2023-04-15",
-          time: "10:23 AM",
-          description: "Order placed and confirmed",
+          time: "10:23",
+          description: "Pesanan dibuat dan dikonfirmasi",
         },
         {
           status: "processing",
           date: "2023-04-15",
-          time: "02:45 PM",
-          description: "Order processed and ready for shipping",
+          time: "14:45",
+          description: "Pesanan diproses dan siap untuk pengiriman",
         },
         {
           status: "shipped",
           date: "2023-04-16",
-          time: "09:30 AM",
-          description: "Order shipped via Standard Shipping",
+          time: "09:30",
+          description: "Pesanan dikirim melalui Pengiriman Standar",
         },
         {
           status: "delivered",
           date: "2023-04-18",
-          time: "02:15 PM",
-          description: "Order delivered successfully",
+          time: "14:15",
+          description: "Pesanan berhasil diantar",
         },
       ],
       shippingAddress: {
-        name: "John Doe",
-        address: "123 Eco Street",
-        city: "Green City",
-        state: "CA",
+        name: "Budi Santoso",
+        address: "Jl. Eco No. 123",
+        city: "Jakarta",
+        state: "DKI Jakarta",
         zipCode: "12345",
-        country: "United States",
+        country: "Indonesia",
       },
     },
     {
       id: "order-123457",
       orderNumber: "ECO-123457",
       date: "2023-03-28",
-      total: 45.99,
+      total: 689850, // 45.99 USD * 15000
       status: "delivered",
       paymentMethod: "PayPal",
-      shippingMethod: "Express Shipping",
+      shippingMethod: "Pengiriman Ekspres",
       items: [
         {
           id: "item4",
-          name: "Solar Power Bank",
-          price: 45.99,
+          name: "Power Bank Tenaga Surya",
+          price: 689850, // 45.99 USD * 15000
           quantity: 1,
           image: "/solar-power-bank.png",
         },
@@ -107,57 +112,57 @@ const TransactionHistory = () => {
         {
           status: "ordered",
           date: "2023-03-28",
-          time: "03:45 PM",
-          description: "Order placed and confirmed",
+          time: "15:45",
+          description: "Pesanan dibuat dan dikonfirmasi",
         },
         {
           status: "processing",
           date: "2023-03-28",
-          time: "05:12 PM",
-          description: "Order processed and ready for shipping",
+          time: "17:12",
+          description: "Pesanan diproses dan siap untuk pengiriman",
         },
         {
           status: "shipped",
           date: "2023-03-29",
-          time: "10:30 AM",
-          description: "Order shipped via Express Shipping",
+          time: "10:30",
+          description: "Pesanan dikirim melalui Pengiriman Ekspres",
         },
         {
           status: "delivered",
           date: "2023-03-30",
-          time: "11:45 AM",
-          description: "Order delivered successfully",
+          time: "11:45",
+          description: "Pesanan berhasil diantar",
         },
       ],
       shippingAddress: {
-        name: "John Doe",
-        address: "123 Eco Street",
-        city: "Green City",
-        state: "CA",
+        name: "Budi Santoso",
+        address: "Jl. Eco No. 123",
+        city: "Jakarta",
+        state: "DKI Jakarta",
         zipCode: "12345",
-        country: "United States",
+        country: "Indonesia",
       },
     },
     {
       id: "order-123458",
       orderNumber: "ECO-123458",
       date: "2023-04-05",
-      total: 28.98,
+      total: 434700, // 28.98 USD * 15000
       status: "shipped",
-      paymentMethod: "Credit Card",
-      shippingMethod: "Standard Shipping",
+      paymentMethod: "Kartu Kredit",
+      shippingMethod: "Pengiriman Standar",
       items: [
         {
           id: "item5",
-          name: "Recycled Paper Notebook",
-          price: 9.99,
+          name: "Buku Catatan Kertas Daur Ulang",
+          price: 149850, // 9.99 USD * 15000
           quantity: 2,
           image: "/recycled-paper-notebook.png",
         },
         {
           id: "item6",
-          name: "Natural Deodorant",
-          price: 14.99,
+          name: "Deodoran Alami",
+          price: 224850, // 14.99 USD * 15000
           quantity: 1,
           image: "/natural-deodorant.png",
         },
@@ -166,44 +171,44 @@ const TransactionHistory = () => {
         {
           status: "ordered",
           date: "2023-04-05",
-          time: "11:23 AM",
-          description: "Order placed and confirmed",
+          time: "11:23",
+          description: "Pesanan dibuat dan dikonfirmasi",
         },
         {
           status: "processing",
           date: "2023-04-05",
-          time: "04:45 PM",
-          description: "Order processed and ready for shipping",
+          time: "16:45",
+          description: "Pesanan diproses dan siap untuk pengiriman",
         },
         {
           status: "shipped",
           date: "2023-04-06",
-          time: "10:15 AM",
-          description: "Order shipped via Standard Shipping",
+          time: "10:15",
+          description: "Pesanan dikirim melalui Pengiriman Standar",
         },
       ],
       shippingAddress: {
-        name: "John Doe",
-        address: "123 Eco Street",
-        city: "Green City",
-        state: "CA",
+        name: "Budi Santoso",
+        address: "Jl. Eco No. 123",
+        city: "Jakarta",
+        state: "DKI Jakarta",
         zipCode: "12345",
-        country: "United States",
+        country: "Indonesia",
       },
     },
     {
       id: "order-123459",
       orderNumber: "ECO-123459",
       date: "2023-04-20",
-      total: 34.99,
+      total: 524850, // 34.99 USD * 15000
       status: "processing",
       paymentMethod: "Apple Pay",
-      shippingMethod: "Standard Shipping",
+      shippingMethod: "Pengiriman Standar",
       items: [
         {
           id: "item7",
-          name: "Organic Herb Garden Kit",
-          price: 34.99,
+          name: "Kit Kebun Herbal Organik",
+          price: 524850, // 34.99 USD * 15000
           quantity: 1,
           image: "/herb-garden-kit.png",
         },
@@ -212,38 +217,38 @@ const TransactionHistory = () => {
         {
           status: "ordered",
           date: "2023-04-20",
-          time: "09:15 AM",
-          description: "Order placed and confirmed",
+          time: "09:15",
+          description: "Pesanan dibuat dan dikonfirmasi",
         },
         {
           status: "processing",
           date: "2023-04-20",
-          time: "11:30 AM",
-          description: "Order processed and ready for shipping",
+          time: "11:30",
+          description: "Pesanan diproses dan siap untuk pengiriman",
         },
       ],
       shippingAddress: {
-        name: "John Doe",
-        address: "123 Eco Street",
-        city: "Green City",
-        state: "CA",
+        name: "Budi Santoso",
+        address: "Jl. Eco No. 123",
+        city: "Jakarta",
+        state: "DKI Jakarta",
         zipCode: "12345",
-        country: "United States",
+        country: "Indonesia",
       },
     },
     {
       id: "order-123460",
       orderNumber: "ECO-123460",
       date: "2023-04-22",
-      total: 12.99,
+      total: 194850, // 12.99 USD * 15000
       status: "ordered",
-      paymentMethod: "Credit Card",
-      shippingMethod: "Standard Shipping",
+      paymentMethod: "Kartu Kredit",
+      shippingMethod: "Pengiriman Standar",
       items: [
         {
           id: "item1",
-          name: "Bamboo Toothbrush Set",
-          price: 12.99,
+          name: "Set Sikat Gigi Bambu",
+          price: 194850, // 12.99 USD * 15000
           quantity: 1,
           image: "/bamboo-toothbrush-set.png",
         },
@@ -252,17 +257,17 @@ const TransactionHistory = () => {
         {
           status: "ordered",
           date: "2023-04-22",
-          time: "03:45 PM",
-          description: "Order placed and confirmed",
+          time: "15:45",
+          description: "Pesanan dibuat dan dikonfirmasi",
         },
       ],
       shippingAddress: {
-        name: "John Doe",
-        address: "123 Eco Street",
-        city: "Green City",
-        state: "CA",
+        name: "Budi Santoso",
+        address: "Jl. Eco No. 123",
+        city: "Jakarta",
+        state: "DKI Jakarta",
         zipCode: "12345",
-        country: "United States",
+        country: "Indonesia",
       },
     },
   ]
@@ -335,7 +340,7 @@ const TransactionHistory = () => {
   // Format date
   const formatDate = (dateString) => {
     const options = { year: "numeric", month: "long", day: "numeric" }
-    return new Date(dateString).toLocaleDateString(undefined, options)
+    return new Date(dateString).toLocaleDateString("id-ID", options)
   }
 
   // Get status icon
@@ -374,6 +379,24 @@ const TransactionHistory = () => {
     }
   }
 
+  // Get status text in Indonesian
+  const getStatusText = (status) => {
+    switch (status) {
+      case "ordered":
+        return "Dipesan"
+      case "processing":
+        return "Diproses"
+      case "shipped":
+        return "Dikirim"
+      case "delivered":
+        return "Diterima"
+      case "cancelled":
+        return "Dibatalkan"
+      default:
+        return status
+    }
+  }
+
   // Reset filters
   const resetFilters = () => {
     setActiveFilter("all")
@@ -392,7 +415,7 @@ const TransactionHistory = () => {
       <div className="transactions-loading">
         <div className="container">
           <div className="loading-spinner"></div>
-          <p>Loading your order history...</p>
+          <p>Memuat riwayat pesanan Anda...</p>
         </div>
       </div>
     )
@@ -402,73 +425,73 @@ const TransactionHistory = () => {
     <div className="transaction-history">
       <div className="container">
         <div className="page-header">
-          <h1>Order History</h1>
-          <p>Track and manage your orders</p>
+          <h1>Riwayat Pesanan</h1>
+          <p>Lacak dan kelola pesanan Anda</p>
         </div>
 
         <div className="transaction-layout">
           {/* Filter Sidebar */}
           <aside className={`filter-sidebar ${isFilterOpen ? "open" : ""}`}>
             <div className="filter-header">
-              <h2>Filters</h2>
+              <h2>Filter</h2>
               <button className="close-filter" onClick={toggleFilter}>
                 <i className="fas fa-times"></i>
               </button>
             </div>
 
             <div className="filter-section">
-              <h3>Order Status</h3>
+              <h3>Status Pesanan</h3>
               <div className="filter-options">
                 <button
                   className={`filter-option ${activeFilter === "all" ? "active" : ""}`}
                   onClick={() => setActiveFilter("all")}
                 >
-                  All Orders
+                  Semua Pesanan
                   {activeFilter === "all" && <i className="fas fa-check"></i>}
                 </button>
                 <button
                   className={`filter-option ${activeFilter === "ordered" ? "active" : ""}`}
                   onClick={() => setActiveFilter("ordered")}
                 >
-                  Ordered
+                  Dipesan
                   {activeFilter === "ordered" && <i className="fas fa-check"></i>}
                 </button>
                 <button
                   className={`filter-option ${activeFilter === "processing" ? "active" : ""}`}
                   onClick={() => setActiveFilter("processing")}
                 >
-                  Processing
+                  Diproses
                   {activeFilter === "processing" && <i className="fas fa-check"></i>}
                 </button>
                 <button
                   className={`filter-option ${activeFilter === "shipped" ? "active" : ""}`}
                   onClick={() => setActiveFilter("shipped")}
                 >
-                  Shipped
+                  Dikirim
                   {activeFilter === "shipped" && <i className="fas fa-check"></i>}
                 </button>
                 <button
                   className={`filter-option ${activeFilter === "delivered" ? "active" : ""}`}
                   onClick={() => setActiveFilter("delivered")}
                 >
-                  Delivered
+                  Diterima
                   {activeFilter === "delivered" && <i className="fas fa-check"></i>}
                 </button>
                 <button
                   className={`filter-option ${activeFilter === "cancelled" ? "active" : ""}`}
                   onClick={() => setActiveFilter("cancelled")}
                 >
-                  Cancelled
+                  Dibatalkan
                   {activeFilter === "cancelled" && <i className="fas fa-check"></i>}
                 </button>
               </div>
             </div>
 
             <div className="filter-section">
-              <h3>Date Range</h3>
+              <h3>Rentang Tanggal</h3>
               <div className="date-range">
                 <div className="date-field">
-                  <label htmlFor="start-date">From</label>
+                  <label htmlFor="start-date">Dari</label>
                   <input
                     type="date"
                     id="start-date"
@@ -477,7 +500,7 @@ const TransactionHistory = () => {
                   />
                 </div>
                 <div className="date-field">
-                  <label htmlFor="end-date">To</label>
+                  <label htmlFor="end-date">Sampai</label>
                   <input
                     type="date"
                     id="end-date"
@@ -489,7 +512,7 @@ const TransactionHistory = () => {
             </div>
 
             <button className="btn btn-outline reset-filters" onClick={resetFilters}>
-              Reset Filters
+              Reset Filter
             </button>
           </aside>
 
@@ -497,13 +520,13 @@ const TransactionHistory = () => {
           <div className="transactions-content">
             <div className="transactions-toolbar">
               <button className="filter-toggle" onClick={toggleFilter}>
-                <i className="fas fa-filter"></i> Filters
+                <i className="fas fa-filter"></i> Filter
               </button>
 
               <div className="search-bar">
                 <input
                   type="text"
-                  placeholder="Search orders..."
+                  placeholder="Cari pesanan..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -513,12 +536,12 @@ const TransactionHistory = () => {
               </div>
 
               <div className="sort-dropdown">
-                <label htmlFor="sort-by">Sort by:</label>
+                <label htmlFor="sort-by">Urutkan:</label>
                 <select id="sort-by" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-                  <option value="date-desc">Newest First</option>
-                  <option value="date-asc">Oldest First</option>
-                  <option value="total-desc">Highest Amount</option>
-                  <option value="total-asc">Lowest Amount</option>
+                  <option value="date-desc">Terbaru</option>
+                  <option value="date-asc">Terlama</option>
+                  <option value="total-desc">Jumlah Tertinggi</option>
+                  <option value="total-asc">Jumlah Terendah</option>
                 </select>
               </div>
             </div>
@@ -526,7 +549,7 @@ const TransactionHistory = () => {
             <div className="transactions-results">
               <p>
                 <span className="result-count">{filteredTransactions.length}</span>{" "}
-                {filteredTransactions.length === 1 ? "order" : "orders"} found
+                {filteredTransactions.length === 1 ? "pesanan" : "pesanan"} ditemukan
               </p>
             </div>
 
@@ -535,10 +558,10 @@ const TransactionHistory = () => {
                 <div className="no-transactions-icon">
                   <i className="fas fa-shopping-bag"></i>
                 </div>
-                <h2>No orders found</h2>
-                <p>Try adjusting your filters or search query.</p>
+                <h2>Tidak ada pesanan ditemukan</h2>
+                <p>Coba sesuaikan filter atau kata kunci pencarian Anda.</p>
                 <button className="btn btn-primary" onClick={resetFilters}>
-                  Reset Filters
+                  Reset Filter
                 </button>
               </div>
             ) : (
@@ -550,7 +573,7 @@ const TransactionHistory = () => {
                         <div className="order-number">
                           <h3>{transaction.orderNumber}</h3>
                           <span className={`status-badge ${getStatusColor(transaction.status)}`}>
-                            {transaction.status.charAt(0).toUpperCase() + transaction.status.slice(1)}
+                            {getStatusText(transaction.status)}
                           </span>
                         </div>
                         <div className="order-date">
@@ -558,19 +581,19 @@ const TransactionHistory = () => {
                         </div>
                       </div>
                       <div className="transaction-actions">
-                        <div className="order-total">${transaction.total.toFixed(2)}</div>
+                        <div className="order-total">{formatPrice(transaction.total)}</div>
                         <button
                           className={`toggle-details ${expandedId === transaction.id ? "active" : ""}`}
                           onClick={() => toggleDetails(transaction.id)}
                         >
                           {expandedId === transaction.id ? (
                             <>
-                              <span>Hide Details</span>
+                              <span>Sembunyikan Detail</span>
                               <i className="fas fa-chevron-up"></i>
                             </>
                           ) : (
                             <>
-                              <span>View Details</span>
+                              <span>Lihat Detail</span>
                               <i className="fas fa-chevron-down"></i>
                             </>
                           )}
@@ -589,7 +612,7 @@ const TransactionHistory = () => {
                         >
                           <div className="details-grid">
                             <div className="order-timeline">
-                              <h4>Order Timeline</h4>
+                              <h4>Timeline Pesanan</h4>
                               <div className="timeline">
                                 {transaction.timeline.map((event, index) => (
                                   <div
@@ -600,11 +623,9 @@ const TransactionHistory = () => {
                                   >
                                     <div className="timeline-icon">{getStatusIcon(event.status)}</div>
                                     <div className="timeline-content">
-                                      <div className="timeline-title">
-                                        {event.status.charAt(0).toUpperCase() + event.status.slice(1)}
-                                      </div>
+                                      <div className="timeline-title">{getStatusText(event.status)}</div>
                                       <div className="timeline-date">
-                                        {formatDate(event.date)} at {event.time}
+                                        {formatDate(event.date)} pukul {event.time}
                                       </div>
                                       <div className="timeline-description">{event.description}</div>
                                     </div>
@@ -614,7 +635,7 @@ const TransactionHistory = () => {
                             </div>
 
                             <div className="order-items">
-                              <h4>Order Items</h4>
+                              <h4>Item Pesanan</h4>
                               <div className="items-list">
                                 {transaction.items.map((item) => (
                                   <div className="order-item" key={item.id}>
@@ -624,21 +645,21 @@ const TransactionHistory = () => {
                                     <div className="item-details">
                                       <h5>{item.name}</h5>
                                       <div className="item-meta">
-                                        <span className="item-price">${item.price.toFixed(2)}</span>
-                                        <span className="item-quantity">Qty: {item.quantity}</span>
+                                        <span className="item-price">{formatPrice(item.price)}</span>
+                                        <span className="item-quantity">Jumlah: {item.quantity}</span>
                                       </div>
                                     </div>
-                                    <div className="item-total">${(item.price * item.quantity).toFixed(2)}</div>
+                                    <div className="item-total">{formatPrice(item.price * item.quantity)}</div>
                                   </div>
                                 ))}
                               </div>
                             </div>
 
                             <div className="order-info">
-                              <h4>Order Information</h4>
+                              <h4>Informasi Pesanan</h4>
                               <div className="info-grid">
                                 <div className="info-section">
-                                  <h5>Shipping Address</h5>
+                                  <h5>Alamat Pengiriman</h5>
                                   <p>
                                     {transaction.shippingAddress.name}
                                     <br />
@@ -651,32 +672,32 @@ const TransactionHistory = () => {
                                   </p>
                                 </div>
                                 <div className="info-section">
-                                  <h5>Payment Method</h5>
+                                  <h5>Metode Pembayaran</h5>
                                   <p>{transaction.paymentMethod}</p>
-                                  <h5>Shipping Method</h5>
+                                  <h5>Metode Pengiriman</h5>
                                   <p>{transaction.shippingMethod}</p>
                                 </div>
                               </div>
                             </div>
 
                             <div className="order-summary">
-                              <h4>Order Summary</h4>
+                              <h4>Ringkasan Pesanan</h4>
                               <div className="summary-table">
                                 <div className="summary-row">
                                   <span>Subtotal</span>
-                                  <span>${transaction.total.toFixed(2)}</span>
+                                  <span>{formatPrice(transaction.total)}</span>
                                 </div>
                                 <div className="summary-row">
-                                  <span>Shipping</span>
-                                  <span>$0.00</span>
+                                  <span>Pengiriman</span>
+                                  <span>Rp0</span>
                                 </div>
                                 <div className="summary-row">
-                                  <span>Tax</span>
-                                  <span>$0.00</span>
+                                  <span>Pajak</span>
+                                  <span>Rp0</span>
                                 </div>
                                 <div className="summary-row total">
                                   <span>Total</span>
-                                  <span>${transaction.total.toFixed(2)}</span>
+                                  <span>{formatPrice(transaction.total)}</span>
                                 </div>
                               </div>
                             </div>
@@ -684,13 +705,13 @@ const TransactionHistory = () => {
 
                           <div className="details-actions">
                             <button className="btn btn-outline">
-                              <i className="fas fa-file-invoice"></i> Download Invoice
+                              <i className="fas fa-file-invoice"></i> Unduh Faktur
                             </button>
                             <button className="btn btn-outline">
-                              <i className="fas fa-redo-alt"></i> Reorder
+                              <i className="fas fa-redo-alt"></i> Pesan Ulang
                             </button>
                             <button className="btn btn-outline">
-                              <i className="fas fa-question-circle"></i> Need Help?
+                              <i className="fas fa-question-circle"></i> Butuh Bantuan?
                             </button>
                           </div>
                         </motion.div>
