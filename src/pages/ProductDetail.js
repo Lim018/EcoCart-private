@@ -18,11 +18,16 @@ const ProductDetail = () => {
   const [relatedProducts, setRelatedProducts] = useState([])
   const imageRef = useRef(null)
 
+  // Format price in IDR
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price);
+  }
+
   // Sample product data (in a real app, this would come from an API)
   const productData = {
     id: 1,
-    name: "Bamboo Toothbrush Set",
-    price: 12.99,
+    name: "Set Sikat Gigi Bambu",
+    price: 194850, // 12.99 USD * 15000
     discount: 0,
     images: [
       "/bamboo-toothbrush-set.png",
@@ -38,63 +43,63 @@ const ProductDetail = () => {
     isBestseller: true,
     sustainabilityScore: 95,
     description:
-      "Our bamboo toothbrush set is designed to reduce plastic waste without compromising on quality. Each set includes 4 biodegradable bamboo toothbrushes with plant-based bristles that clean just as effectively as conventional plastic toothbrushes.",
+      "Set sikat gigi bambu kami dirancang untuk mengurangi limbah plastik tanpa mengorbankan kualitas. Setiap set mencakup 4 sikat gigi bambu biodegradable dengan bulu sikat berbahan nabati yang membersihkan sama efektifnya dengan sikat gigi plastik konvensional.",
     features: [
-      "100% biodegradable bamboo handle",
-      "BPA-free nylon bristles",
-      "Plastic-free packaging",
-      "Lasts as long as conventional toothbrushes",
-      "Ergonomic design for comfortable brushing",
-      "Medium bristle firmness suitable for most users",
+      "Gagang bambu 100% biodegradable",
+      "Bulu sikat nilon bebas BPA",
+      "Kemasan bebas plastik",
+      "Tahan lama seperti sikat gigi konvensional",
+      "Desain ergonomis untuk menyikat yang nyaman",
+      "Kekerasan bulu sikat sedang cocok untuk sebagian besar pengguna",
     ],
     specifications: {
-      Material: "Moso bamboo handle, BPA-free nylon bristles",
-      Dimensions: "19cm length, standard head size",
-      Weight: "15g per toothbrush",
-      Contents: "Set of 4 toothbrushes",
-      Packaging: "Recycled cardboard box",
-      Origin: "Ethically manufactured in China",
-      Certifications: "FSC-certified bamboo, Vegan-friendly",
+      Material: "Gagang bambu Moso, bulu sikat nilon bebas BPA",
+      Dimensi: "Panjang 19cm, ukuran kepala standar",
+      Berat: "15g per sikat gigi",
+      Isi: "Set 4 sikat gigi",
+      Kemasan: "Kotak karton daur ulang",
+      Asal: "Diproduksi secara etis di Tiongkok",
+      Sertifikasi: "Bambu bersertifikat FSC, Ramah vegan",
     },
     impact: {
-      plasticSaved: "30g plastic saved per toothbrush",
-      co2Reduced: "80% less carbon footprint than plastic alternatives",
-      biodegradable: "Fully biodegradable handle",
-      waterSaved: "Requires 65% less water to produce than plastic",
-      recyclable: "Bristles can be recycled through specialized programs",
+      plasticSaved: "30g plastik dihemat per sikat gigi",
+      co2Reduced: "80% lebih sedikit jejak karbon dibanding alternatif plastik",
+      biodegradable: "Gagang sepenuhnya biodegradable",
+      waterSaved: "Membutuhkan 65% lebih sedikit air untuk diproduksi dibanding plastik",
+      recyclable: "Bulu sikat dapat didaur ulang melalui program khusus",
     },
     usage:
-      "Replace your toothbrush every 3 months, or sooner if bristles are frayed. After use, rinse thoroughly and store in an upright position to allow the handle to dry. Do not soak in water for extended periods.",
+      "Ganti sikat gigi Anda setiap 3 bulan, atau lebih cepat jika bulu sikat sudah rusak. Setelah digunakan, bilas secara menyeluruh dan simpan dalam posisi tegak untuk memungkinkan gagang mengering. Jangan rendam dalam air untuk waktu yang lama.",
     endOfLife:
-      "When it's time to replace your toothbrush, remove the bristles (which can be recycled through specialized programs) and compost the bamboo handle. The handle will biodegrade within 6 months in commercial composting conditions.",
+      "Ketika saatnya mengganti sikat gigi Anda, lepaskan bulu sikat (yang dapat didaur ulang melalui program khusus) dan komposkan gagang bambu. Gagang akan terurai dalam waktu 6 bulan dalam kondisi pengomposan komersial.",
     testimonials: [
       {
         id: 1,
         name: "Sarah J.",
-        location: "Portland, OR",
+        location: "Jakarta",
         rating: 5,
         comment:
-          "I've been using these bamboo toothbrushes for over a year now and I'm never going back to plastic! They clean just as well, and I love knowing I'm reducing my plastic waste.",
+          "Saya telah menggunakan sikat gigi bambu ini selama lebih dari setahun dan saya tidak akan kembali ke plastik! Mereka membersihkan sama baiknya, dan saya senang mengetahui saya mengurangi limbah plastik saya.",
         date: "2023-03-15",
         verified: true,
       },
       {
         id: 2,
         name: "Michael T.",
-        location: "Austin, TX",
+        location: "Surabaya",
         rating: 4,
         comment:
-          "Great toothbrushes that do the job well. The only reason I'm giving 4 stars instead of 5 is that the bristles are a bit firmer than I prefer, but they've softened with use.",
+          "Sikat gigi yang bagus yang bekerja dengan baik. Satu-satunya alasan saya memberikan 4 bintang bukan 5 adalah karena bulu sikatnya sedikit lebih keras dari yang saya sukai, tetapi mereka melunakkan dengan penggunaan.",
         date: "2023-02-28",
         verified: true,
       },
       {
         id: 3,
         name: "Emma L.",
-        location: "Seattle, WA",
+        location: "Bandung",
         rating: 5,
         comment:
-          "These toothbrushes are fantastic! The bamboo handle feels nice to hold, and I appreciate the minimal packaging. Will definitely purchase again.",
+          "Sikat gigi ini fantastis! Gagang bambu terasa nyaman dipegang, dan saya menghargai kemasan yang minimal. Pasti akan membeli lagi.",
         date: "2023-02-10",
         verified: true,
       },
@@ -105,8 +110,8 @@ const ProductDetail = () => {
   const sampleRelatedProducts = [
     {
       id: 3,
-      name: "Reusable Produce Bags",
-      price: 15.99,
+      name: "Kantong Belanja Reusable",
+      price: 239850, // 15.99 USD * 15000
       image: "/colorful-produce-bags.png",
       rating: 4.9,
       reviewCount: 203,
@@ -114,8 +119,8 @@ const ProductDetail = () => {
     },
     {
       id: 5,
-      name: "Beeswax Food Wraps",
-      price: 18.99,
+      name: "Pembungkus Makanan Beeswax",
+      price: 284850, // 18.99 USD * 15000
       image: "/beeswax-food-wraps.png",
       rating: 4.7,
       reviewCount: 156,
@@ -123,8 +128,8 @@ const ProductDetail = () => {
     },
     {
       id: 7,
-      name: "Natural Deodorant",
-      price: 14.99,
+      name: "Deodoran Alami",
+      price: 224850, // 14.99 USD * 15000
       image: "/natural-deodorant.png",
       rating: 4.3,
       reviewCount: 78,
@@ -173,7 +178,7 @@ const ProductDetail = () => {
       <div className="product-detail-loading">
         <div className="container">
           <div className="loading-spinner"></div>
-          <p>Loading product details...</p>
+          <p>Memuat detail produk...</p>
         </div>
       </div>
     )
@@ -183,10 +188,10 @@ const ProductDetail = () => {
     return (
       <div className="product-not-found">
         <div className="container">
-          <h2>Product Not Found</h2>
-          <p>Sorry, the product you are looking for does not exist.</p>
+          <h2>Produk Tidak Ditemukan</h2>
+          <p>Maaf, produk yang Anda cari tidak ada.</p>
           <Link to="/products" className="btn btn-primary">
-            Back to Products
+            Kembali ke Produk
           </Link>
         </div>
       </div>
@@ -198,9 +203,9 @@ const ProductDetail = () => {
       <div className="container">
         {/* Breadcrumb Navigation */}
         <div className="breadcrumb">
-          <Link to="/">Home</Link>
+          <Link to="/">Beranda</Link>
           <span className="separator">/</span>
-          <Link to="/products">Products</Link>
+          <Link to="/products">Produk</Link>
           <span className="separator">/</span>
           <span className="current">{product.name}</span>
         </div>
@@ -253,7 +258,7 @@ const ProductDetail = () => {
 
               {activeImageIndex === 0 && (
                 <div className="viewer-instruction">
-                  <i className="fas fa-sync-alt"></i> Drag to rotate
+                  <i className="fas fa-sync-alt"></i> Geser untuk memutar
                 </div>
               )}
             </div>
@@ -264,7 +269,7 @@ const ProductDetail = () => {
                 onClick={() => setActiveImageIndex(0)}
               >
                 <i className="fas fa-cube"></i>
-                <span>360° View</span>
+                <span>Tampilan 360°</span>
               </button>
 
               {product.images.map((image, index) => (
@@ -273,15 +278,15 @@ const ProductDetail = () => {
                   className={`thumbnail-btn ${activeImageIndex === index ? "active" : ""}`}
                   onClick={() => setActiveImageIndex(index)}
                 >
-                  <img src={image || "/placeholder.svg"} alt={`${product.name} - View ${index + 1}`} />
+                  <img src={image || "/placeholder.svg"} alt={`${product.name} - Tampilan ${index + 1}`} />
                 </button>
               ))}
             </div>
           </div>
 
           <div className="product-info">
-            {product.isNew && <div className="product-badge new">New</div>}
-            {product.isBestseller && <div className="product-badge bestseller">Bestseller</div>}
+            {product.isNew && <div className="product-badge new">Baru</div>}
+            {product.isBestseller && <div className="product-badge bestseller">Terlaris</div>}
 
             <h1 className="product-name">{product.name}</h1>
 
@@ -289,7 +294,7 @@ const ProductDetail = () => {
               <div className="product-rating">
                 <div className="stars" style={{ "--rating": product.rating }}></div>
                 <Link to="#reviews" className="review-count">
-                  {product.reviewCount} reviews
+                  {product.reviewCount} ulasan
                 </Link>
               </div>
 
@@ -299,26 +304,26 @@ const ProductDetail = () => {
             <div className="product-pricing">
               {product.discount > 0 ? (
                 <>
-                  <div className="original-price">${(product.price + product.discount).toFixed(2)}</div>
-                  <div className="current-price">${product.price.toFixed(2)}</div>
-                  <div className="discount-badge">Save ${product.discount.toFixed(2)}</div>
+                  <div className="original-price">{formatPrice(product.price + product.discount)}</div>
+                  <div className="current-price">{formatPrice(product.price)}</div>
+                  <div className="discount-badge">Hemat {formatPrice(product.discount)}</div>
                 </>
               ) : (
-                <div className="current-price">${product.price.toFixed(2)}</div>
+                <div className="current-price">{formatPrice(product.price)}</div>
               )}
             </div>
 
             <div className="short-description">{product.description}</div>
 
             <div className="sustainability-impact">
-              <h3>Environmental Impact</h3>
+              <h3>Dampak Lingkungan</h3>
               <div className="impact-meter">
                 <div className="impact-bar">
                   <div className="impact-fill" style={{ width: `${product.sustainabilityScore}%` }}></div>
                 </div>
                 <div className="impact-score">
                   <span className="score-value">{product.sustainabilityScore}</span>
-                  <span className="score-label">Eco Score</span>
+                  <span className="score-label">Skor Eco</span>
                 </div>
               </div>
 
@@ -338,9 +343,9 @@ const ProductDetail = () => {
               <div className="stock-status">
                 <span className={`status-indicator ${product.stock > 0 ? "in-stock" : "out-of-stock"}`}></span>
                 {product.stock > 0 ? (
-                  <span className="status-text">In Stock</span>
+                  <span className="status-text">Stok Tersedia</span>
                 ) : (
-                  <span className="status-text">Out of Stock</span>
+                  <span className="status-text">Stok Habis</span>
                 )}
               </div>
 
@@ -355,33 +360,38 @@ const ProductDetail = () => {
               </div>
 
               <button className="btn btn-primary add-to-cart-btn">
-                <i className="fas fa-shopping-cart"></i> Add to Cart
+                <i className="fas fa-shopping-cart"></i> Tambahkan ke Keranjang
               </button>
 
               <button className="btn btn-outline wishlist-btn">
-                <i className="far fa-heart"></i> Add to Wishlist
+                <i className="far fa-heart"></i> Tambahkan ke Wishlist
               </button>
             </div>
 
             <div className="product-meta-info">
               <div className="meta-item">
-                <span className="meta-label">Category:</span>
+                <span className="meta-label">Kategori:</span>
                 <Link to={`/products/category/${product.category}`} className="meta-value">
-                  {product.category.charAt(0).toUpperCase() + product.category.slice(1)}
+                  {product.category === "home" ? "Rumah & Hidup" : 
+                   product.category === "fashion" ? "Fashion Ramah Lingkungan" : 
+                   product.category === "beauty" ? "Kecantikan Alami" : 
+                   product.category === "food" ? "Makanan Organik" : 
+                   product.category === "gifts" ? "Hadiah Berkelanjutan" : 
+                   product.category.charAt(0).toUpperCase() + product.category.slice(1)}
                 </Link>
               </div>
 
               <div className="meta-item">
-                <span className="meta-label">Tags:</span>
+                <span className="meta-label">Tag:</span>
                 <span className="meta-value">
-                  <Link to="/products/tag/eco-friendly">Eco-friendly</Link>,
-                  <Link to="/products/tag/plastic-free">Plastic-free</Link>,
+                  <Link to="/products/tag/eco-friendly">Ramah lingkungan</Link>,
+                  <Link to="/products/tag/plastic-free">Bebas plastik</Link>,
                   <Link to="/products/tag/biodegradable">Biodegradable</Link>
                 </span>
               </div>
 
               <div className="meta-item">
-                <span className="meta-label">Share:</span>
+                <span className="meta-label">Bagikan:</span>
                 <div className="social-share">
                   <a href="#" className="social-icon">
                     <i className="fab fa-facebook-f"></i>
@@ -408,25 +418,25 @@ const ProductDetail = () => {
               className={`tab-btn ${activeTab === "description" ? "active" : ""}`}
               onClick={() => setActiveTab("description")}
             >
-              Description
+              Deskripsi
             </button>
             <button
               className={`tab-btn ${activeTab === "specifications" ? "active" : ""}`}
               onClick={() => setActiveTab("specifications")}
             >
-              Specifications
+              Spesifikasi
             </button>
             <button
               className={`tab-btn ${activeTab === "sustainability" ? "active" : ""}`}
               onClick={() => setActiveTab("sustainability")}
             >
-              Sustainability
+              Keberlanjutan
             </button>
             <button
               className={`tab-btn ${activeTab === "reviews" ? "active" : ""}`}
               onClick={() => setActiveTab("reviews")}
             >
-              Reviews ({product.reviewCount})
+              Ulasan ({product.reviewCount})
             </button>
           </div>
 
@@ -436,7 +446,7 @@ const ProductDetail = () => {
                 <div className="product-description">
                   <p>{product.description}</p>
 
-                  <h3>Features</h3>
+                  <h3>Fitur</h3>
                   <ul className="features-list">
                     {product.features.map((feature, index) => (
                       <li key={index}>
@@ -446,10 +456,10 @@ const ProductDetail = () => {
                     ))}
                   </ul>
 
-                  <h3>How to Use</h3>
+                  <h3>Cara Penggunaan</h3>
                   <p>{product.usage}</p>
 
-                  <h3>End of Life</h3>
+                  <h3>Akhir Masa Pakai</h3>
                   <p>{product.endOfLife}</p>
                 </div>
               </div>
@@ -492,21 +502,19 @@ const ProductDetail = () => {
                         {product.sustainabilityScore}
                       </text>
                     </svg>
-                    <span className="score-label">Eco Score</span>
+                    <span className="score-label">Skor Eco</span>
                   </div>
 
                   <div className="score-explanation">
-                    <h3>What This Score Means</h3>
+                    <h3>Arti Skor Ini</h3>
                     <p>
-                      Our Eco Score rates products on a scale from 0-100 based on environmental impact, materials,
-                      production methods, packaging, and end-of-life considerations. A score above 90 indicates an
-                      exceptional eco-friendly product.
+                      Skor Eco kami menilai produk pada skala 0-100 berdasarkan dampak lingkungan, bahan, metode produksi, kemasan, dan pertimbangan akhir masa pakai. Skor di atas 90 menunjukkan produk ramah lingkungan yang luar biasa.
                     </p>
                   </div>
                 </div>
 
                 <div className="impact-details">
-                  <h3>Environmental Impact</h3>
+                  <h3>Dampak Lingkungan</h3>
                   <div className="impact-grid">
                     {Object.entries(product.impact).map(([key, value]) => (
                       <div className="impact-card" key={key}>
@@ -519,19 +527,19 @@ const ProductDetail = () => {
                   </div>
 
                   <div className="certifications">
-                    <h3>Certifications</h3>
+                    <h3>Sertifikasi</h3>
                     <div className="certification-logos">
                       <div className="certification">
                         <img src="/fsc-certified.png" alt="FSC Certified" />
-                        <span>FSC Certified</span>
+                        <span>Bersertifikat FSC</span>
                       </div>
                       <div className="certification">
                         <img src="/vegan-friendly.png" alt="Vegan Friendly" />
-                        <span>Vegan Friendly</span>
+                        <span>Ramah Vegan</span>
                       </div>
                       <div className="certification">
                         <img src="/plastic-free.png" alt="Plastic Free" />
-                        <span>Plastic Free</span>
+                        <span>Bebas Plastik</span>
                       </div>
                     </div>
                   </div>
@@ -546,41 +554,41 @@ const ProductDetail = () => {
                     <div className="rating-number">{product.rating.toFixed(1)}</div>
                     <div className="rating-stars">
                       <div className="stars" style={{ "--rating": product.rating }}></div>
-                      <span className="review-count">{product.reviewCount} reviews</span>
+                      <span className="review-count">{product.reviewCount} ulasan</span>
                     </div>
                   </div>
 
                   <div className="rating-breakdown">
                     <div className="rating-bar">
-                      <span className="rating-label">5 stars</span>
+                      <span className="rating-label">5 bintang</span>
                       <div className="bar-container">
                         <div className="bar-fill" style={{ width: "70%" }}></div>
                       </div>
                       <span className="rating-percent">70%</span>
                     </div>
                     <div className="rating-bar">
-                      <span className="rating-label">4 stars</span>
+                      <span className="rating-label">4 bintang</span>
                       <div className="bar-container">
                         <div className="bar-fill" style={{ width: "20%" }}></div>
                       </div>
                       <span className="rating-percent">20%</span>
                     </div>
                     <div className="rating-bar">
-                      <span className="rating-label">3 stars</span>
+                      <span className="rating-label">3 bintang</span>
                       <div className="bar-container">
                         <div className="bar-fill" style={{ width: "7%" }}></div>
                       </div>
                       <span className="rating-percent">7%</span>
                     </div>
                     <div className="rating-bar">
-                      <span className="rating-label">2 stars</span>
+                      <span className="rating-label">2 bintang</span>
                       <div className="bar-container">
                         <div className="bar-fill" style={{ width: "2%" }}></div>
                       </div>
                       <span className="rating-percent">2%</span>
                     </div>
                     <div className="rating-bar">
-                      <span className="rating-label">1 star</span>
+                      <span className="rating-label">1 bintang</span>
                       <div className="bar-container">
                         <div className="bar-fill" style={{ width: "1%" }}></div>
                       </div>
@@ -590,12 +598,12 @@ const ProductDetail = () => {
                 </div>
 
                 <div className="testimonial-section">
-                  <h3>Customer Testimonials</h3>
+                  <h3>Testimoni Pelanggan</h3>
                   <TestimonialCarousel testimonials={product.testimonials} />
                 </div>
 
                 <div className="write-review">
-                  <button className="btn btn-outline">Write a Review</button>
+                  <button className="btn btn-outline">Tulis Ulasan</button>
                 </div>
               </div>
             )}
@@ -604,17 +612,17 @@ const ProductDetail = () => {
 
         {/* Related Products */}
         <div className="related-products">
-          <h2>You May Also Like</h2>
+          <h2>Produk Terkait</h2>
           <div className="related-products-grid">
             {relatedProducts.map((relatedProduct) => (
               <div className="product-card" key={relatedProduct.id}>
                 <div className="product-image">
                   <img src={relatedProduct.image || "/placeholder.svg"} alt={relatedProduct.name} />
                   <div className="product-actions">
-                    <button className="wishlist-btn" aria-label="Add to wishlist">
+                    <button className="wishlist-btn" aria-label="Tambahkan ke wishlist">
                       <i className="far fa-heart"></i>
                     </button>
-                    <button className="quickview-btn" aria-label="Quick view">
+                    <button className="quickview-btn" aria-label="Lihat cepat">
                       <i className="fas fa-eye"></i>
                     </button>
                   </div>
@@ -625,14 +633,14 @@ const ProductDetail = () => {
                     <Link to={`/products/${relatedProduct.id}`}>{relatedProduct.name}</Link>
                   </h3>
 
-                  <div className="product-price">${relatedProduct.price.toFixed(2)}</div>
+                  <div className="product-price">{formatPrice(relatedProduct.price)}</div>
 
                   <div className="product-rating">
                     <div className="stars" style={{ "--rating": relatedProduct.rating }}></div>
                     <span className="review-count">({relatedProduct.reviewCount})</span>
                   </div>
 
-                  <button className="btn btn-primary add-to-cart">Add to Cart</button>
+                  <button className="btn btn-primary add-to-cart">Tambahkan ke Keranjang</button>
                 </div>
               </div>
             ))}
