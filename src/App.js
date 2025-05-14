@@ -17,6 +17,8 @@ import ManageTransactions from "./pages/ManageTransactions"
 import Dashboard from "./pages/Dashboard"
 import Authentication from "./pages/Authentication"
 import ContactPage from "./pages/ContactPage"
+import SearchPage from "./pages/SearchPage"
+import "./styles/main.css"
 
 function App() {
   return (
@@ -40,6 +42,7 @@ function App() {
           <Route path="/admin/dashboard" element={<Dashboard />} />
           <Route path="/auth" element={<Authentication />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/search" element={<SearchPage />} />
         </Routes>
       </main>
       <Footer />
