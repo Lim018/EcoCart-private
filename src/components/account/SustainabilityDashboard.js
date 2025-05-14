@@ -1,222 +1,181 @@
 "use client"
 
-import { useEffect } from "react"
-import { motion } from "framer-motion"
-import { Leaf, Droplet, Wind, Sun, ShoppingBag, Award, MessageSquare } from "react-feather"
+import { useState, useEffect } from "react"
+import { ShoppingBag, Award, MessageSquare, Droplet, Wind, Leaf } from "react-feather"
 import "../../styles/SustainabilityDashboard.css"
 
 const SustainabilityDashboard = ({ userData }) => {
-  const { sustainabilityStats, recentActivity } = userData || {
-    sustainabilityStats: {
-      plasticSaved: 0,
-      waterSaved: 0,
-      co2Reduced: 0,
-      energySaved: 0,
-    },
-    recentActivity: [],
-  }
+  const [animatedStats, setAnimatedStats] = useState({
+    plasticSaved: 0,
+    waterSaved: 0,
+    co2Reduced: 0,
+    energySaved: 0,
+  })
 
-  // Animation variants for the stats
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
-  }
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { type: "spring", stiffness: 100 },
-    },
-  }
-
-  // Function to animate the counter
-  const animateValue = (id, start, end, duration) => {
-    const obj = document.getElementById(id)
-    if (!obj) return
-
-    let startTimestamp = null
-    const step = (timestamp) => {
-      if (!startTimestamp) startTimestamp = timestamp
-      const progress = Math.min((timestamp - startTimestamp) / duration, 1)
-      const value = Math.floor(progress * (end - start) + start)
-      obj.innerHTML = value.toLocaleString()
-      if (progress < 1) {
-        window.requestAnimationFrame(step)
-      }
-    }
-    window.requestAnimationFrame(step)
-  }
-
+  // Animasi statistik keberlanjutan
   useEffect(() => {
-    // Animate the stats when component mounts
-    if (sustainabilityStats) {
-      animateValue("plasticSaved", 0, sustainabilityStats.plasticSaved, 2000)
-      animateValue("waterSaved", 0, sustainabilityStats.waterSaved, 2000)
-      animateValue("co2Reduced", 0, sustainabilityStats.co2Reduced, 2000)
-      animateValue("energySaved", 0, sustainabilityStats.energySaved, 2000)
-    }
-  }, [sustainabilityStats])
+    if (!userData) return
+
+    const { sustainabilityStats } = userData
+    const duration = 2000 // Durasi animasi dalam milidetik
+    const steps = 60 // Jumlah langkah animasi
+    const interval = duration / steps
+
+    let currentStep = 0
+    const timer = setInterval(() => {
+      currentStep++
+      const progress = currentStep / steps
+
+      setAnimatedStats({
+        plasticSaved: Math.round(sustainabilityStats.plasticSaved * progress),
+        waterSaved: Math.round(sustainabilityStats.waterSaved * progress),
+        co2Reduced: Math.round(sustainabilityStats.co2Reduced * progress),
+        energySaved: Math.round(sustainabilityStats.energySaved * progress),
+      })
+
+      if (currentStep >= steps) {
+        clearInterval(timer)
+      }
+    }, interval)
+
+    return () => clearInterval(timer)
+  }, [userData])
+
+  if (!userData) {
+    return <div className="sustainability-dashboard loading">Memuat data...</div>
+  }
 
   return (
     <div className="sustainability-dashboard">
-      <motion.h2
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="dashboard-title"
-      >
-        Dampak Sustainability Anda
-      </motion.h2>
+      <div className="dashboard-header">
+        <h2>Dashboard Keberlanjutan</h2>
+        <p>Lihat dampak positif Anda terhadap lingkungan</p>
+      </div>
 
-      <motion.div className="stats-container" variants={containerVariants} initial="hidden" animate="visible">
-        <motion.div className="stat-card" variants={itemVariants}>
+      <div className="stats-grid">
+        <div className="stat-card">
           <div className="stat-icon plastic">
-            <Leaf size={32} />
+            <ShoppingBag size={24} />
           </div>
           <div className="stat-content">
             <h3>Plastik Terhindarkan</h3>
-            <p>
-              <span id="plasticSaved">0</span> gram
-            </p>
-            <div className="progress-bar">
-              <motion.div
-                className="progress"
-                initial={{ width: 0 }}
-                animate={{ width: "75%" }}
-                transition={{ duration: 1, delay: 0.5 }}
-              ></motion.div>
+            <div className="stat-value">
+              {animatedStats.plasticSaved} <span>gram</span>
+            </div>
+            <div className="stat-progress">
+              <div className="progress-bar">
+                <div
+                  className="progress plastic"
+                  style={{ width: `${Math.min(100, (animatedStats.plasticSaved / 3000) * 100)}%` }}
+                ></div>
+              </div>
+              <div className="progress-text">Target: 3000 gram</div>
             </div>
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div className="stat-card" variants={itemVariants}>
+        <div className="stat-card">
           <div className="stat-icon water">
-            <Droplet size={32} />
+            <Droplet size={24} />
           </div>
           <div className="stat-content">
             <h3>Air Terhemat</h3>
-            <p>
-              <span id="waterSaved">0</span> liter
-            </p>
-            <div className="progress-bar">
-              <motion.div
-                className="progress"
-                initial={{ width: 0 }}
-                animate={{ width: "60%" }}
-                transition={{ duration: 1, delay: 0.7 }}
-              ></motion.div>
+            <div className="stat-value">
+              {animatedStats.waterSaved} <span>liter</span>
+            </div>
+            <div className="stat-progress">
+              <div className="progress-bar">
+                <div
+                  className="progress water"
+                  style={{ width: `${Math.min(100, (animatedStats.waterSaved / 10000) * 100)}%` }}
+                ></div>
+              </div>
+              <div className="progress-text">Target: 10000 liter</div>
             </div>
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div className="stat-card" variants={itemVariants}>
-          <div className="stat-icon co2">
-            <Wind size={32} />
+        <div className="stat-card">
+          <div className="stat-icon carbon">
+            <Leaf size={24} />
           </div>
           <div className="stat-content">
-            <h3>CO2 Berkurang</h3>
-            <p>
-              <span id="co2Reduced">0</span> kg
-            </p>
-            <div className="progress-bar">
-              <motion.div
-                className="progress"
-                initial={{ width: 0 }}
-                animate={{ width: "45%" }}
-                transition={{ duration: 1, delay: 0.9 }}
-              ></motion.div>
+            <h3>CO₂ Terkurangi</h3>
+            <div className="stat-value">
+              {animatedStats.co2Reduced} <span>kg</span>
+            </div>
+            <div className="stat-progress">
+              <div className="progress-bar">
+                <div
+                  className="progress carbon"
+                  style={{ width: `${Math.min(100, (animatedStats.co2Reduced / 500) * 100)}%` }}
+                ></div>
+              </div>
+              <div className="progress-text">Target: 500 kg</div>
             </div>
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div className="stat-card" variants={itemVariants}>
+        <div className="stat-card">
           <div className="stat-icon energy">
-            <Sun size={32} />
+            <Wind size={24} />
           </div>
           <div className="stat-content">
             <h3>Energi Terhemat</h3>
-            <p>
-              <span id="energySaved">0</span> kWh
-            </p>
-            <div className="progress-bar">
-              <motion.div
-                className="progress"
-                initial={{ width: 0 }}
-                animate={{ width: "80%" }}
-                transition={{ duration: 1, delay: 1.1 }}
-              ></motion.div>
+            <div className="stat-value">
+              {animatedStats.energySaved} <span>kWh</span>
+            </div>
+            <div className="stat-progress">
+              <div className="progress-bar">
+                <div
+                  className="progress energy"
+                  style={{ width: `${Math.min(100, (animatedStats.energySaved / 1000) * 100)}%` }}
+                ></div>
+              </div>
+              <div className="progress-text">Target: 1000 kWh</div>
             </div>
           </div>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
 
-      <motion.div
-        className="recent-activity"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 1.3 }}
-      >
-        <h3>Aktivitas Terbaru</h3>
-        <div className="activity-timeline">
-          {recentActivity && recentActivity.length > 0 ? (
-            recentActivity.map((activity, index) => (
-              <motion.div
-                key={index}
-                className="activity-item"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3, delay: 1.5 + index * 0.1 }}
-              >
+      <div className="dashboard-sections">
+        <div className="dashboard-section">
+          <h3>Aktivitas Terbaru</h3>
+          <div className="activity-list">
+            {userData.recentActivity.map((activity, index) => (
+              <div key={index} className={`activity-item ${activity.type}`}>
                 <div className="activity-icon">
-                  {activity.type === "purchase" && <ShoppingBag size={16} />}
-                  {activity.type === "badge" && <Award size={16} />}
-                  {activity.type === "review" && <MessageSquare size={16} />}
+                  {activity.type === "purchase" && <ShoppingBag size={18} />}
+                  {activity.type === "badge" && <Award size={18} />}
+                  {activity.type === "review" && <MessageSquare size={18} />}
                 </div>
                 <div className="activity-content">
-                  <p>{activity.description}</p>
-                  <span className="activity-date">{activity.date}</span>
+                  <p className="activity-description">{activity.description}</p>
+                  <p className="activity-date">{activity.date}</p>
                 </div>
-              </motion.div>
-            ))
-          ) : (
-            <p className="no-activity">Belum ada aktivitas terbaru.</p>
-          )}
+              </div>
+            ))}
+          </div>
         </div>
-      </motion.div>
 
-      <motion.div
-        className="sustainability-tips"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 1.5 }}
-      >
-        <h3>Tips Sustainability</h3>
-        <div className="tips-container">
-          <motion.div className="tip-card" whileHover={{ scale: 1.03, boxShadow: "0 10px 20px rgba(0,0,0,0.1)" }}>
-            <h4>Kurangi Penggunaan Plastik</h4>
-            <p>
-              Gunakan tas belanja yang dapat digunakan kembali dan hindari produk dengan kemasan plastik sekali pakai.
-            </p>
-          </motion.div>
-          <motion.div className="tip-card" whileHover={{ scale: 1.03, boxShadow: "0 10px 20px rgba(0,0,0,0.1)" }}>
-            <h4>Hemat Air</h4>
-            <p>Matikan keran saat menyikat gigi dan ambil shower yang lebih singkat untuk menghemat air.</p>
-          </motion.div>
-          <motion.div className="tip-card" whileHover={{ scale: 1.03, boxShadow: "0 10px 20px rgba(0,0,0,0.1)" }}>
-            <h4>Kurangi Jejak Karbon</h4>
-            <p>
-              Pertimbangkan untuk berjalan kaki, bersepeda, atau menggunakan transportasi umum untuk perjalanan pendek.
-            </p>
-          </motion.div>
+        <div className="dashboard-section">
+          <h3>Tips Keberlanjutan</h3>
+          <div className="sustainability-tips">
+            <div className="tip-card">
+              <h4>Kurangi Penggunaan Plastik Sekali Pakai</h4>
+              <p>Bawa tas belanja sendiri dan hindari penggunaan sedotan plastik untuk mengurangi sampah plastik.</p>
+            </div>
+            <div className="tip-card">
+              <h4>Hemat Air</h4>
+              <p>Matikan keran saat menyikat gigi dan perbaiki keran yang bocor untuk menghemat air.</p>
+            </div>
+            <div className="tip-card">
+              <h4>Kurangi Jejak Karbon</h4>
+              <p>Gunakan transportasi umum atau sepeda untuk perjalanan pendek untuk mengurangi emisi karbon.</p>
+            </div>
+          </div>
         </div>
-      </motion.div>
+      </div>
     </div>
   )
 }
