@@ -1,41 +1,51 @@
 "use client"
-import { motion } from "framer-motion"
-import { User, ShoppingBag, Heart, Gift, Award, CreditCard, Settings, BarChart2 } from "react-feather"
+
+import React, { useState, useEffect } from "react"
 import "../../styles/TabNavigation.css"
 
-const TabNavigation = ({ activeTab, onTabChange }) => {
-  const tabs = [
-    { id: "dashboard", label: "Dashboard", icon: <BarChart2 /> },
-    { id: "orders", label: "Pesanan Saya", icon: <ShoppingBag /> },
-    { id: "wishlist", label: "Wishlist", icon: <Heart /> },
-    { id: "recommendations", label: "Rekomendasi", icon: <Gift /> },
-    { id: "profile", label: "Profil", icon: <User /> },
-    { id: "badges", label: "Badge Sustainability", icon: <Award /> },
-    { id: "payment", label: "Metode Pembayaran", icon: <CreditCard /> },
-    { id: "settings", label: "Pengaturan", icon: <Settings /> },
-  ]
+const TabNavigation = ({ tabs, activeTab, setActiveTab }) => {
+  const [indicatorStyle, setIndicatorStyle] = useState({})
+  const [tabRefs, setTabRefs] = useState([])
+
+  // Inisialisasi refs untuk setiap tab
+  useEffect(() => {
+    setTabRefs(tabs.map(() => React.createRef()))
+  }, [tabs])
+
+  // Update posisi indikator saat tab aktif berubah
+  useEffect(() => {
+    if (tabRefs.length > 0 && tabRefs[activeTab] && tabRefs[activeTab].current) {
+      const activeTabElement = tabRefs[activeTab].current
+      setIndicatorStyle({
+        width: `${activeTabElement.offsetWidth}px`,
+        left: `${activeTabElement.offsetLeft}px`,
+      })
+    }
+  }, [activeTab, tabRefs])
+
+  // Handler untuk perubahan tab
+  const handleTabChange = (index) => {
+    setActiveTab(index)
+  }
 
   return (
     <div className="tab-navigation">
-      {tabs.map((tab) => (
-        <motion.div
-          key={tab.id}
-          className={`tab-item ${activeTab === tab.id ? "active" : ""}`}
-          onClick={() => onTabChange(tab.id)}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <div className="tab-icon">{tab.icon}</div>
-          <span className="tab-label">{tab.label}</span>
-          {activeTab === tab.id && (
-            <motion.div
-              className="active-indicator"
-              layoutId="activeIndicator"
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            />
-          )}
-        </motion.div>
-      ))}
+      <div className="tabs">
+        {tabs.map((tab, index) => (
+          <button
+            key={index}
+            ref={tabRefs[index]}
+            className={`tab ${activeTab === index ? "active" : ""}`}
+            onClick={() => handleTabChange(index)}
+            aria-selected={activeTab === index}
+            role="tab"
+          >
+            {tab.icon && <span className="tab-icon">{tab.icon}</span>}
+            <span className="tab-text">{tab.label}</span>
+          </button>
+        ))}
+        <div className="tab-indicator" style={indicatorStyle} />
+      </div>
     </div>
   )
 }
