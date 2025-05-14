@@ -18,6 +18,7 @@ import Dashboard from "./pages/Dashboard"
 import Authentication from "./pages/Authentication"
 import ContactPage from "./pages/ContactPage"
 import SearchPage from "./pages/SearchPage"
+import AccountPage from "./pages/AccountPage"
 import "./styles/main.css"
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
           <Route path="/auth" element={<Authentication />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/search" element={<SearchPage />} />
+          <Route path="/account" element={<AccountPage />} />
         </Routes>
       </main>
       <Footer />

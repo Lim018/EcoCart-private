@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { ShoppingBag, Award, MessageSquare, Droplet, Wind, Leaf } from "react-feather"
+import { ShoppingBag, Award, MessageSquare, Droplet, Wind, Feather } from "react-feather"
 import "../../styles/SustainabilityDashboard.css"
 
 const SustainabilityDashboard = ({ userData }) => {
@@ -97,7 +97,7 @@ const SustainabilityDashboard = ({ userData }) => {
 
         <div className="stat-card">
           <div className="stat-icon carbon">
-            <Leaf size={24} />
+            <Feather size={24} />
           </div>
           <div className="stat-content">
             <h3>CO₂ Terkurangi</h3>

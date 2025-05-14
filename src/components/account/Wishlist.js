@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef } from "react"
-import { Heart, ShoppingCart, Trash2, GripVertical, ShoppingBag } from "react-feather"
+import { Heart, ShoppingCart, Trash2, MoreVertical, ShoppingBag } from "react-feather"
 import { formatPrice } from "../../utils/accountUtils"
 import "../../styles/Wishlist.css"
 
@@ -92,7 +92,7 @@ const Wishlist = ({ wishlistItems }) => {
       <div className="wishlist-header">
         <h2>Wishlist Saya</h2>
         <div className="drag-instruction">
-          <GripVertical size={16} />
+          <MoreVertical size={16} />
           <span>Seret untuk mengatur ulang</span>
         </div>
       </div>
@@ -107,9 +107,9 @@ const Wishlist = ({ wishlistItems }) => {
             onDragEnter={(e) => handleDragEnter(e, index)}
             onDragOver={(e) => e.preventDefault()}
           >
-            <div className="wishlist-item-drag-handle">
-              <GripVertical size={20} />
-            </div>
+          <div className="wishlist-item-drag-handle">
+            <MoreVertical size={20} />
+          </div>
 
             <div
               className="wishlist-item-image"
