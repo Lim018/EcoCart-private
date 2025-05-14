@@ -27,7 +27,7 @@ const Navbar = () => {
   }, [location])
 
   // Don't render Navbar on specific pages or dynamic routes
-  const hiddenPaths = ["/auth", "/login", "/register"] // Added /about
+  const hiddenPaths = ["/auth", "/login", "/register", "/account"] // Added /about
   const dynamicPathBases = ["/articles", "/products", "/admin"] // Base paths for dynamic routes
   const isDynamicPath = dynamicPathBases.some(
     (base) =>
