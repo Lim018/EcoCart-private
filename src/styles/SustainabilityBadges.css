@@ -1,0 +1,394 @@
+.sustainability-badges {
+    color: #333;
+  }
+  
+  .badges-header {
+    margin-bottom: 1.5rem;
+  }
+  
+  .badges-header h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #388e3c;
+    margin-bottom: 0.5rem;
+  }
+  
+  .badges-header p {
+    font-size: 1rem;
+    color: #666;
+  }
+  
+  .no-badges {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
+    text-align: center;
+  }
+  
+  .no-badges svg {
+    color: #ccc;
+    margin-bottom: 1rem;
+  }
+  
+  .no-badges h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #555;
+  }
+  
+  .no-badges p {
+    font-size: 0.95rem;
+    color: #888;
+  }
+  
+  .badges-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .badge-category {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+  }
+  
+  .badge-category h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1.25rem;
+    color: #388e3c;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .badge-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.25rem;
+  }
+  
+  .badge-item {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+  }
+  
+  .badge-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .badge-item.locked {
+    background-color: #f9f9f9;
+    opacity: 0.8;
+  }
+  
+  .badge-icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 1rem;
+    position: relative;
+  }
+  
+  .badge-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  
+  .locked-icon {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
+    border-radius: 50%;
+    color: #aaa;
+  }
+  
+  .locked-icon.large {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .badge-info {
+    text-align: center;
+    width: 100%;
+  }
+  
+  .badge-info h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #333;
+  }
+  
+  .badge-date {
+    font-size: 0.85rem;
+    color: #888;
+  }
+  
+  .progress-container {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+  
+  .progress-bar {
+    height: 6px;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 0.25rem;
+  }
+  
+  .progress {
+    height: 100%;
+    background: linear-gradient(90deg, #388e3c 0%, #4caf50 100%);
+    border-radius: 3px;
+  }
+  
+  .progress-text {
+    font-size: 0.8rem;
+    color: #888;
+    text-align: right;
+    display: block;
+  }
+  
+  .badge-hover-hint {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+  }
+  
+  .badge-item:hover .badge-hover-hint {
+    transform: translateY(0);
+  }
+  
+  .badge-details-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+  }
+  
+  .badge-details {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  
+  .badge-details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .badge-details-header h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #388e3c;
+  }
+  
+  .close-details {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+  
+  .close-details:hover {
+    color: #333;
+  }
+  
+  .badge-details-content {
+    padding: 1.5rem;
+    display: flex;
+    gap: 1.5rem;
+  }
+  
+  .badge-details-icon {
+    flex: 0 0 120px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .badge-details-info {
+    flex: 1;
+  }
+  
+  .badge-description {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    color: #555;
+  }
+  
+  .badge-achievement {
+    background-color: rgba(76, 175, 80, 0.1);
+    border-radius: 8px;
+    padding: 1rem;
+  }
+  
+  .achievement-date {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #388e3c;
+    margin-bottom: 0.5rem;
+  }
+  
+  .achievement-details {
+    font-size: 0.9rem;
+    color: #555;
+  }
+  
+  .badge-requirements {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 1rem;
+  }
+  
+  .badge-requirements h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #555;
+  }
+  
+  .badge-requirements p {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1rem;
+  }
+  
+  .detailed-progress {
+    margin-top: 1rem;
+  }
+  
+  .progress-details {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+  }
+  
+  .progress-fraction {
+    color: #666;
+  }
+  
+  .progress-percentage {
+    font-weight: 600;
+    color: #388e3c;
+  }
+  
+  .badge-details-footer {
+    padding: 1.25rem;
+    border-top: 1px solid #f0f0f0;
+  }
+  
+  .related-badges h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #555;
+  }
+  
+  .related-badges-list {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+  
+  .related-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 80px;
+  }
+  
+  .related-badge img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+  }
+  
+  .related-badge span {
+    font-size: 0.8rem;
+    text-align: center;
+    color: #666;
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 992px) {
+    .badge-grid {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .badge-details-content {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .badge-details-icon {
+      margin-bottom: 1rem;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .badge-grid {
+      grid-template-columns: 1fr;
+    }
+  
+    .badge-category {
+      padding: 1rem;
+    }
+  
+    .badge-details {
+      max-height: 100vh;
+      border-radius: 0;
+    }
+  }
+  
