@@ -1,0 +1,94 @@
+.saved-searches {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    flex: 1;
+  }
+  
+  .saved-header {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .saved-header h3 {
+    margin: 0;
+    font-size: 1rem;
+    color: #555;
+  }
+  
+  .saved-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .saved-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .saved-item:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .saved-item.animating {
+    animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  }
+  
+  @keyframes shake {
+    10%,
+    90% {
+      transform: translateX(-1px);
+    }
+    20%,
+    80% {
+      transform: translateX(2px);
+    }
+    30%,
+    50%,
+    70% {
+      transform: translateX(-4px);
+    }
+    40%,
+    60% {
+      transform: translateX(4px);
+    }
+  }
+  
+  .saved-item-icon {
+    color: #43a047;
+    margin-right: 0.75rem;
+    font-size: 0.9rem;
+  }
+  
+  .saved-item-query {
+    font-size: 0.9rem;
+    color: #555;
+    flex: 1;
+  }
+  
+  .remove-saved-button {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    padding: 0.25rem;
+    margin-left: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    opacity: 0;
+  }
+  
+  .saved-item:hover .remove-saved-button {
+    opacity: 1;
+  }
+  
+  .remove-saved-button:hover {
+    background-color: #f0f0f0;
+    color: #666;
+  }
+  
