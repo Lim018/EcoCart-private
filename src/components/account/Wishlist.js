@@ -1,183 +1,170 @@
 "use client"
 
-import { useState } from "react"
-import { motion } from "framer-motion"
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
-import { ShoppingCart, Trash2, Move } from "react-feather"
+import { useState, useRef } from "react"
+import { Heart, ShoppingCart, Trash2, GripVertical, ShoppingBag } from "react-feather"
+import { formatPrice } from "../../utils/accountUtils"
 import "../../styles/Wishlist.css"
 
-const Wishlist = ({ items = [] }) => {
-  const [wishlistItems, setWishlistItems] = useState(items)
+const Wishlist = ({ wishlistItems }) => {
+  const [items, setItems] = useState(wishlistItems || [])
+  const [draggedItem, setDraggedItem] = useState(null)
   const [hoveredItem, setHoveredItem] = useState(null)
+  const dragItem = useRef(null)
+  const dragNode = useRef(null)
 
-  const handleDragEnd = (result) => {
-    if (!result.destination) return
+  // Handle drag start
+  const handleDragStart = (e, index) => {
+    dragItem.current = index
+    dragNode.current = e.currentTarget
+    dragNode.current.addEventListener("dragend", handleDragEnd)
 
-    const newItems = Array.from(wishlistItems)
-    const [reorderedItem] = newItems.splice(result.source.index, 1)
-    newItems.splice(result.destination.index, 0, reorderedItem)
-
-    setWishlistItems(newItems)
+    // Add a delay to apply the dragging class for animation
+    setTimeout(() => {
+      setDraggedItem(index)
+    }, 0)
   }
 
-  const removeFromWishlist = (itemId) => {
-    setWishlistItems(wishlistItems.filter((item) => item.id !== itemId))
+  // Handle drag enter
+  const handleDragEnter = (e, index) => {
+    if (dragItem.current === index) return
+
+    // Reorder the items
+    const newItems = [...items]
+    const draggedItemContent = newItems[dragItem.current]
+    newItems.splice(dragItem.current, 1)
+    newItems.splice(index, 0, draggedItemContent)
+
+    dragItem.current = index
+    setItems(newItems)
   }
 
-  const addToCart = (itemId) => {
-    // Implement add to cart functionality
-    console.log(`Added item ${itemId} to cart`)
-    // Show success notification
-    alert(`Produk telah ditambahkan ke keranjang!`)
+  // Handle drag end
+  const handleDragEnd = () => {
+    setDraggedItem(null)
+    dragNode.current.removeEventListener("dragend", handleDragEnd)
+    dragItem.current = null
+    dragNode.current = null
+  }
+
+  // Handle mouse enter for hover effect
+  const handleMouseEnter = (index) => {
+    setHoveredItem(index)
+  }
+
+  // Handle mouse leave for hover effect
+  const handleMouseLeave = () => {
+    setHoveredItem(null)
+  }
+
+  // Remove item from wishlist
+  const removeFromWishlist = (index) => {
+    const newItems = [...items]
+    newItems.splice(index, 1)
+    setItems(newItems)
+  }
+
+  // Add item to cart
+  const addToCart = (item) => {
+    console.log("Added to cart:", item)
+    // Implementasi penambahan ke keranjang akan ditambahkan nanti
+  }
+
+  if (!items || items.length === 0) {
+    return (
+      <div className="wishlist-container">
+        <div className="wishlist-header">
+          <h2>Wishlist Saya</h2>
+        </div>
+        <div className="empty-wishlist">
+          <div className="empty-wishlist-icon">
+            <Heart size={48} />
+          </div>
+          <h3>Wishlist Anda Kosong</h3>
+          <p>Simpan produk favorit Anda di sini untuk melihatnya nanti.</p>
+          <button className="browse-products-btn">Jelajahi Produk</button>
+        </div>
+      </div>
+    )
   }
 
   return (
     <div className="wishlist-container">
-      <motion.div
-        className="wishlist-header"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
+      <div className="wishlist-header">
         <h2>Wishlist Saya</h2>
-        <p className="drag-instruction">
-          <Move size={16} />
-          <span>Seret item untuk mengatur ulang wishlist Anda</span>
-        </p>
-      </motion.div>
+        <div className="drag-instruction">
+          <GripVertical size={16} />
+          <span>Seret untuk mengatur ulang</span>
+        </div>
+      </div>
 
-      {wishlistItems.length === 0 ? (
-        <motion.div
-          className="empty-wishlist"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <div className="empty-wishlist-icon">❤️</div>
-          <h3>Wishlist Anda Kosong</h3>
-          <p>Tambahkan produk ke wishlist Anda untuk menyimpannya di sini.</p>
-          <motion.button
-            className="browse-products-btn"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => (window.location.href = "/products")}
+      <div className="wishlist-items">
+        {items.map((item, index) => (
+          <div
+            key={item.id}
+            className={`wishlist-item ${draggedItem === index ? "dragging" : ""}`}
+            draggable
+            onDragStart={(e) => handleDragStart(e, index)}
+            onDragEnter={(e) => handleDragEnter(e, index)}
+            onDragOver={(e) => e.preventDefault()}
           >
-            Jelajahi Produk
-          </motion.button>
-        </motion.div>
-      ) : (
-        <DragDropContext onDragEnd={handleDragEnd}>
-          <Droppable droppableId="wishlist">
-            {(provided) => (
-              <motion.div
-                className="wishlist-items"
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-              >
-                {wishlistItems.map((item, index) => (
-                  <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
-                    {(provided, snapshot) => (
-                      <motion.div
-                        className={`wishlist-item ${snapshot.isDragging ? "dragging" : ""}`}
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        onMouseEnter={() => setHoveredItem(item.id)}
-                        onMouseLeave={() => setHoveredItem(null)}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.3, delay: index * 0.1 }}
-                        whileHover={{
-                          scale: 1.02,
-                          boxShadow: "0 10px 20px rgba(0,0,0,0.1)",
-                        }}
-                      >
-                        <div className="wishlist-item-drag-handle" {...provided.dragHandleProps}>
-                          <Move size={20} />
-                        </div>
+            <div className="wishlist-item-drag-handle">
+              <GripVertical size={20} />
+            </div>
 
-                        <div className="wishlist-item-image">
-                          <img src={item.image || "/placeholder.svg"} alt={item.name} />
-                          {hoveredItem === item.id && (
-                            <motion.div
-                              className="quick-add-overlay"
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              transition={{ duration: 0.2 }}
-                            >
-                              <motion.button
-                                className="quick-add-btn"
-                                onClick={() => addToCart(item.id)}
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.9 }}
-                              >
-                                <ShoppingCart size={16} />
-                                <span>Tambah ke Keranjang</span>
-                              </motion.button>
-                            </motion.div>
-                          )}
-                        </div>
+            <div
+              className="wishlist-item-image"
+              onMouseEnter={() => handleMouseEnter(index)}
+              onMouseLeave={handleMouseLeave}
+            >
+              <img src={item.image || "/placeholder.svg"} alt={item.name} />
+              {hoveredItem === index && (
+                <div className="quick-add-overlay">
+                  <button className="quick-add-btn" onClick={() => addToCart(item)} disabled={!item.inStock}>
+                    <ShoppingBag size={16} />
+                    <span>Tambah ke Keranjang</span>
+                  </button>
+                </div>
+              )}
+            </div>
 
-                        <div className="wishlist-item-details">
-                          <h3>{item.name}</h3>
-                          <div className="wishlist-item-price">
-                            {item.discountPrice ? (
-                              <>
-                                <span className="original-price">Rp {item.originalPrice.toLocaleString()}</span>
-                                <span className="discount-price">Rp {item.discountPrice.toLocaleString()}</span>
-                              </>
-                            ) : (
-                              <span>Rp {item.price.toLocaleString()}</span>
-                            )}
-                          </div>
-                          <div className="wishlist-item-meta">
-                            {item.inStock ? (
-                              <span className="in-stock">Tersedia</span>
-                            ) : (
-                              <span className="out-of-stock">Stok Habis</span>
-                            )}
-                            {item.sustainabilityScore && (
-                              <div className="sustainability-score">
-                                <span className="score-label">Skor Sustainability:</span>
-                                <div className="score-value">
-                                  <div className="score-bar" style={{ width: `${item.sustainabilityScore}%` }}></div>
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        </div>
+            <div className="wishlist-item-details">
+              <h3>{item.name}</h3>
+              <div className="wishlist-item-price">
+                {item.originalPrice ? (
+                  <>
+                    <span className="original-price">{formatPrice(item.originalPrice)}</span>
+                    <span className="discount-price">{formatPrice(item.discountPrice)}</span>
+                  </>
+                ) : (
+                  <span className="discount-price">{formatPrice(item.price)}</span>
+                )}
+              </div>
+              <div className="wishlist-item-meta">
+                {item.inStock ? (
+                  <span className="in-stock">Stok Tersedia</span>
+                ) : (
+                  <span className="out-of-stock">Stok Habis</span>
+                )}
+                <div className="sustainability-score">
+                  <span className="score-label">Skor Keberlanjutan:</span>
+                  <div className="score-value">
+                    <div className="score-bar" style={{ width: `${item.sustainabilityScore}%` }}></div>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-                        <div className="wishlist-item-actions">
-                          <motion.button
-                            className="action-btn add-to-cart"
-                            onClick={() => addToCart(item.id)}
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                            disabled={!item.inStock}
-                          >
-                            <ShoppingCart size={16} />
-                          </motion.button>
-                          <motion.button
-                            className="action-btn remove"
-                            onClick={() => removeFromWishlist(item.id)}
-                            whileHover={{ scale: 1.1, color: "#f44336" }}
-                            whileTap={{ scale: 0.9 }}
-                          >
-                            <Trash2 size={16} />
-                          </motion.button>
-                        </div>
-                      </motion.div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </motion.div>
-            )}
-          </Droppable>
-        </DragDropContext>
-      )}
+            <div className="wishlist-item-actions">
+              <button className="action-btn add-to-cart" onClick={() => addToCart(item)} disabled={!item.inStock}>
+                <ShoppingCart size={18} />
+              </button>
+              <button className="action-btn remove" onClick={() => removeFromWishlist(index)}>
+                <Trash2 size={18} />
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
