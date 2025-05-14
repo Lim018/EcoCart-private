@@ -1,0 +1,271 @@
+.personalized-recommendations {
+    color: #333;
+  }
+  
+  .recommendations-header {
+    margin-bottom: 1.5rem;
+  }
+  
+  .recommendations-header h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #388e3c;
+    margin-bottom: 0.5rem;
+  }
+  
+  .recommendations-header p {
+    font-size: 1rem;
+    color: #666;
+  }
+  
+  .no-recommendations {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
+    text-align: center;
+    color: #888;
+  }
+  
+  .recommendations-carousel-container {
+    position: relative;
+    padding: 0 2rem;
+  }
+  
+  .carousel-control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #fff;
+    border: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2;
+    color: #388e3c;
+    transition: all 0.3s ease;
+  }
+  
+  .carousel-control.prev {
+    left: -10px;
+  }
+  
+  .carousel-control.next {
+    right: -10px;
+  }
+  
+  .carousel-control:hover {
+    background-color: #388e3c;
+    color: #fff;
+  }
+  
+  .carousel-control.disabled {
+    background-color: #f5f5f5;
+    color: #ccc;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  
+  .recommendations-carousel {
+    overflow: hidden;
+    margin: 0 -10px;
+  }
+  
+  .carousel-track {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .recommendation-card {
+    flex: 0 0 260px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .recommendation-image {
+    height: 180px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .recommendation-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  
+  .recommendation-card:hover .recommendation-image img {
+    transform: scale(1.05);
+  }
+  
+  .recommendation-badges {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  
+  .badge.new {
+    background-color: #2196f3;
+    color: #fff;
+  }
+  
+  .badge.discount {
+    background-color: #f44336;
+    color: #fff;
+  }
+  
+  .badge.eco {
+    background-color: #388e3c;
+    color: #fff;
+  }
+  
+  .recommendation-details {
+    padding: 1rem;
+  }
+  
+  .recommendation-details h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+    height: 2.8em;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  
+  .recommendation-price {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .original-price {
+    font-size: 0.85rem;
+    color: #888;
+    text-decoration: line-through;
+  }
+  
+  .discount-price {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #388e3c;
+  }
+  
+  .recommendation-reason {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 1rem;
+    height: 2.5em;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  
+  .recommendation-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .action-btn {
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 6px;
+  }
+  
+  .action-btn.add-to-cart {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    background-color: #388e3c;
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+  
+  .action-btn.add-to-cart:hover {
+    background-color: #2e7d32;
+  }
+  
+  .action-btn.add-to-wishlist {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f5f5;
+    color: #666;
+  }
+  
+  .action-btn.add-to-wishlist:hover {
+    background-color: #f44336;
+    color: #fff;
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 992px) {
+    .recommendation-card {
+      flex: 0 0 240px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .recommendation-card {
+      flex: 0 0 220px;
+    }
+  
+    .recommendation-image {
+      height: 150px;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .recommendations-carousel-container {
+      padding: 0 1.5rem;
+    }
+  
+    .recommendation-card {
+      flex: 0 0 200px;
+    }
+  
+    .recommendation-image {
+      height: 130px;
+    }
+  
+    .recommendation-details h3 {
+      font-size: 0.9rem;
+    }
+  
+    .action-btn.add-to-cart span {
+      display: none;
+    }
+  }
+  
