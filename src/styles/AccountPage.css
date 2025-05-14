@@ -1,0 +1,106 @@
+.account-page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    font-family: "Inter", sans-serif;
+    color: #333;
+  }
+  
+  .account-header {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .account-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #388e3c;
+    margin-bottom: 0.5rem;
+  }
+  
+  .account-header p {
+    font-size: 1.1rem;
+    color: #666;
+  }
+  
+  .account-content {
+    display: flex;
+    gap: 2rem;
+    min-height: 600px;
+  }
+  
+  .tab-content {
+    flex: 1;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 2rem;
+    overflow: hidden;
+  }
+  
+  .account-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 400px;
+  }
+  
+  .account-loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(56, 142, 60, 0.2);
+    border-radius: 50%;
+    border-top-color: #388e3c;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 992px) {
+    .account-content {
+      flex-direction: column;
+    }
+  
+    .tab-content {
+      margin-top: 1rem;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .account-header h1 {
+      font-size: 2rem;
+    }
+  
+    .account-header p {
+      font-size: 1rem;
+    }
+  
+    .tab-content {
+      padding: 1.5rem;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .account-page-container {
+      padding: 1rem 0.5rem;
+    }
+  
+    .account-header h1 {
+      font-size: 1.8rem;
+    }
+  
+    .tab-content {
+      padding: 1rem;
+    }
+  }
+  
