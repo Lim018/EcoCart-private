@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react"
 import { useParams, Link } from "react-router-dom"
-import ProductViewer360 from "../components/ProductViewer360"
 import TestimonialCarousel from "../components/TestimonialCarousel"
 import "../styles/ProductDetail.css"
 
@@ -27,7 +26,7 @@ const ProductDetail = () => {
   const productData = {
     id: 1,
     name: "Set Sikat Gigi Bambu",
-    price: 194850, // 12.99 USD * 15000
+    price: 194850,
     discount: 0,
     images: [
       "/bamboo-toothbrush-set.png",
@@ -111,7 +110,7 @@ const ProductDetail = () => {
     {
       id: 3,
       name: "Kantong Belanja Reusable",
-      price: 239850, // 15.99 USD * 15000
+      price: 239850,
       image: "/colorful-produce-bags.png",
       rating: 4.9,
       reviewCount: 203,
@@ -120,16 +119,16 @@ const ProductDetail = () => {
     {
       id: 5,
       name: "Pembungkus Makanan Beeswax",
-      price: 284850, // 18.99 USD * 15000
+      price: 284850,
       image: "/beeswax-food-wraps.png",
-      rating: 4.7,
+      rating: 4.4,
       reviewCount: 156,
       sustainabilityScore: 95,
     },
     {
       id: 7,
       name: "Deodoran Alami",
-      price: 224850, // 14.99 USD * 15000
+      price: 224850,
       image: "/natural-deodorant.png",
       rating: 4.3,
       reviewCount: 78,
@@ -139,7 +138,6 @@ const ProductDetail = () => {
 
   // Fetch product data
   useEffect(() => {
-    // Simulate API call
     setLoading(true)
     setTimeout(() => {
       setProduct(productData)
@@ -214,64 +212,31 @@ const ProductDetail = () => {
         <div className="product-overview">
           <div className="product-gallery">
             <div className="gallery-main">
-              {activeImageIndex === 0 ? (
-                <ProductViewer360
-                  images={[
-                    "/bamboo-toothbrush-360-1.png",
-                    "/bamboo-toothbrush-360-2.png",
-                    "/bamboo-toothbrush-360-3.png",
-                    "/bamboo-toothbrush-360-4.png",
-                    "/bamboo-toothbrush-360-5.png",
-                    "/bamboo-toothbrush-360-6.png",
-                    "/bamboo-toothbrush-360-7.png",
-                    "/bamboo-toothbrush-360-8.png",
-                    "/bamboo-toothbrush-360-9.png",
-                    "/bamboo-toothbrush-360-10.png",
-                    "/bamboo-toothbrush-360-11.png",
-                    "/bamboo-toothbrush-360-12.png",
-                  ]}
+              <div
+                className={`zoom-container ${isZooming ? "zooming" : ""}`}
+                onMouseEnter={() => setIsZooming(true)}
+                onMouseLeave={() => setIsZooming(false)}
+                onMouseMove={handleMouseMove}
+              >
+                <img
+                  ref={imageRef}
+                  src={product.images[activeImageIndex] || "/placeholder.svg"}
+                  alt={product.name}
+                  className="main-image"
                 />
-              ) : (
-                <div
-                  className={`zoom-container ${isZooming ? "zooming" : ""}`}
-                  onMouseEnter={() => setIsZooming(true)}
-                  onMouseLeave={() => setIsZooming(false)}
-                  onMouseMove={handleMouseMove}
-                >
-                  <img
-                    ref={imageRef}
-                    src={product.images[activeImageIndex] || "/placeholder.svg"}
-                    alt={product.name}
-                    className="main-image"
-                  />
-                  {isZooming && (
-                    <div
-                      className="zoomed-image"
-                      style={{
-                        backgroundImage: `url(${product.images[activeImageIndex]})`,
-                        backgroundPosition: `${zoomPosition.x}% ${zoomPosition.y}%`,
-                      }}
-                    ></div>
-                  )}
-                </div>
-              )}
-
-              {activeImageIndex === 0 && (
-                <div className="viewer-instruction">
-                  <i className="fas fa-sync-alt"></i> Geser untuk memutar
-                </div>
-              )}
+                {isZooming && (
+                  <div
+                    className="zoomed-image"
+                    style={{
+                      backgroundImage: `url(${product.images[activeImageIndex]})`,
+                      backgroundPosition: `${zoomPosition.x}% ${zoomPosition.y}%`,
+                    }}
+                  ></div>
+                )}
+              </div>
             </div>
 
             <div className="gallery-thumbnails">
-              <button
-                className={`thumbnail-btn ${activeImageIndex === 0 ? "active" : ""}`}
-                onClick={() => setActiveImageIndex(0)}
-              >
-                <i className="fas fa-cube"></i>
-                <span>Tampilan 360°</span>
-              </button>
-
               {product.images.map((image, index) => (
                 <button
                   key={index}
