@@ -71,7 +71,7 @@ const ArticleArchive = () => {
       title: "Biaya Lingkungan Tersembunyi dari Fast Fashion",
       excerpt:
         "Mengeksplorasi dampak lingkungan sebenarnya dari industri fashion dan bagaimana konsumen dapat membuat pilihan yang lebih baik.",
-      image: "/placeholder.svg?key=hb2b6",
+      image: "/folded-organic-tee.png",
       category: "ethical-fashion",
       author: "Olivia Chen",
       date: "2023-03-20",
@@ -79,20 +79,9 @@ const ArticleArchive = () => {
     },
     {
       id: 6,
-      title: "Renovasi Rumah Berkelanjutan: Material dan Praktik Ramah Lingkungan",
-      excerpt:
-        "Cara membuat pilihan sadar lingkungan saat merenovasi rumah Anda tanpa mengorbankan gaya atau kualitas.",
-      image: "/placeholder.svg?key=thl24",
-      category: "eco-living",
-      author: "Daniel Brooks",
-      date: "2023-03-15",
-      readTime: "10 menit baca",
-    },
-    {
-      id: 7,
       title: "Sains di Balik Perubahan Iklim: Dijelaskan dengan Sederhana",
       excerpt: "Menguraikan sains kompleks perubahan iklim menjadi konsep yang dapat dipahami oleh semua orang.",
-      image: "/placeholder.svg?key=c7hgb",
+      image: "/interconnected-eco-production.png",
       category: "climate",
       author: "Dr. Sarah Johnson",
       date: "2023-03-08",
@@ -103,7 +92,7 @@ const ArticleArchive = () => {
       title: "Belanja Bahan Makanan Zero Waste: Panduan Praktis",
       excerpt:
         "Tips dan trik untuk mengurangi limbah kemasan saat berbelanja bahan makanan, dari persiapan hingga pembayaran.",
-      image: "/placeholder.svg?key=7kwv8",
+      image: "/colorful-produce-bags.png",
       category: "zero-waste",
       author: "Alex Turner",
       date: "2023-03-01",
