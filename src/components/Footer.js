@@ -1,7 +1,33 @@
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import "../styles/Footer.css"
 
 const Footer = () => {
+  const location = useLocation()
+
+  // Don't render Footer on specific pages or dynamic routes
+  const hiddenPaths = [
+    "/auth",
+    "/login",
+    "/register",
+    "/account",
+    "/dashboard",
+    "/manage-products",
+    "/manage-users",
+    "/manage-transactions",
+    "/manage-articles",
+  ]
+  const dynamicPathBases = ["/admin"] // Base paths for dynamic routes
+  const isDynamicPath = dynamicPathBases.some(
+    (base) =>
+      location.pathname.startsWith(base) &&
+      location.pathname !== base && // Exclude exact match
+      location.pathname.split("/").filter(Boolean).length > base.split("/").filter(Boolean).length,
+  )
+
+  if (hiddenPaths.includes(location.pathname) || isDynamicPath) {
+    return null
+  }
+
   return (
     <footer className="footer">
       <div className="container">

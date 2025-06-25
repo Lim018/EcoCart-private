@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import "../styles/ManageUsers.css"
+import AdminLayout from "../components/AdminLayout"
 
 // Mock data untuk pengguna
 const initialUsers = [
@@ -537,280 +538,282 @@ const ManageUsers = () => {
   }
 
   return (
-    <div className="manage-users-container">
-      <div className="admin-header">
-        <h1>Kelola Pengguna</h1>
-        <div className="admin-actions">
-          <button className="action-button primary-button">
-            <i className="fas fa-plus"></i> Tambah Pengguna
-          </button>
+    <AdminLayout>
+      <div className="manage-users-container">
+        <div className="admin-header">
+          <h1>Kelola Pengguna</h1>
+          <div className="admin-actions">
+            <button className="action-button primary-button">
+              <i className="fas fa-plus"></i> Tambah Pengguna
+            </button>
+          </div>
         </div>
-      </div>
 
-      <div className="users-dashboard">
-        <div className="users-sidebar">
-          <div className="filter-section">
-            <h3>Filter Pengguna</h3>
+        <div className="users-dashboard">
+          <div className="users-sidebar">
+            <div className="filter-section">
+              <h3>Filter Pengguna</h3>
 
-            <div className="search-box">
-              <input
-                type="text"
-                placeholder="Cari pengguna..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <i className="fas fa-search"></i>
+              <div className="search-box">
+                <input
+                  type="text"
+                  placeholder="Cari pengguna..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <i className="fas fa-search"></i>
+              </div>
+
+              <div className="filter-group">
+                <label>Role</label>
+                <select value={filterRole} onChange={(e) => setFilterRole(e.target.value)}>
+                  <option value="">Semua Role</option>
+                  {availableRoles.map((role) => (
+                    <option key={role.id} value={role.id}>
+                      {role.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="filter-group">
+                <label>Status</label>
+                <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
+                  <option value="">Semua Status</option>
+                  <option value="active">Aktif</option>
+                  <option value="inactive">Tidak Aktif</option>
+                </select>
+              </div>
+
+              <div className="filter-group">
+                <RangeSlider
+                  min={1}
+                  max={90}
+                  value={filterLoginDays}
+                  onChange={setFilterLoginDays}
+                  label="Login dalam (hari)"
+                />
+              </div>
             </div>
 
-            <div className="filter-group">
-              <label>Role</label>
-              <select value={filterRole} onChange={(e) => setFilterRole(e.target.value)}>
-                <option value="">Semua Role</option>
-                {availableRoles.map((role) => (
-                  <option key={role.id} value={role.id}>
-                    {role.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <div className="users-list">
+              <h3>Daftar Pengguna</h3>
+              <div className="users-count">{filteredUsers.length} pengguna ditemukan</div>
 
-            <div className="filter-group">
-              <label>Status</label>
-              <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
-                <option value="">Semua Status</option>
-                <option value="active">Aktif</option>
-                <option value="inactive">Tidak Aktif</option>
-              </select>
-            </div>
+              <div className="users-scroll">
+                <AnimatePresence>
+                  {filteredUsers.map((user) => (
+                    <motion.div
+                      key={user.id}
+                      className={`user-card ${selectedUser?.id === user.id ? "selected" : ""}`}
+                      onClick={() => handleSelectUser(user)}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      whileHover={{ scale: 1.02 }}
+                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    >
+                      <div className="user-avatar">
+                        {user.avatar ? (
+                          <img src={user.avatar || "/placeholder.svg"} alt={user.name} />
+                        ) : (
+                          <div className="avatar-placeholder">{user.name.charAt(0)}</div>
+                        )}
+                        <div className={`status-indicator ${user.status}`}></div>
+                      </div>
 
-            <div className="filter-group">
-              <RangeSlider
-                min={1}
-                max={90}
-                value={filterLoginDays}
-                onChange={setFilterLoginDays}
-                label="Login dalam (hari)"
-              />
+                      <div className="user-info">
+                        <div className="user-name">{user.name}</div>
+                        <div className="user-email">{user.email}</div>
+                        <div className="user-role">
+                          {availableRoles.find((role) => role.id === user.role)?.name || user.role}
+                        </div>
+                      </div>
+
+                      <div className="user-actions">
+                        <button
+                          className={`status-toggle ${user.status}`}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleStatusToggle(user.id)
+                          }}
+                          aria-label={`Toggle status to ${user.status === "active" ? "inactive" : "active"}`}
+                        >
+                          <i className={`fas fa-${user.status === "active" ? "check" : "times"}`}></i>
+                        </button>
+                      </div>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+
+                {filteredUsers.length === 0 && (
+                  <div className="no-users-found">
+                    <i className="fas fa-user-slash"></i>
+                    <p>Tidak ada pengguna yang ditemukan</p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
-          <div className="users-list">
-            <h3>Daftar Pengguna</h3>
-            <div className="users-count">{filteredUsers.length} pengguna ditemukan</div>
+          <div className="user-details">
+            {selectedUser ? (
+              <div className="user-profile">
+                <div className="profile-header">
+                  <div className="profile-avatar">
+                    {selectedUser.avatar ? (
+                      <img src={selectedUser.avatar || "/placeholder.svg"} alt={selectedUser.name} />
+                    ) : (
+                      <div className="avatar-placeholder large">{selectedUser.name.charAt(0)}</div>
+                    )}
+                  </div>
 
-            <div className="users-scroll">
-              <AnimatePresence>
-                {filteredUsers.map((user) => (
-                  <motion.div
-                    key={user.id}
-                    className={`user-card ${selectedUser?.id === user.id ? "selected" : ""}`}
-                    onClick={() => handleSelectUser(user)}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    whileHover={{ scale: 1.02 }}
-                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                  >
-                    <div className="user-avatar">
-                      {user.avatar ? (
-                        <img src={user.avatar || "/placeholder.svg"} alt={user.name} />
-                      ) : (
-                        <div className="avatar-placeholder">{user.name.charAt(0)}</div>
-                      )}
-                      <div className={`status-indicator ${user.status}`}></div>
+                  <div className="profile-info">
+                    <h2>
+                      <EditableField
+                        value={selectedUser.name}
+                        onSave={(value) => handleUserDataChange(selectedUser.id, "name", value)}
+                        validator={validateName}
+                      />
+                    </h2>
+
+                    <div className="profile-meta">
+                      <div className="meta-item">
+                        <i className="fas fa-envelope"></i>
+                        <EditableField
+                          value={selectedUser.email}
+                          onSave={(value) => handleUserDataChange(selectedUser.id, "email", value)}
+                          validator={validateEmail}
+                          type="email"
+                        />
+                      </div>
+
+                      <div className="meta-item">
+                        <i className="fas fa-user-tag"></i>
+                        <EditableField
+                          value={selectedUser.role}
+                          onSave={(value) => handleUserDataChange(selectedUser.id, "role", value)}
+                          type="select"
+                          options={availableRoles}
+                        />
+                      </div>
+
+                      <div className="meta-item">
+                        <i className="fas fa-calendar-alt"></i>
+                        <span>Terdaftar: {new Date(selectedUser.registeredDate).toLocaleDateString()}</span>
+                      </div>
+
+                      <div className="meta-item">
+                        <i className="fas fa-clock"></i>
+                        <span>
+                          Login terakhir:{" "}
+                          {selectedUser.lastLogin
+                            ? new Date(selectedUser.lastLogin).toLocaleString()
+                            : "Belum pernah login"}
+                        </span>
+                      </div>
                     </div>
+                  </div>
 
-                    <div className="user-info">
-                      <div className="user-name">{user.name}</div>
-                      <div className="user-email">{user.email}</div>
-                      <div className="user-role">
-                        {availableRoles.find((role) => role.id === user.role)?.name || user.role}
+                  <div className="profile-status">
+                    <div className={`status-badge ${selectedUser.status}`}>
+                      {selectedUser.status === "active" ? "Aktif" : "Tidak Aktif"}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="profile-tabs">
+                  <div className="tab-navigation">
+                    <button className="tab-button active">Izin Akses</button>
+                    <button className="tab-button">Aktivitas</button>
+                    <button className="tab-button">Pesanan</button>
+                    <button className="tab-button">Keamanan</button>
+                  </div>
+
+                  <div className="tab-content">
+                    <div className="permissions-section">
+                      <h3>Izin Akses</h3>
+                      <div className="permissions-grid">
+                        <ToggleSwitch
+                          isOn={selectedUser.permissions.manageProducts}
+                          onToggle={() => handlePermissionToggle(selectedUser.id, "manageProducts")}
+                          label="Kelola Produk"
+                          disabled={selectedUser.role === "customer"}
+                        />
+
+                        <ToggleSwitch
+                          isOn={selectedUser.permissions.manageOrders}
+                          onToggle={() => handlePermissionToggle(selectedUser.id, "manageOrders")}
+                          label="Kelola Pesanan"
+                          disabled={selectedUser.role === "customer"}
+                        />
+
+                        <ToggleSwitch
+                          isOn={selectedUser.permissions.manageUsers}
+                          onToggle={() => handlePermissionToggle(selectedUser.id, "manageUsers")}
+                          label="Kelola Pengguna"
+                          disabled={selectedUser.role !== "admin"}
+                        />
+
+                        <ToggleSwitch
+                          isOn={selectedUser.permissions.manageContent}
+                          onToggle={() => handlePermissionToggle(selectedUser.id, "manageContent")}
+                          label="Kelola Konten"
+                          disabled={selectedUser.role === "customer"}
+                        />
+
+                        <ToggleSwitch
+                          isOn={selectedUser.permissions.viewReports}
+                          onToggle={() => handlePermissionToggle(selectedUser.id, "viewReports")}
+                          label="Lihat Laporan"
+                          disabled={selectedUser.role === "customer"}
+                        />
+                      </div>
+
+                      <div className="permissions-note">
+                        <i className="fas fa-info-circle"></i>
+                        <p>
+                          Beberapa izin mungkin dibatasi berdasarkan role pengguna. Ubah role untuk mengaktifkan lebih
+                          banyak izin.
+                        </p>
                       </div>
                     </div>
 
-                    <div className="user-actions">
-                      <button
-                        className={`status-toggle ${user.status}`}
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleStatusToggle(user.id)
-                        }}
-                        aria-label={`Toggle status to ${user.status === "active" ? "inactive" : "active"}`}
-                      >
-                        <i className={`fas fa-${user.status === "active" ? "check" : "times"}`}></i>
-                      </button>
+                    <div className="activity-section">
+                      <h3>Riwayat Aktivitas</h3>
+                      <ActivityTimeline activities={selectedUser.activity} />
                     </div>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-
-              {filteredUsers.length === 0 && (
-                <div className="no-users-found">
-                  <i className="fas fa-user-slash"></i>
-                  <p>Tidak ada pengguna yang ditemukan</p>
+                  </div>
                 </div>
-              )}
-            </div>
+              </div>
+            ) : (
+              <div className="no-user-selected">
+                <div className="empty-state">
+                  <i className="fas fa-user-circle"></i>
+                  <h3>Pilih pengguna untuk melihat detail</h3>
+                  <p>Klik pada salah satu pengguna di daftar untuk melihat dan mengelola informasi mereka.</p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
-        <div className="user-details">
-          {selectedUser ? (
-            <div className="user-profile">
-              <div className="profile-header">
-                <div className="profile-avatar">
-                  {selectedUser.avatar ? (
-                    <img src={selectedUser.avatar || "/placeholder.svg"} alt={selectedUser.name} />
-                  ) : (
-                    <div className="avatar-placeholder large">{selectedUser.name.charAt(0)}</div>
-                  )}
-                </div>
-
-                <div className="profile-info">
-                  <h2>
-                    <EditableField
-                      value={selectedUser.name}
-                      onSave={(value) => handleUserDataChange(selectedUser.id, "name", value)}
-                      validator={validateName}
-                    />
-                  </h2>
-
-                  <div className="profile-meta">
-                    <div className="meta-item">
-                      <i className="fas fa-envelope"></i>
-                      <EditableField
-                        value={selectedUser.email}
-                        onSave={(value) => handleUserDataChange(selectedUser.id, "email", value)}
-                        validator={validateEmail}
-                        type="email"
-                      />
-                    </div>
-
-                    <div className="meta-item">
-                      <i className="fas fa-user-tag"></i>
-                      <EditableField
-                        value={selectedUser.role}
-                        onSave={(value) => handleUserDataChange(selectedUser.id, "role", value)}
-                        type="select"
-                        options={availableRoles}
-                      />
-                    </div>
-
-                    <div className="meta-item">
-                      <i className="fas fa-calendar-alt"></i>
-                      <span>Terdaftar: {new Date(selectedUser.registeredDate).toLocaleDateString()}</span>
-                    </div>
-
-                    <div className="meta-item">
-                      <i className="fas fa-clock"></i>
-                      <span>
-                        Login terakhir:{" "}
-                        {selectedUser.lastLogin
-                          ? new Date(selectedUser.lastLogin).toLocaleString()
-                          : "Belum pernah login"}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="profile-status">
-                  <div className={`status-badge ${selectedUser.status}`}>
-                    {selectedUser.status === "active" ? "Aktif" : "Tidak Aktif"}
-                  </div>
-                </div>
-              </div>
-
-              <div className="profile-tabs">
-                <div className="tab-navigation">
-                  <button className="tab-button active">Izin Akses</button>
-                  <button className="tab-button">Aktivitas</button>
-                  <button className="tab-button">Pesanan</button>
-                  <button className="tab-button">Keamanan</button>
-                </div>
-
-                <div className="tab-content">
-                  <div className="permissions-section">
-                    <h3>Izin Akses</h3>
-                    <div className="permissions-grid">
-                      <ToggleSwitch
-                        isOn={selectedUser.permissions.manageProducts}
-                        onToggle={() => handlePermissionToggle(selectedUser.id, "manageProducts")}
-                        label="Kelola Produk"
-                        disabled={selectedUser.role === "customer"}
-                      />
-
-                      <ToggleSwitch
-                        isOn={selectedUser.permissions.manageOrders}
-                        onToggle={() => handlePermissionToggle(selectedUser.id, "manageOrders")}
-                        label="Kelola Pesanan"
-                        disabled={selectedUser.role === "customer"}
-                      />
-
-                      <ToggleSwitch
-                        isOn={selectedUser.permissions.manageUsers}
-                        onToggle={() => handlePermissionToggle(selectedUser.id, "manageUsers")}
-                        label="Kelola Pengguna"
-                        disabled={selectedUser.role !== "admin"}
-                      />
-
-                      <ToggleSwitch
-                        isOn={selectedUser.permissions.manageContent}
-                        onToggle={() => handlePermissionToggle(selectedUser.id, "manageContent")}
-                        label="Kelola Konten"
-                        disabled={selectedUser.role === "customer"}
-                      />
-
-                      <ToggleSwitch
-                        isOn={selectedUser.permissions.viewReports}
-                        onToggle={() => handlePermissionToggle(selectedUser.id, "viewReports")}
-                        label="Lihat Laporan"
-                        disabled={selectedUser.role === "customer"}
-                      />
-                    </div>
-
-                    <div className="permissions-note">
-                      <i className="fas fa-info-circle"></i>
-                      <p>
-                        Beberapa izin mungkin dibatasi berdasarkan role pengguna. Ubah role untuk mengaktifkan lebih
-                        banyak izin.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="activity-section">
-                    <h3>Riwayat Aktivitas</h3>
-                    <ActivityTimeline activities={selectedUser.activity} />
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="no-user-selected">
-              <div className="empty-state">
-                <i className="fas fa-user-circle"></i>
-                <h3>Pilih pengguna untuk melihat detail</h3>
-                <p>Klik pada salah satu pengguna di daftar untuk melihat dan mengelola informasi mereka.</p>
-              </div>
-            </div>
+        {/* Notifikasi konfirmasi */}
+        <AnimatePresence>
+          {showConfirmation && (
+            <motion.div
+              className="confirmation-notification"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 50 }}
+            >
+              <i className="fas fa-check-circle"></i>
+              <span>{confirmationMessage}</span>
+            </motion.div>
           )}
-        </div>
+        </AnimatePresence>
       </div>
-
-      {/* Notifikasi konfirmasi */}
-      <AnimatePresence>
-        {showConfirmation && (
-          <motion.div
-            className="confirmation-notification"
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
-          >
-            <i className="fas fa-check-circle"></i>
-            <span>{confirmationMessage}</span>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+    </AdminLayout>
   )
 }
 

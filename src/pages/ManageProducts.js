@@ -6,6 +6,7 @@ import { SortableContext, useSortable, arrayMove, rectSortingStrategy } from "@d
 import { CSS } from "@dnd-kit/utilities"
 import { motion, AnimatePresence } from "framer-motion"
 import "../styles/ManageProducts.css"
+import AdminLayout from "../components/AdminLayout"
 
 // Format harga dalam Rupiah
 const formatPrice = (price) => {
@@ -850,288 +851,293 @@ const ManageProducts = () => {
   }
 
   return (
-    <div className="manage-products-container">
-      <div className="admin-header">
-        <h1>Kelola Produk</h1>
-        <div className="admin-actions">
-          <button className="action-button undo-button" disabled={undoStack.length === 0} onClick={handleUndo}>
-            <i className="fas fa-undo"></i> Batalkan
-          </button>
-          <button className="action-button redo-button" disabled={redoStack.length === 0} onClick={handleRedo}>
-            <i className="fas fa-redo"></i> Ulangi
-          </button>
-          <button className="action-button primary-button" onClick={handleNewProduct}>
-            <i className="fas fa-plus"></i> Tambah Produk
-          </button>
+    <AdminLayout>
+      <div className="manage-products-container">
+        <div className="admin-header">
+          <h1>Kelola Produk</h1>
+          <div className="admin-actions">
+            <button className="action-button undo-button" disabled={undoStack.length === 0} onClick={handleUndo}>
+              <i className="fas fa-undo"></i> Batalkan
+            </button>
+            <button className="action-button redo-button" disabled={redoStack.length === 0} onClick={handleRedo}>
+              <i className="fas fa-redo"></i> Ulangi
+            </button>
+            <button className="action-button primary-button" onClick={handleNewProduct}>
+              <i className="fas fa-plus"></i> Tambah Produk
+            </button>
+          </div>
         </div>
-      </div>
 
-      {isEditing ? (
-        <div className="edit-product-panel">
-          <div className="panel-header">
-            <h2>{editingProduct.id ? "Edit Produk" : "Produk Baru"}</h2>
-            <div className="panel-actions">
-              <button className="action-button" onClick={handleCancelEdit}>
-                Batal
-              </button>
-              <button className="action-button primary-button" onClick={handleSaveProduct}>
-                Simpan Produk
-              </button>
+        {isEditing ? (
+          <div className="edit-product-panel">
+            <div className="panel-header">
+              <h2>{editingProduct.id ? "Edit Produk" : "Produk Baru"}</h2>
+              <div className="panel-actions">
+                <button className="action-button" onClick={handleCancelEdit}>
+                  Batal
+                </button>
+                <button className="action-button primary-button" onClick={handleSaveProduct}>
+                  Simpan Produk
+                </button>
+              </div>
+            </div>
+
+            <div className="panel-content">
+              {Object.keys(errors).length > 0 && (
+                <div className="error-messages">
+                  {Object.values(errors).map((error, index) => (
+                    <p key={index} className="error-message">
+                      {error}
+                    </p>
+                  ))}
+                </div>
+              )}
+              <ProductForm product={editingProduct} setProduct={setEditingProduct} categories={categories} />
             </div>
           </div>
+        ) : (
+          <>
+            <div className="filter-bar">
+              <div className="search-box">
+                <input
+                  type="text"
+                  placeholder="Cari produk..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <i className="fas fa-search"></i>
+              </div>
 
-          <div className="panel-content">
-            {Object.keys(errors).length > 0 && (
-              <div className="error-messages">
-                {Object.values(errors).map((error, index) => (
-                  <p key={index} className="error-message">
-                    {error}
-                  </p>
-                ))}
+              <div className="filter-options">
+                <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)}>
+                  <option value="">Semua Kategori</option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+
+                <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
+                  <option value="">Semua Status</option>
+                  <option value="active">Aktif</option>
+                  <option value="inactive">Tidak Aktif</option>
+                  <option value="out-of-stock">Stok Habis</option>
+                </select>
+              </div>
+            </div>
+
+            {selectedProducts.length > 0 && (
+              <div className="bulk-actions">
+                <span>{selectedProducts.length} produk dipilih</span>
+                <div className="action-buttons">
+                  <button className="action-button" onClick={() => handleBulkAction("active")}>
+                    Aktifkan
+                  </button>
+                  <button className="action-button" onClick={() => handleBulkAction("inactive")}>
+                    Nonaktifkan
+                  </button>
+                  <button className="action-button" onClick={() => handleBulkAction("feature")}>
+                    Jadikan Unggulan
+                  </button>
+                  <button className="action-button" onClick={() => handleBulkAction("unfeature")}>
+                    Hapus Unggulan
+                  </button>
+                  <button className="action-button danger-button" onClick={() => handleBulkAction("delete")}>
+                    Hapus
+                  </button>
+                </div>
               </div>
             )}
-            <ProductForm product={editingProduct} setProduct={setEditingProduct} categories={categories} />
-          </div>
-        </div>
-      ) : (
-        <>
-          <div className="filter-bar">
-            <div className="search-box">
-              <input
-                type="text"
-                placeholder="Cari produk..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <i className="fas fa-search"></i>
+
+            <div className="products-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th className="checkbox-column">
+                      <input
+                        type="checkbox"
+                        checked={selectedProducts.length === filteredProducts.length && filteredProducts.length > 0}
+                        onChange={toggleSelectAll}
+                      />
+                    </th>
+                    <th className="image-column">Gambar</th>
+                    <th
+                      className={`sortable ${sortField === "name" ? "sorted" : ""}`}
+                      onClick={() => handleSort("name")}
+                    >
+                      Nama
+                      {sortField === "name" && (
+                        <i className={`fas fa-sort-${sortDirection === "asc" ? "up" : "down"}`}></i>
+                      )}
+                    </th>
+                    <th
+                      className={`sortable ${sortField === "category" ? "sorted" : ""}`}
+                      onClick={() => handleSort("category")}
+                    >
+                      Kategori
+                      {sortField === "category" && (
+                        <i className={`fas fa-sort-${sortDirection === "asc" ? "up" : "down"}`}></i>
+                      )}
+                    </th>
+                    <th
+                      className={`sortable ${sortField === "price" ? "sorted" : ""}`}
+                      onClick={() => handleSort("price")}
+                    >
+                      Harga
+                      {sortField === "price" && (
+                        <i className={`fas fa-sort-${sortDirection === "asc" ? "up" : "down"}`}></i>
+                      )}
+                    </th>
+                    <th
+                      className={`sortable ${sortField === "stock" ? "sorted" : ""}`}
+                      onClick={() => handleSort("stock")}
+                    >
+                      Stok
+                      {sortField === "stock" && (
+                        <i className={`fas fa-sort-${sortDirection === "asc" ? "up" : "down"}`}></i>
+                      )}
+                    </th>
+                    <th>Tag</th>
+                    <th
+                      className={`sortable ${sortField === "status" ? "sorted" : ""}`}
+                      onClick={() => handleSort("status")}
+                    >
+                      Status
+                      {sortField === "status" && (
+                        <i className={`fas fa-sort-${sortDirection === "asc" ? "up" : "down"}`}></i>
+                      )}
+                    </th>
+                    <th>Tindakan</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <AnimatePresence>
+                    {filteredProducts.map((product) => (
+                      <motion.tr
+                        key={product.id}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className={selectedProducts.includes(product.id) ? "selected" : ""}
+                      >
+                        <td className="checkbox-column">
+                          <input
+                            type="checkbox"
+                            checked={selectedProducts.includes(product.id)}
+                            onChange={() => toggleProductSelection(product.id)}
+                          />
+                        </td>
+                        <td className="image-column">
+                          {product.images[0] ? (
+                            <img src={product.images[0] || "/placeholder.svg"} alt={product.name} />
+                          ) : (
+                            <div className="no-image">Tidak Ada Gambar</div>
+                          )}
+                        </td>
+                        <td className="name-column">
+                          <div className="product-name">{product.name}</div>
+                          <div className="product-description">{product.description.substring(0, 60)}...</div>
+                        </td>
+                        <td>{categories.find((c) => c.id === product.category)?.name || product.category}</td>
+                        <td>{formatPrice(product.price)}</td>
+                        <td>{product.stock}</td>
+                        <td className="tags-column">
+                          {product.tags.map((tag, index) => (
+                            <span key={index} className="tag">
+                              {tag}
+                            </span>
+                          ))}
+                        </td>
+                        <td>
+                          <span className={`status-badge ${product.status}`}>
+                            {product.status === "active"
+                              ? "Aktif"
+                              : product.status === "inactive"
+                                ? "Tidak Aktif"
+                                : product.status === "out-of-stock"
+                                  ? "Stok Habis"
+                                  : product.status}
+                          </span>
+                          {product.featured && <span className="featured-badge">Unggulan</span>}
+                        </td>
+                        <td className="actions-column">
+                          <button className="action-icon-button" onClick={() => handleEditProduct(product)}>
+                            <i className="fas fa-edit"></i>
+                          </button>
+                          <button
+                            className="action-icon-button danger"
+                            onClick={() => {
+                              setSelectedProducts([product.id])
+                              handleBulkAction("delete")
+                            }}
+                          >
+                            <i className="fas fa-trash-alt"></i>
+                          </button>
+                        </td>
+                      </motion.tr>
+                    ))}
+                  </AnimatePresence>
+                </tbody>
+              </table>
             </div>
+          </>
+        )}
 
-            <div className="filter-options">
-              <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)}>
-                <option value="">Semua Kategori</option>
-                {categories.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.name}
-                  </option>
-                ))}
-              </select>
-
-              <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
-                <option value="">Semua Status</option>
-                <option value="active">Aktif</option>
-                <option value="inactive">Tidak Aktif</option>
-                <option value="out-of-stock">Stok Habis</option>
-              </select>
-            </div>
-          </div>
-
-          {selectedProducts.length > 0 && (
-            <div className="bulk-actions">
-              <span>{selectedProducts.length} produk dipilih</span>
-              <div className="action-buttons">
-                <button className="action-button" onClick={() => handleBulkAction("active")}>
-                  Aktifkan
+        {/* Dialog konfirmasi */}
+        {confirmationAction && (
+          <div className="confirmation-dialog">
+            <div className="confirmation-content">
+              <h3>Konfirmasi Tindakan</h3>
+              <p>
+                {confirmationAction.type === "delete"
+                  ? `Apakah Anda yakin ingin menghapus ${selectedProducts.length} produk?`
+                  : `Apakah Anda yakin ingin ${
+                      confirmationAction.type === "active"
+                        ? "mengaktifkan"
+                        : confirmationAction.type === "inactive"
+                          ? "menonaktifkan"
+                          : confirmationAction.type === "feature"
+                            ? "menjadikan unggulan"
+                            : confirmationAction.type === "unfeature"
+                              ? "menghapus status unggulan"
+                              : confirmationAction.type
+                    } ${selectedProducts.length} produk?`}
+              </p>
+              <div className="confirmation-actions">
+                <button className="action-button" onClick={() => setConfirmationAction(null)}>
+                  Batal
                 </button>
-                <button className="action-button" onClick={() => handleBulkAction("inactive")}>
-                  Nonaktifkan
-                </button>
-                <button className="action-button" onClick={() => handleBulkAction("feature")}>
-                  Jadikan Unggulan
-                </button>
-                <button className="action-button" onClick={() => handleBulkAction("unfeature")}>
-                  Hapus Unggulan
-                </button>
-                <button className="action-button danger-button" onClick={() => handleBulkAction("delete")}>
-                  Hapus
+                <button
+                  className={`action-button ${confirmationAction.type === "delete" ? "danger-button" : "primary-button"}`}
+                  onClick={() => {
+                    confirmationAction.callback()
+                    setConfirmationAction(null)
+                  }}
+                >
+                  Konfirmasi
                 </button>
               </div>
             </div>
-          )}
-
-          <div className="products-table">
-            <table>
-              <thead>
-                <tr>
-                  <th className="checkbox-column">
-                    <input
-                      type="checkbox"
-                      checked={selectedProducts.length === filteredProducts.length && filteredProducts.length > 0}
-                      onChange={toggleSelectAll}
-                    />
-                  </th>
-                  <th className="image-column">Gambar</th>
-                  <th className={`sortable ${sortField === "name" ? "sorted" : ""}`} onClick={() => handleSort("name")}>
-                    Nama
-                    {sortField === "name" && (
-                      <i className={`fas fa-sort-${sortDirection === "asc" ? "up" : "down"}`}></i>
-                    )}
-                  </th>
-                  <th
-                    className={`sortable ${sortField === "category" ? "sorted" : ""}`}
-                    onClick={() => handleSort("category")}
-                  >
-                    Kategori
-                    {sortField === "category" && (
-                      <i className={`fas fa-sort-${sortDirection === "asc" ? "up" : "down"}`}></i>
-                    )}
-                  </th>
-                  <th
-                    className={`sortable ${sortField === "price" ? "sorted" : ""}`}
-                    onClick={() => handleSort("price")}
-                  >
-                    Harga
-                    {sortField === "price" && (
-                      <i className={`fas fa-sort-${sortDirection === "asc" ? "up" : "down"}`}></i>
-                    )}
-                  </th>
-                  <th
-                    className={`sortable ${sortField === "stock" ? "sorted" : ""}`}
-                    onClick={() => handleSort("stock")}
-                  >
-                    Stok
-                    {sortField === "stock" && (
-                      <i className={`fas fa-sort-${sortDirection === "asc" ? "up" : "down"}`}></i>
-                    )}
-                  </th>
-                  <th>Tag</th>
-                  <th
-                    className={`sortable ${sortField === "status" ? "sorted" : ""}`}
-                    onClick={() => handleSort("status")}
-                  >
-                    Status
-                    {sortField === "status" && (
-                      <i className={`fas fa-sort-${sortDirection === "asc" ? "up" : "down"}`}></i>
-                    )}
-                  </th>
-                  <th>Tindakan</th>
-                </tr>
-              </thead>
-              <tbody>
-                <AnimatePresence>
-                  {filteredProducts.map((product) => (
-                    <motion.tr
-                      key={product.id}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className={selectedProducts.includes(product.id) ? "selected" : ""}
-                    >
-                      <td className="checkbox-column">
-                        <input
-                          type="checkbox"
-                          checked={selectedProducts.includes(product.id)}
-                          onChange={() => toggleProductSelection(product.id)}
-                        />
-                      </td>
-                      <td className="image-column">
-                        {product.images[0] ? (
-                          <img src={product.images[0] || "/placeholder.svg"} alt={product.name} />
-                        ) : (
-                          <div className="no-image">Tidak Ada Gambar</div>
-                        )}
-                      </td>
-                      <td className="name-column">
-                        <div className="product-name">{product.name}</div>
-                        <div className="product-description">{product.description.substring(0, 60)}...</div>
-                      </td>
-                      <td>{categories.find((c) => c.id === product.category)?.name || product.category}</td>
-                      <td>{formatPrice(product.price)}</td>
-                      <td>{product.stock}</td>
-                      <td className="tags-column">
-                        {product.tags.map((tag, index) => (
-                          <span key={index} className="tag">
-                            {tag}
-                          </span>
-                        ))}
-                      </td>
-                      <td>
-                        <span className={`status-badge ${product.status}`}>
-                          {product.status === "active"
-                            ? "Aktif"
-                            : product.status === "inactive"
-                              ? "Tidak Aktif"
-                              : product.status === "out-of-stock"
-                                ? "Stok Habis"
-                                : product.status}
-                        </span>
-                        {product.featured && <span className="featured-badge">Unggulan</span>}
-                      </td>
-                      <td className="actions-column">
-                        <button className="action-icon-button" onClick={() => handleEditProduct(product)}>
-                          <i className="fas fa-edit"></i>
-                        </button>
-                        <button
-                          className="action-icon-button danger"
-                          onClick={() => {
-                            setSelectedProducts([product.id])
-                            handleBulkAction("delete")
-                          }}
-                        >
-                          <i className="fas fa-trash-alt"></i>
-                        </button>
-                      </td>
-                    </motion.tr>
-                  ))}
-                </AnimatePresence>
-              </tbody>
-            </table>
           </div>
-        </>
-      )}
-
-      {/* Dialog konfirmasi */}
-      {confirmationAction && (
-        <div className="confirmation-dialog">
-          <div className="confirmation-content">
-            <h3>Konfirmasi Tindakan</h3>
-            <p>
-              {confirmationAction.type === "delete"
-                ? `Apakah Anda yakin ingin menghapus ${selectedProducts.length} produk?`
-                : `Apakah Anda yakin ingin ${
-                    confirmationAction.type === "active"
-                      ? "mengaktifkan"
-                      : confirmationAction.type === "inactive"
-                        ? "menonaktifkan"
-                        : confirmationAction.type === "feature"
-                          ? "menjadikan unggulan"
-                          : confirmationAction.type === "unfeature"
-                            ? "menghapus status unggulan"
-                            : confirmationAction.type
-                  } ${selectedProducts.length} produk?`}
-            </p>
-            <div className="confirmation-actions">
-              <button className="action-button" onClick={() => setConfirmationAction(null)}>
-                Batal
-              </button>
-              <button
-                className={`action-button ${confirmationAction.type === "delete" ? "danger-button" : "primary-button"}`}
-                onClick={() => {
-                  confirmationAction.callback()
-                  setConfirmationAction(null)
-                }}
-              >
-                Konfirmasi
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Notifikasi sukses */}
-      <AnimatePresence>
-        {showConfirmation && (
-          <motion.div
-            className="success-notification"
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
-          >
-            <i className="fas fa-check-circle"></i>
-            <span>Perubahan berhasil disimpan!</span>
-          </motion.div>
         )}
-      </AnimatePresence>
-    </div>
+
+        {/* Notifikasi sukses */}
+        <AnimatePresence>
+          {showConfirmation && (
+            <motion.div
+              className="success-notification"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 50 }}
+            >
+              <i className="fas fa-check-circle"></i>
+              <span>Perubahan berhasil disimpan!</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </AdminLayout>
   )
 }
 

@@ -6,6 +6,7 @@ import { SortableContext, useSortable, arrayMove, verticalListSortingStrategy } 
 import { CSS } from "@dnd-kit/utilities"
 import { motion, AnimatePresence } from "framer-motion"
 import "../styles/ManageArticles.css"
+import AdminLayout from "../components/AdminLayout"
 
 // Data contoh untuk artikel
 const initialArticles = [
@@ -39,7 +40,8 @@ const initialArticles = [
     id: 2,
     title: "Hidup Zero Waste: Panduan untuk Pemula",
     slug: "hidup-zero-waste-panduan-pemula",
-    excerpt: "Langkah-langkah sederhana untuk mengurangi limbah dalam kehidupan sehari-hari dan bergerak menuju gaya hidup yang lebih berkelanjutan.",
+    excerpt:
+      "Langkah-langkah sederhana untuk mengurangi limbah dalam kehidupan sehari-hari dan bergerak menuju gaya hidup yang lebih berkelanjutan.",
     content: `
       <h2>Memahami Zero Waste</h2>
       <p>Hidup zero waste adalah tentang mengurangi jumlah sampah yang kita kirim ke tempat pembuangan sampah dengan membuat pilihan sadar tentang apa yang kita beli dan bagaimana kita membuang barang.</p>
@@ -382,13 +384,7 @@ const TagSelector = ({ selectedTags, setSelectedTags }) => {
       <div className="selected-tags">
         <AnimatePresence>
           {selectedTags.map((tag, index) => (
-            <motion.div
-              key={index}
-              className="tag"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0 }}
-            >
+            <motion.div key={index} className="tag" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
               <span>{tag}</span>
               <button onClick={() => removeTag(tag)}>×</button>
             </motion.div>
@@ -412,11 +408,7 @@ const TagSelector = ({ selectedTags, setSelectedTags }) => {
         {showSuggestions && suggestions.length > 0 && (
           <div className="tag-suggestions">
             {suggestions.map((suggestion, index) => (
-              <div
-                key={index}
-                className="tag-suggestion"
-                onClick={() => addTag(suggestion)}
-              >
+              <div key={index} className="tag-suggestion" onClick={() => addTag(suggestion)}>
                 {suggestion}
               </div>
             ))}
@@ -432,9 +424,7 @@ const MediaLibrary = ({ mediaItems, onSelectMedia, onClose }) => {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedItem, setSelectedItem] = useState(null)
 
-  const filteredItems = mediaItems.filter((item) =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  const filteredItems = mediaItems.filter((item) => item.name.toLowerCase().includes(searchTerm.toLowerCase()))
 
   const handleSelect = () => {
     if (selectedItem) {
@@ -470,9 +460,7 @@ const MediaLibrary = ({ mediaItems, onSelectMedia, onClose }) => {
               <img src={item.url || "/placeholder.svg"} alt={item.name} />
               <div className="media-item-info">
                 <span className="media-item-name">{item.name}</span>
-                <span className="media-item-date">
-                  {new Date(item.uploadDate).toLocaleDateString()}
-                </span>
+                <span className="media-item-date">{new Date(item.uploadDate).toLocaleDateString()}</span>
               </div>
             </div>
           ))}
@@ -481,11 +469,7 @@ const MediaLibrary = ({ mediaItems, onSelectMedia, onClose }) => {
           <button className="action-button" onClick={onClose}>
             Batal
           </button>
-          <button
-            className="action-button primary-button"
-            onClick={handleSelect}
-            disabled={!selectedItem}
-          >
+          <button className="action-button primary-button" onClick={handleSelect} disabled={!selectedItem}>
             Pilih
           </button>
         </div>
@@ -569,33 +553,17 @@ const RichTextEditor = ({ content, setContent }) => {
   return (
     <div className="rich-text-editor">
       <div className="editor-toolbar">
-        <button
-          className="toolbar-btn"
-          onClick={() => addBlock("heading")}
-          title="Tambah Judul"
-        >
+        <button className="toolbar-btn" onClick={() => addBlock("heading")} title="Tambah Judul">
           <i className="fas fa-heading"></i>
         </button>
-        <button
-          className="toolbar-btn"
-          onClick={() => addBlock("paragraph")}
-          title="Tambah Paragraf"
-        >
+        <button className="toolbar-btn" onClick={() => addBlock("paragraph")} title="Tambah Paragraf">
           <i className="fas fa-paragraph"></i>
         </button>
-        <button
-          className="toolbar-btn"
-          onClick={() => addBlock("image")}
-          title="Tambah Gambar"
-        >
+        <button className="toolbar-btn" onClick={() => addBlock("image")} title="Tambah Gambar">
           <i className="fas fa-image"></i>
         </button>
       </div>
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-      >
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext
           items={contentBlocks.map((_, index) => `block-${index}`)}
           strategy={verticalListSortingStrategy}
@@ -639,10 +607,7 @@ const ContentPreview = ({ content }) => {
   try {
     return (
       <div className="content-preview">
-        <div
-          className="preview-content"
-          dangerouslySetInnerHTML={{ __html: content }}
-        />
+        <div className="preview-content" dangerouslySetInnerHTML={{ __html: content }} />
       </div>
     )
   } catch (error) {
@@ -658,19 +623,14 @@ const ContentPreview = ({ content }) => {
 // Komponen kalender penjadwalan
 const SchedulingCalendar = ({ publishDate, setPublishDate }) => {
   const [showCalendar, setShowCalendar] = useState(false)
-  const [selectedDate, setSelectedDate] = useState(
-    publishDate ? new Date(publishDate) : new Date()
-  )
+  const [selectedDate, setSelectedDate] = useState(publishDate ? new Date(publishDate) : new Date())
   const [selectedTime, setSelectedTime] = useState(
     publishDate
-      ? `${new Date(publishDate)
-          .getHours()
-          .toString()
-          .padStart(2, "0")}:${new Date(publishDate)
+      ? `${new Date(publishDate).getHours().toString().padStart(2, "0")}:${new Date(publishDate)
           .getMinutes()
           .toString()
           .padStart(2, "0")}`
-      : "09:00"
+      : "09:00",
   )
 
   const handleDateSelect = (date) => {
@@ -732,26 +692,17 @@ const SchedulingCalendar = ({ publishDate, setPublishDate }) => {
 
   return (
     <div className="scheduling-calendar">
-      <div
-        className="schedule-display"
-        onClick={() => setShowCalendar(!showCalendar)}
-      >
+      <div className="schedule-display" onClick={() => setShowCalendar(!showCalendar)}>
         <i className="fas fa-calendar-alt"></i>
         <span>{formatDate(publishDate)}</span>
-        <i
-          className={`fas fa-chevron-${showCalendar ? "up" : "down"}`}
-        ></i>
+        <i className={`fas fa-chevron-${showCalendar ? "up" : "down"}`}></i>
       </div>
       {showCalendar && (
         <div className="calendar-dropdown">
           <div className="calendar-header">
             <button
               className="month-nav"
-              onClick={() =>
-                setSelectedDate(
-                  new Date(selectedDate.getFullYear(), selectedDate.getMonth() - 1, 1)
-                )
-              }
+              onClick={() => setSelectedDate(new Date(selectedDate.getFullYear(), selectedDate.getMonth() - 1, 1))}
             >
               <i className="fas fa-chevron-left"></i>
             </button>
@@ -760,11 +711,7 @@ const SchedulingCalendar = ({ publishDate, setPublishDate }) => {
             </h4>
             <button
               className="month-nav"
-              onClick={() =>
-                setSelectedDate(
-                  new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 1)
-                )
-              }
+              onClick={() => setSelectedDate(new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 1))}
             >
               <i className="fas fa-chevron-right"></i>
             </button>
@@ -794,11 +741,7 @@ const SchedulingCalendar = ({ publishDate, setPublishDate }) => {
           </div>
           <div className="time-selector">
             <label>Waktu:</label>
-            <input
-              type="time"
-              value={selectedTime}
-              onChange={handleTimeChange}
-            />
+            <input type="time" value={selectedTime} onChange={handleTimeChange} />
           </div>
           <div className="calendar-actions">
             <button
@@ -810,10 +753,7 @@ const SchedulingCalendar = ({ publishDate, setPublishDate }) => {
             >
               Hapus
             </button>
-            <button
-              className="action-button primary-button"
-              onClick={handleSave}
-            >
+            <button className="action-button primary-button" onClick={handleSave}>
               Atur Tanggal & Waktu
             </button>
           </div>
@@ -847,15 +787,9 @@ const ManageArticles = () => {
       const matchesSearch =
         article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         article.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        article.tags.some((tag) =>
-          tag.toLowerCase().includes(searchTerm.toLowerCase())
-        )
-      const matchesCategory = filterCategory
-        ? article.category === filterCategory
-        : true
-      const matchesStatus = filterStatus
-        ? article.status === filterStatus
-        : true
+        article.tags.some((tag) => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+      const matchesCategory = filterCategory ? article.category === filterCategory : true
+      const matchesStatus = filterStatus ? article.status === filterStatus : true
       return matchesSearch && matchesCategory && matchesStatus
     })
     .sort((a, b) => {
@@ -920,18 +854,12 @@ const ManageArticles = () => {
   const handleSaveArticle = () => {
     setUndoStack([...undoStack, [...articles]])
     setRedoStack([])
-    if (
-      !editingArticle.slug ||
-      editingArticle.title !==
-        articles.find((a) => a.id === editingArticle.id)?.title
-    ) {
+    if (!editingArticle.slug || editingArticle.title !== articles.find((a) => a.id === editingArticle.id)?.title) {
       editingArticle.slug = generateSlug(editingArticle.title)
     }
     editingArticle.lastModified = new Date().toISOString()
     if (editingArticle.id) {
-      setArticles(
-        articles.map((a) => (a.id === editingArticle.id ? editingArticle : a))
-      )
+      setArticles(articles.map((a) => (a.id === editingArticle.id ? editingArticle : a)))
     } else {
       const newArticle = {
         ...editingArticle,
@@ -979,9 +907,7 @@ const ManageArticles = () => {
         setRedoStack([])
         switch (action) {
           case "delete":
-            setArticles(
-              articles.filter((a) => !selectedArticles.includes(a.id))
-            )
+            setArticles(articles.filter((a) => !selectedArticles.includes(a.id)))
             break
           case "publish":
             setArticles(
@@ -992,17 +918,13 @@ const ManageArticles = () => {
                       status: "published",
                       publishDate: new Date().toISOString(),
                     }
-                  : a
-              )
+                  : a,
+              ),
             )
             break
           case "draft":
             setArticles(
-              articles.map((a) =>
-                selectedArticles.includes(a.id)
-                  ? { ...a, status: "draft", publishDate: null }
-                  : a
-              )
+              articles.map((a) => (selectedArticles.includes(a.id) ? { ...a, status: "draft", publishDate: null } : a)),
             )
             break
           default:
@@ -1041,527 +963,445 @@ const ManageArticles = () => {
   }
 
   return (
-    <div className="manage-articles-container">
-      {/* Header Admin */}
-      <div className="admin-header">
-        <h1>Kelola Artikel</h1>
-        <div className="admin-actions">
-          <button
-            className="action-button undo-button"
-            disabled={undoStack.length === 0}
-            onClick={handleUndo}
-          >
-            <i className="fas fa-undo"></i> Batalkan
-          </button>
-          <button
-            className="action-button redo-button"
-            disabled={redoStack.length === 0}
-            onClick={handleRedo}
-          >
-            <i className="fas fa-redo"></i> Ulangi
-          </button>
-          <button
-            className="action-button primary-button"
-            onClick={handleNewArticle}
-          >
-            <i className="fas fa-plus"></i> Tambah Artikel
-          </button>
-        </div>
-      </div>
-
-      {/* Panel Pengeditan atau Daftar Artikel */}
-      {isEditing ? (
-        <div className="edit-article-panel">
-          <div className="panel-header">
-            <h2>{editingArticle.id ? "Edit Artikel" : "Artikel Baru"}</h2>
-            <div className="panel-actions">
-              <button className="action-button" onClick={handleCancelEdit}>
-                Batal
-              </button>
-              <button
-                className="action-button primary-button"
-                onClick={handleSaveArticle}
-              >
-                Simpan Artikel
-              </button>
-            </div>
+    <AdminLayout>
+      <div className="manage-articles-container">
+        {/* Header Admin */}
+        <div className="admin-header">
+          <h1>Kelola Artikel</h1>
+          <div className="admin-actions">
+            <button className="action-button undo-button" disabled={undoStack.length === 0} onClick={handleUndo}>
+              <i className="fas fa-undo"></i> Batalkan
+            </button>
+            <button className="action-button redo-button" disabled={redoStack.length === 0} onClick={handleRedo}>
+              <i className="fas fa-redo"></i> Ulangi
+            </button>
+            <button className="action-button primary-button" onClick={handleNewArticle}>
+              <i className="fas fa-plus"></i> Tambah Artikel
+            </button>
           </div>
-          <div className="panel-content">
-            <div className="article-edit-form">
-              <div className="form-section article-info">
-                <div className="form-group">
-                  <label>Judul</label>
-                  <input
-                    type="text"
-                    value={editingArticle.title}
-                    onChange={(e) =>
-                      setEditingArticle({
-                        ...editingArticle,
-                        title: e.target.value,
-                      })
-                    }
-                    placeholder="Judul artikel"
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Ringkasan</label>
-                  <textarea
-                    value={editingArticle.excerpt}
-                    onChange={(e) =>
-                      setEditingArticle({
-                        ...editingArticle,
-                        excerpt: e.target.value,
-                      })
-                    }
-                    placeholder="Ringkasan singkat artikel"
-                  />
-                </div>
-                <div className="form-row">
+        </div>
+
+        {/* Panel Pengeditan atau Daftar Artikel */}
+        {isEditing ? (
+          <div className="edit-article-panel">
+            <div className="panel-header">
+              <h2>{editingArticle.id ? "Edit Artikel" : "Artikel Baru"}</h2>
+              <div className="panel-actions">
+                <button className="action-button" onClick={handleCancelEdit}>
+                  Batal
+                </button>
+                <button className="action-button primary-button" onClick={handleSaveArticle}>
+                  Simpan Artikel
+                </button>
+              </div>
+            </div>
+            <div className="panel-content">
+              <div className="article-edit-form">
+                <div className="form-section article-info">
                   <div className="form-group">
-                    <label>Kategori</label>
-                    <select
-                      value={editingArticle.category}
-                      onChange={(e) =>
-                        setEditingArticle({
-                          ...editingArticle,
-                          category: e.target.value,
-                        })
-                      }
-                    >
-                      <option value="">Pilih Kategori</option>
-                      {categories.map((category) => (
-                        <option key={category.id} value={category.id}>
-                          {category.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="form-group">
-                    <label>Penulis</label>
+                    <label>Judul</label>
                     <input
                       type="text"
-                      value={editingArticle.author}
+                      value={editingArticle.title}
                       onChange={(e) =>
                         setEditingArticle({
                           ...editingArticle,
-                          author: e.target.value,
+                          title: e.target.value,
                         })
                       }
-                      placeholder="Penulis artikel"
+                      placeholder="Judul artikel"
                     />
                   </div>
-                </div>
-                <div className="form-group">
-                  <label>Tag</label>
-                  <TagSelector
-                    selectedTags={editingArticle.tags}
-                    setSelectedTags={(tags) =>
-                      setEditingArticle({ ...editingArticle, tags })
-                    }
-                  />
-                </div>
-                <div className="form-row">
                   <div className="form-group">
-                    <label>Status</label>
-                    <select
-                      value={editingArticle.status}
-                      onChange={(e) => {
-                        const newStatus = e.target.value
-                        const newArticle = {
+                    <label>Ringkasan</label>
+                    <textarea
+                      value={editingArticle.excerpt}
+                      onChange={(e) =>
+                        setEditingArticle({
                           ...editingArticle,
-                          status: newStatus,
-                        }
-                        if (newStatus === "published" && !editingArticle.publishDate) {
-                          newArticle.publishDate = new Date().toISOString()
-                        }
-                        if (newStatus === "draft") {
-                          newArticle.publishDate = null
-                        }
-                        setEditingArticle(newArticle)
-                      }}
-                    >
-                      <option value="draft">Draft</option>
-                      <option value="published">Dipublikasikan</option>
-                      <option value="scheduled">Dijadwalkan</option>
-                    </select>
-                  </div>
-                  <div className="form-group">
-                    <label>Tanggal Publikasi</label>
-                    <SchedulingCalendar
-                      publishDate={editingArticle.publishDate}
-                      setPublishDate={(date) => {
-                        const newArticle = {
-                          ...editingArticle,
-                          publishDate: date,
-                        }
-                        if (date) {
-                          const publishDate = new Date(date)
-                          const now = new Date()
-                          if (publishDate > now) {
-                            newArticle.status = "scheduled"
-                          } else {
-                            newArticle.status = "published"
-                          }
-                        }
-                        setEditingArticle(newArticle)
-                      }}
+                          excerpt: e.target.value,
+                        })
+                      }
+                      placeholder="Ringkasan singkat artikel"
                     />
                   </div>
-                </div>
-                <div className="form-group">
-                  <label>Gambar Unggulan</label>
-                  <div className="featured-image-selector">
-                    {editingArticle.featuredImage ? (
-                      <div className="featured-image-preview">
-                        <img
-                          src={editingArticle.featuredImage || "/placeholder.svg"}
-                          alt="Unggulan"
-                        />
-                        <button
-                          className="remove-image-btn"
-                          onClick={() =>
-                            setEditingArticle({
-                              ...editingArticle,
-                              featuredImage: "",
-                            })
-                          }
-                        >
-                          <i className="fas fa-times"></i>
-                        </button>
-                      </div>
-                    ) : (
-                      <button
-                        className="select-image-btn"
-                        onClick={() => setShowMediaLibrary(true)}
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label>Kategori</label>
+                      <select
+                        value={editingArticle.category}
+                        onChange={(e) =>
+                          setEditingArticle({
+                            ...editingArticle,
+                            category: e.target.value,
+                          })
+                        }
                       >
-                        <i className="fas fa-image"></i>
-                        <span>Pilih Gambar Unggulan</span>
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <div className="form-section article-content">
-                <div className="editor-container">
-                  <div className="editor-header">
-                    <h3>Konten</h3>
-                    <div className="editor-tabs">
-                      <button className="editor-tab active">Edit</button>
-                      <button className="editor-tab">Pratinjau</button>
+                        <option value="">Pilih Kategori</option>
+                        {categories.map((category) => (
+                          <option key={category.id} value={category.id}>
+                            {category.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="form-group">
+                      <label>Penulis</label>
+                      <input
+                        type="text"
+                        value={editingArticle.author}
+                        onChange={(e) =>
+                          setEditingArticle({
+                            ...editingArticle,
+                            author: e.target.value,
+                          })
+                        }
+                        placeholder="Penulis artikel"
+                      />
                     </div>
                   </div>
-                  <div className="editor-preview-container">
-                    <RichTextEditor
-                      content={editingArticle.content}
-                      setContent={(content) =>
-                        setEditingArticle({ ...editingArticle, content })
-                      }
+                  <div className="form-group">
+                    <label>Tag</label>
+                    <TagSelector
+                      selectedTags={editingArticle.tags}
+                      setSelectedTags={(tags) => setEditingArticle({ ...editingArticle, tags })}
                     />
-                    <ContentPreview content={editingArticle.content} />
+                  </div>
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label>Status</label>
+                      <select
+                        value={editingArticle.status}
+                        onChange={(e) => {
+                          const newStatus = e.target.value
+                          const newArticle = {
+                            ...editingArticle,
+                            status: newStatus,
+                          }
+                          if (newStatus === "published" && !editingArticle.publishDate) {
+                            newArticle.publishDate = new Date().toISOString()
+                          }
+                          if (newStatus === "draft") {
+                            newArticle.publishDate = null
+                          }
+                          setEditingArticle(newArticle)
+                        }}
+                      >
+                        <option value="draft">Draft</option>
+                        <option value="published">Dipublikasikan</option>
+                        <option value="scheduled">Dijadwalkan</option>
+                      </select>
+                    </div>
+                    <div className="form-group">
+                      <label>Tanggal Publikasi</label>
+                      <SchedulingCalendar
+                        publishDate={editingArticle.publishDate}
+                        setPublishDate={(date) => {
+                          const newArticle = {
+                            ...editingArticle,
+                            publishDate: date,
+                          }
+                          if (date) {
+                            const publishDate = new Date(date)
+                            const now = new Date()
+                            if (publishDate > now) {
+                              newArticle.status = "scheduled"
+                            } else {
+                              newArticle.status = "published"
+                            }
+                          }
+                          setEditingArticle(newArticle)
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label>Gambar Unggulan</label>
+                    <div className="featured-image-selector">
+                      {editingArticle.featuredImage ? (
+                        <div className="featured-image-preview">
+                          <img src={editingArticle.featuredImage || "/placeholder.svg"} alt="Unggulan" />
+                          <button
+                            className="remove-image-btn"
+                            onClick={() =>
+                              setEditingArticle({
+                                ...editingArticle,
+                                featuredImage: "",
+                              })
+                            }
+                          >
+                            <i className="fas fa-times"></i>
+                          </button>
+                        </div>
+                      ) : (
+                        <button className="select-image-btn" onClick={() => setShowMediaLibrary(true)}>
+                          <i className="fas fa-image"></i>
+                          <span>Pilih Gambar Unggulan</span>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div className="form-section article-content">
+                  <div className="editor-container">
+                    <div className="editor-header">
+                      <h3>Konten</h3>
+                      <div className="editor-tabs">
+                        <button className="editor-tab active">Edit</button>
+                        <button className="editor-tab">Pratinjau</button>
+                      </div>
+                    </div>
+                    <div className="editor-preview-container">
+                      <RichTextEditor
+                        content={editingArticle.content}
+                        setContent={(content) => setEditingArticle({ ...editingArticle, content })}
+                      />
+                      <ContentPreview content={editingArticle.content} />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      ) : (
-        <>
-          <div className="filter-bar">
-            <div className="search-box">
-              <input
-                type="text"
-                placeholder="Cari artikel..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <i className="fas fa-search"></i>
+        ) : (
+          <>
+            <div className="filter-bar">
+              <div className="search-box">
+                <input
+                  type="text"
+                  placeholder="Cari artikel..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <i className="fas fa-search"></i>
+              </div>
+              <div className="filter-options">
+                <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)}>
+                  <option value="">Semua Kategori</option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+                <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
+                  <option value="">Semua Status</option>
+                  <option value="published">Dipublikasikan</option>
+                  <option value="draft">Draft</option>
+                  <option value="scheduled">Dijadwalkan</option>
+                </select>
+              </div>
             </div>
-            <div className="filter-options">
-              <select
-                value={filterCategory}
-                onChange={(e) => setFilterCategory(e.target.value)}
-              >
-                <option value="">Semua Kategori</option>
-                {categories.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.name}
-                  </option>
-                ))}
-              </select>
-              <select
-                value={filterStatus}
-                onChange={(e) => setFilterStatus(e.target.value)}
-              >
-                <option value="">Semua Status</option>
-                <option value="published">Dipublikasikan</option>
-                <option value="draft">Draft</option>
-                <option value="scheduled">Dijadwalkan</option>
-              </select>
+            {selectedArticles.length > 0 && (
+              <div className="bulk-actions">
+                <span>{selectedArticles.length} artikel dipilih</span>
+                <div className="action-buttons">
+                  <button className="action-button" onClick={() => handleBulkAction("publish")}>
+                    Publikasikan
+                  </button>
+                  <button className="action-button" onClick={() => handleBulkAction("draft")}>
+                    Pindahkan ke Draft
+                  </button>
+                  <button className="action-button danger-button" onClick={() => handleBulkAction("delete")}>
+                    Hapus
+                  </button>
+                </div>
+              </div>
+            )}
+            <div className="articles-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th className="checkbox-column">
+                      <input
+                        type="checkbox"
+                        checked={selectedArticles.length === filteredArticles.length && filteredArticles.length > 0}
+                        onChange={toggleSelectAll}
+                      />
+                    </th>
+                    <th className="image-column">Gambar</th>
+                    <th
+                      className={`sortable ${sortField === "title" ? "sorted" : ""}`}
+                      onClick={() => handleSort("title")}
+                    >
+                      Judul
+                      {sortField === "title" && (
+                        <i className={`fas fa-sort-${sortDirection === "asc" ? "up" : "down"}`}></i>
+                      )}
+                    </th>
+                    <th
+                      className={`sortable ${sortField === "author" ? "sorted" : ""}`}
+                      onClick={() => handleSort("author")}
+                    >
+                      Penulis
+                      {sortField === "author" && (
+                        <i className={`fas fa-sort-${sortDirection === "asc" ? "up" : "down"}`}></i>
+                      )}
+                    </th>
+                    <th
+                      className={`sortable ${sortField === "category" ? "sorted" : ""}`}
+                      onClick={() => handleSort("category")}
+                    >
+                      Kategori
+                      {sortField === "category" && (
+                        <i className={`fas fa-sort-${sortDirection === "asc" ? "up" : "down"}`}></i>
+                      )}
+                    </th>
+                    <th>Tag</th>
+                    <th
+                      className={`sortable ${sortField === "status" ? "sorted" : ""}`}
+                      onClick={() => handleSort("status")}
+                    >
+                      Status
+                      {sortField === "status" && (
+                        <i className={`fas fa-sort-${sortDirection === "asc" ? "up" : "down"}`}></i>
+                      )}
+                    </th>
+                    <th
+                      className={`sortable ${sortField === "publishDate" ? "sorted" : ""}`}
+                      onClick={() => handleSort("publishDate")}
+                    >
+                      Dipublikasikan
+                      {sortField === "publishDate" && (
+                        <i className={`fas fa-sort-${sortDirection === "asc" ? "up" : "down"}`}></i>
+                      )}
+                    </th>
+                    <th>Tindakan</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <AnimatePresence>
+                    {filteredArticles.map((article) => (
+                      <motion.tr
+                        key={article.id}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className={selectedArticles.includes(article.id) ? "selected" : ""}
+                      >
+                        <td className="checkbox-column">
+                          <input
+                            type="checkbox"
+                            checked={selectedArticles.includes(article.id)}
+                            onChange={() => toggleArticleSelection(article.id)}
+                          />
+                        </td>
+                        <td className="image-column">
+                          {article.featuredImage ? (
+                            <img src={article.featuredImage || "/placeholder.svg"} alt={article.title} />
+                          ) : (
+                            <div className="no-image">Tidak Ada Gambar</div>
+                          )}
+                        </td>
+                        <td className="title-column">
+                          <div className="article-title">{article.title}</div>
+                          <div className="article-excerpt">{article.excerpt.substring(0, 60)}...</div>
+                        </td>
+                        <td>{article.author}</td>
+                        <td>{categories.find((c) => c.id === article.category)?.name || article.category}</td>
+                        <td className="tags-column">
+                          {article.tags.map((tag, index) => (
+                            <span key={index} className="tag">
+                              {tag}
+                            </span>
+                          ))}
+                        </td>
+                        <td>
+                          <span className={`status-badge ${article.status}`}>
+                            {article.status === "published"
+                              ? "Dipublikasikan"
+                              : article.status === "draft"
+                                ? "Draft"
+                                : article.status === "scheduled"
+                                  ? "Dijadwalkan"
+                                  : article.status}
+                          </span>
+                        </td>
+                        <td>
+                          {article.publishDate
+                            ? new Date(article.publishDate).toLocaleDateString()
+                            : "Belum dipublikasikan"}
+                        </td>
+                        <td className="actions-column">
+                          <button className="action-icon-button" onClick={() => handleEditArticle(article)}>
+                            <i className="fas fa-edit"></i>
+                          </button>
+                          <button
+                            className="action-icon-button danger"
+                            onClick={() => {
+                              setSelectedArticles([article.id])
+                              handleBulkAction("delete")
+                            }}
+                          >
+                            <i className="fas fa-trash-alt"></i>
+                          </button>
+                        </td>
+                      </motion.tr>
+                    ))}
+                  </AnimatePresence>
+                </tbody>
+              </table>
             </div>
-          </div>
-          {selectedArticles.length > 0 && (
-            <div className="bulk-actions">
-              <span>{selectedArticles.length} artikel dipilih</span>
-              <div className="action-buttons">
-                <button
-                  className="action-button"
-                  onClick={() => handleBulkAction("publish")}
-                >
-                  Publikasikan
+          </>
+        )}
+
+        {/* Dialog Konfirmasi */}
+        {confirmationAction && (
+          <div className="confirmation-dialog">
+            <div className="confirmation-content">
+              <h3>Konfirmasi Tindakan</h3>
+              <p>
+                {confirmationAction.type === "delete"
+                  ? `Apakah Anda yakin ingin menghapus ${selectedArticles.length} artikel?`
+                  : `Apakah Anda yakin ingin ${
+                      confirmationAction.type === "publish" ? "mempublikasikan" : "memindahkan ke draft"
+                    } ${selectedArticles.length} artikel?`}
+              </p>
+              <div className="confirmation-actions">
+                <button className="action-button" onClick={() => setConfirmationAction(null)}>
+                  Batal
                 </button>
                 <button
-                  className="action-button"
-                  onClick={() => handleBulkAction("draft")}
+                  className={`action-button ${confirmationAction.type === "delete" ? "danger-button" : "primary-button"}`}
+                  onClick={() => {
+                    confirmationAction.callback()
+                    setConfirmationAction(null)
+                  }}
                 >
-                  Pindahkan ke Draft
-                </button>
-                <button
-                  className="action-button danger-button"
-                  onClick={() => handleBulkAction("delete")}
-                >
-                  Hapus
+                  Konfirmasi
                 </button>
               </div>
             </div>
-          )}
-          <div className="articles-table">
-            <table>
-              <thead>
-                <tr>
-                  <th className="checkbox-column">
-                    <input
-                      type="checkbox"
-                      checked={
-                        selectedArticles.length === filteredArticles.length &&
-                        filteredArticles.length > 0
-                      }
-                      onChange={toggleSelectAll}
-                    />
-                  </th>
-                  <th className="image-column">Gambar</th>
-                  <th
-                    className={`sortable ${sortField === "title" ? "sorted" : ""}`}
-                    onClick={() => handleSort("title")}
-                  >
-                    Judul
-                    {sortField === "title" && (
-                      <i
-                        className={`fas fa-sort-${
-                          sortDirection === "asc" ? "up" : "down"
-                        }`}
-                      ></i>
-                    )}
-                  </th>
-                  <th
-                    className={`sortable ${sortField === "author" ? "sorted" : ""}`}
-                    onClick={() => handleSort("author")}
-                  >
-                    Penulis
-                    {sortField === "author" && (
-                      <i
-                        className={`fas fa-sort-${
-                          sortDirection === "asc" ? "up" : "down"
-                        }`}
-                      ></i>
-                    )}
-                  </th>
-                  <th
-                    className={`sortable ${
-                      sortField === "category" ? "sorted" : ""
-                    }`}
-                    onClick={() => handleSort("category")}
-                  >
-                    Kategori
-                    {sortField === "category" && (
-                      <i
-                        className={`fas fa-sort-${
-                          sortDirection === "asc" ? "up" : "down"
-                        }`}
-                      ></i>
-                    )}
-                  </th>
-                  <th>Tag</th>
-                  <th
-                    className={`sortable ${sortField === "status" ? "sorted" : ""}`}
-                    onClick={() => handleSort("status")}
-                  >
-                    Status
-                    {sortField === "status" && (
-                      <i
-                        className={`fas fa-sort-${
-                          sortDirection === "asc" ? "up" : "down"
-                        }`}
-                      ></i>
-                    )}
-                  </th>
-                  <th
-                    className={`sortable ${
-                      sortField === "publishDate" ? "sorted" : ""
-                    }`}
-                    onClick={() => handleSort("publishDate")}
-                  >
-                    Dipublikasikan
-                    {sortField === "publishDate" && (
-                      <i
-                        className={`fas fa-sort-${
-                          sortDirection === "asc" ? "up" : "down"
-                        }`}
-                      ></i>
-                    )}
-                  </th>
-                  <th>Tindakan</th>
-                </tr>
-              </thead>
-              <tbody>
-                <AnimatePresence>
-                  {filteredArticles.map((article) => (
-                    <motion.tr
-                      key={article.id}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className={
-                        selectedArticles.includes(article.id) ? "selected" : ""
-                      }
-                    >
-                      <td className="checkbox-column">
-                        <input
-                          type="checkbox"
-                          checked={selectedArticles.includes(article.id)}
-                          onChange={() => toggleArticleSelection(article.id)}
-                        />
-                      </td>
-                      <td className="image-column">
-                        {article.featuredImage ? (
-                          <img
-                            src={article.featuredImage || "/placeholder.svg"}
-                            alt={article.title}
-                          />
-                        ) : (
-                          <div className="no-image">Tidak Ada Gambar</div>
-                        )}
-                      </td>
-                      <td className="title-column">
-                        <div className="article-title">{article.title}</div>
-                        <div className="article-excerpt">
-                          {article.excerpt.substring(0, 60)}...
-                        </div>
-                      </td>
-                      <td>{article.author}</td>
-                      <td>
-                        {categories.find((c) => c.id === article.category)?.name ||
-                          article.category}
-                      </td>
-                      <td className="tags-column">
-                        {article.tags.map((tag, index) => (
-                          <span key={index} className="tag">
-                            {tag}
-                          </span>
-                        ))}
-                      </td>
-                      <td>
-                        <span className={`status-badge ${article.status}`}>
-                          {article.status === "published"
-                            ? "Dipublikasikan"
-                            : article.status === "draft"
-                            ? "Draft"
-                            : article.status === "scheduled"
-                            ? "Dijadwalkan"
-                            : article.status}
-                        </span>
-                      </td>
-                      <td>
-                        {article.publishDate
-                          ? new Date(article.publishDate).toLocaleDateString()
-                          : "Belum dipublikasikan"}
-                      </td>
-                      <td className="actions-column">
-                        <button
-                          className="action-icon-button"
-                          onClick={() => handleEditArticle(article)}
-                        >
-                          <i className="fas fa-edit"></i>
-                        </button>
-                        <button
-                          className="action-icon-button danger"
-                          onClick={() => {
-                            setSelectedArticles([article.id])
-                            handleBulkAction("delete")
-                          }}
-                        >
-                          <i className="fas fa-trash-alt"></i>
-                        </button>
-                      </td>
-                    </motion.tr>
-                  ))}
-                </AnimatePresence>
-              </tbody>
-            </table>
           </div>
-        </>
-      )}
-
-      {/* Dialog Konfirmasi */}
-      {confirmationAction && (
-        <div className="confirmation-dialog">
-          <div className="confirmation-content">
-            <h3>Konfirmasi Tindakan</h3>
-            <p>
-              {confirmationAction.type === "delete"
-                ? `Apakah Anda yakin ingin menghapus ${selectedArticles.length} artikel?`
-                : `Apakah Anda yakin ingin ${
-                    confirmationAction.type === "publish" ? "mempublikasikan" : "memindahkan ke draft"
-                  } ${selectedArticles.length} artikel?`}
-            </p>
-            <div className="confirmation-actions">
-              <button
-                className="action-button"
-                onClick={() => setConfirmationAction(null)}
-              >
-                Batal
-              </button>
-              <button
-                className={`action-button ${
-                  confirmationAction.type === "delete" ? "danger-button" : "primary-button"
-                }`}
-                onClick={() => {
-                  confirmationAction.callback()
-                  setConfirmationAction(null)
-                }}
-              >
-                Konfirmasi
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Perpustakaan Media */}
-      {showMediaLibrary && (
-        <div className="media-library-overlay">
-          <MediaLibrary
-            mediaItems={mediaItems}
-            onSelectMedia={handleSelectFeaturedImage}
-            onClose={() => setShowMediaLibrary(false)}
-          />
-        </div>
-      )}
-
-      {/* Notifikasi Sukses */}
-      <AnimatePresence>
-        {showConfirmation && (
-          <motion.div
-            className="success-notification"
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
-          >
-            <i className="fas fa-check-circle"></i>
-            <span>Perubahan berhasil disimpan!</span>
-          </motion.div>
         )}
-      </AnimatePresence>
-    </div>
+
+        {/* Perpustakaan Media */}
+        {showMediaLibrary && (
+          <div className="media-library-overlay">
+            <MediaLibrary
+              mediaItems={mediaItems}
+              onSelectMedia={handleSelectFeaturedImage}
+              onClose={() => setShowMediaLibrary(false)}
+            />
+          </div>
+        )}
+
+        {/* Notifikasi Sukses */}
+        <AnimatePresence>
+          {showConfirmation && (
+            <motion.div
+              className="success-notification"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 50 }}
+            >
+              <i className="fas fa-check-circle"></i>
+              <span>Perubahan berhasil disimpan!</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </AdminLayout>
   )
 }
 

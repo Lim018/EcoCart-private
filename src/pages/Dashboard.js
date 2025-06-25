@@ -32,6 +32,7 @@ import {
   RefreshCw,
 } from "react-feather"
 import "../styles/Dashboard.css"
+import AdminLayout from "../components/AdminLayout"
 
 const SortableItem = ({ id, children }) => {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id })
@@ -360,10 +361,10 @@ const Dashboard = () => {
                         {tx.status === "completed"
                           ? "Selesai"
                           : tx.status === "processing"
-                          ? "Diproses"
-                          : tx.status === "failed"
-                          ? "Gagal"
-                          : tx.status}
+                            ? "Diproses"
+                            : tx.status === "failed"
+                              ? "Gagal"
+                              : tx.status}
                       </span>
                     </td>
                     <td>
@@ -383,49 +384,51 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="dashboard-container">
-      <header className="dashboard-header">
-        <h1>Dashboard Admin</h1>
-        <div className="dashboard-actions">
-          <button className="action-button primary">Tambah Widget</button>
-          <button className="action-button">Ekspor Data</button>
-        </div>
-      </header>
-
-      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <SortableContext items={widgets.map((widget) => widget.id)} strategy={rectSortingStrategy}>
-          <div className="widgets-grid">
-            {widgets.map((widget) => (
-              <SortableItem key={widget.id} id={widget.id}>
-                <DashboardWidget
-                  id={widget.id}
-                  title={widget.title}
-                  onRemove={removeWidget}
-                  onMaximize={maximizeWidget}
-                  refreshData={refreshData}
-                >
-                  {renderWidgetContent(widget)}
-                </DashboardWidget>
-              </SortableItem>
-            ))}
+    <AdminLayout>
+      <div className="dashboard-container">
+        <header className="dashboard-header">
+          <h1>Dashboard Admin</h1>
+          <div className="dashboard-actions">
+            <button className="action-button primary">Tambah Widget</button>
+            <button className="action-button">Ekspor Data</button>
           </div>
-        </SortableContext>
-      </DndContext>
+        </header>
 
-      {maximizedWidget && (
-        <div className="maximized-widget-overlay">
-          <div className="maximized-widget">
-            <div className="widget-header">
-              <h3>{maximizedWidget.title}</h3>
-              <button className="widget-action" onClick={closeMaximizedWidget}>
-                <X size={16} />
-              </button>
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <SortableContext items={widgets.map((widget) => widget.id)} strategy={rectSortingStrategy}>
+            <div className="widgets-grid">
+              {widgets.map((widget) => (
+                <SortableItem key={widget.id} id={widget.id}>
+                  <DashboardWidget
+                    id={widget.id}
+                    title={widget.title}
+                    onRemove={removeWidget}
+                    onMaximize={maximizeWidget}
+                    refreshData={refreshData}
+                  >
+                    {renderWidgetContent(widget)}
+                  </DashboardWidget>
+                </SortableItem>
+              ))}
             </div>
-            <div className="widget-content">{renderWidgetContent(maximizedWidget)}</div>
+          </SortableContext>
+        </DndContext>
+
+        {maximizedWidget && (
+          <div className="maximized-widget-overlay">
+            <div className="maximized-widget">
+              <div className="widget-header">
+                <h3>{maximizedWidget.title}</h3>
+                <button className="widget-action" onClick={closeMaximizedWidget}>
+                  <X size={16} />
+                </button>
+              </div>
+              <div className="widget-content">{renderWidgetContent(maximizedWidget)}</div>
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </AdminLayout>
   )
 }
 

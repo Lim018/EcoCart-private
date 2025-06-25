@@ -201,11 +201,11 @@ const Cart = () => {
           <div className="cart-layout">
             <div className="cart-items-container">
               <div className="cart-header">
-                <div className="cart-header-product">Produk</div>
-                <div className="cart-header-price">Harga</div>
-                <div className="cart-header-quantity">Jumlah</div>
-                <div className="cart-header-total">Total</div>
-                <div className="cart-header-actions"></div>
+                <div>Produk</div>
+                <div>Harga</div>
+                <div>Jumlah</div>
+                <div>Total</div>
+                <div></div>
               </div>
 
               <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
@@ -222,74 +222,76 @@ const Cart = () => {
                               exit={{ opacity: 0, height: 0, marginBottom: 0 }}
                               transition={{ duration: 0.3 }}
                             >
-                              <div className="drag-handle" {...listeners}>
-                                <i className="fas fa-grip-vertical"></i>
-                              </div>
+                              <div className="cart-item-main">
+                                <div className="drag-handle" {...listeners}>
+                                  <i className="fas fa-grip-vertical"></i>
+                                </div>
 
-                              <div className="cart-item-product">
-                                <img src={item.image || "/placeholder.svg"} alt={item.name} />
-                                <div className="item-details">
-                                  <h3>{item.name}</h3>
-                                  <div className="sustainability-badge">
-                                    <i className="fas fa-leaf"></i>
-                                    <span>Skor Eco: {item.sustainabilityScore}</span>
+                                <div className="cart-item-product">
+                                  {/* <img src={item.image || "/placeholder.svg"} alt={item.name} /> */}
+                                  <div className="item-details">
+                                    <h3>{item.name}</h3>
+                                    <div className="sustainability-badge">
+                                      <i className="fas fa-leaf"></i>
+                                      <span>Skor Eco: {item.sustainabilityScore}</span>
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
 
-                              <div className="cart-item-price">{formatPrice(item.price)}</div>
+                                <div className="cart-item-controls">
+                                  <div className="cart-item-price">{formatPrice(item.price)}</div>
 
-                              <div className="cart-item-quantity">
-                                <div className="quantity-selector">
-                                  <button
-                                    className="quantity-btn"
-                                    onClick={() => handleQuantityChange(item.id, Math.max(1, item.quantity - 1))}
-                                    disabled={item.quantity <= 1}
+                                  <div className="quantity-selector">
+                                    <button
+                                      className="quantity-btn"
+                                      onClick={() => handleQuantityChange(item.id, Math.max(1, item.quantity - 1))}
+                                      disabled={item.quantity <= 1}
+                                    >
+                                      <i className="fas fa-minus"></i>
+                                    </button>
+                                    <input
+                                      type="number"
+                                      value={item.quantity}
+                                      min="1"
+                                      max={item.maxQuantity}
+                                      onChange={(e) =>
+                                        handleQuantityChange(
+                                          item.id,
+                                          Math.min(item.maxQuantity, Math.max(1, Number.parseInt(e.target.value) || 1)),
+                                        )
+                                      }
+                                    />
+                                    <button
+                                      className="quantity-btn"
+                                      onClick={() =>
+                                        handleQuantityChange(item.id, Math.min(item.maxQuantity, item.quantity + 1))
+                                      }
+                                      disabled={item.quantity >= item.maxQuantity}
+                                    >
+                                      <i className="fas fa-plus"></i>
+                                    </button>
+                                  </div>
+
+                                  <motion.div
+                                    className="cart-item-total"
+                                    key={`${item.id}-${item.quantity}`}
+                                    initial={{ scale: 1 }}
+                                    animate={{ scale: [1, 1.05, 1] }}
+                                    transition={{ duration: 0.3 }}
                                   >
-                                    <i className="fas fa-minus"></i>
-                                  </button>
-                                  <input
-                                    type="number"
-                                    value={item.quantity}
-                                    min="1"
-                                    max={item.maxQuantity}
-                                    onChange={(e) =>
-                                      handleQuantityChange(
-                                        item.id,
-                                        Math.min(item.maxQuantity, Math.max(1, Number.parseInt(e.target.value) || 1)),
-                                      )
-                                    }
-                                  />
-                                  <button
-                                    className="quantity-btn"
-                                    onClick={() =>
-                                      handleQuantityChange(item.id, Math.min(item.maxQuantity, item.quantity + 1))
-                                    }
-                                    disabled={item.quantity >= item.maxQuantity}
-                                  >
-                                    <i className="fas fa-plus"></i>
-                                  </button>
+                                    {formatPrice(item.price * item.quantity)}
+                                  </motion.div>
+
+                                  <div className="cart-item-actions">
+                                    <button
+                                      className="remove-item"
+                                      onClick={() => handleRemoveItem(item.id)}
+                                      aria-label="Hapus item"
+                                    >
+                                      <i className="fas fa-trash-alt"></i>
+                                    </button>
+                                  </div>
                                 </div>
-                              </div>
-
-                              <motion.div
-                                className="cart-item-total"
-                                key={`${item.id}-${item.quantity}`}
-                                initial={{ scale: 1 }}
-                                animate={{ scale: [1, 1.05, 1] }}
-                                transition={{ duration: 0.3 }}
-                              >
-                                {formatPrice(item.price * item.quantity)}
-                              </motion.div>
-
-                              <div className="cart-item-actions">
-                                <button
-                                  className="remove-item"
-                                  onClick={() => handleRemoveItem(item.id)}
-                                  aria-label="Hapus item"
-                                >
-                                  <i className="fas fa-trash-alt"></i>
-                                </button>
                               </div>
                             </motion.div>
                           )}

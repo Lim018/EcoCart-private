@@ -289,7 +289,9 @@ const Authentication = () => {
       setShowSuccess(true)
       setTimeout(() => {
         setShowSuccess(false)
-      }, 3000)
+        // Redirect ke dashboard admin
+        window.location.href = "/admin/dashboard"
+      }, 2000)
     } else {
       // Tampilkan animasi error
       setErrorMessage("Gagal login. Silakan periksa kembali data Anda.")

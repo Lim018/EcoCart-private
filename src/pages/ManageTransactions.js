@@ -16,6 +16,7 @@ import {
   RefreshCw,
 } from "react-feather"
 import "../styles/ManageTransactions.css"
+import AdminLayout from "../components/AdminLayout"
 
 // Sample transaction data
 const transactionsData = [
@@ -392,335 +393,337 @@ const ManageTransactions = () => {
   const sortedTransactions = getSortedTransactions()
 
   return (
-    <div className="manage-transactions-container">
-      <header className="transactions-header">
-        <h1>Manage Transactions</h1>
-        <div className="header-actions">
-          <div className="search-container">
-            <Search size={18} />
-            <input
-              type="text"
-              placeholder="Search transactions..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            {searchTerm && (
-              <button className="clear-search" onClick={() => setSearchTerm("")}>
-                <X size={16} />
-              </button>
-            )}
-          </div>
+    <AdminLayout>
+      <div className="manage-transactions-container">
+        <header className="transactions-header">
+          <h1>Manage Transactions</h1>
+          <div className="header-actions">
+            <div className="search-container">
+              <Search size={18} />
+              <input
+                type="text"
+                placeholder="Search transactions..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              {searchTerm && (
+                <button className="clear-search" onClick={() => setSearchTerm("")}>
+                  <X size={16} />
+                </button>
+              )}
+            </div>
 
-          <button
-            className={`filter-button ${showFilters ? "active" : ""}`}
-            onClick={() => setShowFilters(!showFilters)}
-          >
-            <Filter size={18} />
-            <span>Filter</span>
-          </button>
-
-          <button
-            className="refresh-button"
-            onClick={() => {
-              setIsLoading(true)
-              setTimeout(() => setIsLoading(false), 800)
-            }}
-          >
-            <RefreshCw size={18} className={isLoading ? "loading" : ""} />
-          </button>
-        </div>
-      </header>
-
-      {showFilters && (
-        <div className="filters-panel">
-          <div className="filter-group">
-            <label>Status</label>
-            <select value={filters.status} onChange={(e) => setFilters({ ...filters, status: e.target.value })}>
-              <option value="all">All Statuses</option>
-              <option value="completed">Completed</option>
-              <option value="processing">Processing</option>
-              <option value="pending">Pending</option>
-              <option value="failed">Failed</option>
-              <option value="refunded">Refunded</option>
-            </select>
-          </div>
-
-          <div className="filter-group">
-            <label>Date Range</label>
-            <select value={filters.dateRange} onChange={(e) => setFilters({ ...filters, dateRange: e.target.value })}>
-              <option value="all">All Time</option>
-              <option value="today">Today</option>
-              <option value="yesterday">Yesterday</option>
-              <option value="week">Last 7 Days</option>
-              <option value="month">Last 30 Days</option>
-            </select>
-          </div>
-
-          <div className="filter-group">
-            <label>Payment Method</label>
-            <select
-              value={filters.paymentMethod}
-              onChange={(e) => setFilters({ ...filters, paymentMethod: e.target.value })}
+            <button
+              className={`filter-button ${showFilters ? "active" : ""}`}
+              onClick={() => setShowFilters(!showFilters)}
             >
-              <option value="all">All Methods</option>
-              <option value="Credit Card">Credit Card</option>
-              <option value="PayPal">PayPal</option>
-              <option value="Bank Transfer">Bank Transfer</option>
-            </select>
-          </div>
-
-          <button className="reset-filters" onClick={resetFilters}>
-            Reset Filters
-          </button>
-        </div>
-      )}
-
-      {selectedRows.length > 0 && (
-        <div className="bulk-actions-bar">
-          <div className="selected-count">
-            {selectedRows.length} {selectedRows.length === 1 ? "transaction" : "transactions"} selected
-          </div>
-
-          <div className="bulk-actions">
-            <button className="bulk-action-button" onClick={() => setShowBulkActions(!showBulkActions)}>
-              Actions <ChevronDown size={16} />
+              <Filter size={18} />
+              <span>Filter</span>
             </button>
 
-            {showBulkActions && (
-              <div className="bulk-actions-dropdown">
-                <button onClick={() => handleBulkAction("status:completed")}>Mark as Completed</button>
-                <button onClick={() => handleBulkAction("status:processing")}>Mark as Processing</button>
-                <button onClick={() => handleBulkAction("export")}>
-                  <Download size={14} /> Export Selected
-                </button>
-                <button className="danger" onClick={() => handleBulkAction("delete")}>
-                  <Trash2 size={14} /> Delete Selected
-                </button>
-              </div>
-            )}
+            <button
+              className="refresh-button"
+              onClick={() => {
+                setIsLoading(true)
+                setTimeout(() => setIsLoading(false), 800)
+              }}
+            >
+              <RefreshCw size={18} className={isLoading ? "loading" : ""} />
+            </button>
           </div>
-        </div>
-      )}
+        </header>
 
-      <div className={`transactions-table-container ${isLoading ? "loading" : ""}`}>
-        <table className="transactions-table" ref={tableRef}>
-          <thead>
-            <tr>
-              <th className="checkbox-cell">
-                <input type="checkbox" checked={selectAll} onChange={toggleSelectAll} />
-              </th>
-              <th
-                className={sortConfig.key === "id" ? `sorted-${sortConfig.direction}` : ""}
-                onClick={() => requestSort("id")}
+        {showFilters && (
+          <div className="filters-panel">
+            <div className="filter-group">
+              <label>Status</label>
+              <select value={filters.status} onChange={(e) => setFilters({ ...filters, status: e.target.value })}>
+                <option value="all">All Statuses</option>
+                <option value="completed">Completed</option>
+                <option value="processing">Processing</option>
+                <option value="pending">Pending</option>
+                <option value="failed">Failed</option>
+                <option value="refunded">Refunded</option>
+              </select>
+            </div>
+
+            <div className="filter-group">
+              <label>Date Range</label>
+              <select value={filters.dateRange} onChange={(e) => setFilters({ ...filters, dateRange: e.target.value })}>
+                <option value="all">All Time</option>
+                <option value="today">Today</option>
+                <option value="yesterday">Yesterday</option>
+                <option value="week">Last 7 Days</option>
+                <option value="month">Last 30 Days</option>
+              </select>
+            </div>
+
+            <div className="filter-group">
+              <label>Payment Method</label>
+              <select
+                value={filters.paymentMethod}
+                onChange={(e) => setFilters({ ...filters, paymentMethod: e.target.value })}
               >
-                Transaction ID
-                {sortConfig.key === "id" &&
-                  (sortConfig.direction === "asc" ? <ChevronUp size={16} /> : <ChevronDown size={16} />)}
-              </th>
-              <th
-                className={sortConfig.key === "customer" ? `sorted-${sortConfig.direction}` : ""}
-                onClick={() => requestSort("customer")}
-              >
-                Customer
-                {sortConfig.key === "customer" &&
-                  (sortConfig.direction === "asc" ? <ChevronUp size={16} /> : <ChevronDown size={16} />)}
-              </th>
-              <th
-                className={sortConfig.key === "amount" ? `sorted-${sortConfig.direction}` : ""}
-                onClick={() => requestSort("amount")}
-              >
-                Amount
-                {sortConfig.key === "amount" &&
-                  (sortConfig.direction === "asc" ? <ChevronUp size={16} /> : <ChevronDown size={16} />)}
-              </th>
-              <th
-                className={sortConfig.key === "items" ? `sorted-${sortConfig.direction}` : ""}
-                onClick={() => requestSort("items")}
-              >
-                Items
-                {sortConfig.key === "items" &&
-                  (sortConfig.direction === "asc" ? <ChevronUp size={16} /> : <ChevronDown size={16} />)}
-              </th>
-              <th
-                className={sortConfig.key === "date" ? `sorted-${sortConfig.direction}` : ""}
-                onClick={() => requestSort("date")}
-              >
-                Date
-                {sortConfig.key === "date" &&
-                  (sortConfig.direction === "asc" ? <ChevronUp size={16} /> : <ChevronDown size={16} />)}
-              </th>
-              <th
-                className={sortConfig.key === "status" ? `sorted-${sortConfig.direction}` : ""}
-                onClick={() => requestSort("status")}
-              >
-                Status
-                {sortConfig.key === "status" &&
-                  (sortConfig.direction === "asc" ? <ChevronUp size={16} /> : <ChevronDown size={16} />)}
-              </th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sortedTransactions.length === 0 ? (
+                <option value="all">All Methods</option>
+                <option value="Credit Card">Credit Card</option>
+                <option value="PayPal">PayPal</option>
+                <option value="Bank Transfer">Bank Transfer</option>
+              </select>
+            </div>
+
+            <button className="reset-filters" onClick={resetFilters}>
+              Reset Filters
+            </button>
+          </div>
+        )}
+
+        {selectedRows.length > 0 && (
+          <div className="bulk-actions-bar">
+            <div className="selected-count">
+              {selectedRows.length} {selectedRows.length === 1 ? "transaction" : "transactions"} selected
+            </div>
+
+            <div className="bulk-actions">
+              <button className="bulk-action-button" onClick={() => setShowBulkActions(!showBulkActions)}>
+                Actions <ChevronDown size={16} />
+              </button>
+
+              {showBulkActions && (
+                <div className="bulk-actions-dropdown">
+                  <button onClick={() => handleBulkAction("status:completed")}>Mark as Completed</button>
+                  <button onClick={() => handleBulkAction("status:processing")}>Mark as Processing</button>
+                  <button onClick={() => handleBulkAction("export")}>
+                    <Download size={14} /> Export Selected
+                  </button>
+                  <button className="danger" onClick={() => handleBulkAction("delete")}>
+                    <Trash2 size={14} /> Delete Selected
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        <div className={`transactions-table-container ${isLoading ? "loading" : ""}`}>
+          <table className="transactions-table" ref={tableRef}>
+            <thead>
               <tr>
-                <td colSpan="8" className="no-results">
-                  No transactions found
-                </td>
+                <th className="checkbox-cell">
+                  <input type="checkbox" checked={selectAll} onChange={toggleSelectAll} />
+                </th>
+                <th
+                  className={sortConfig.key === "id" ? `sorted-${sortConfig.direction}` : ""}
+                  onClick={() => requestSort("id")}
+                >
+                  Transaction ID
+                  {sortConfig.key === "id" &&
+                    (sortConfig.direction === "asc" ? <ChevronUp size={16} /> : <ChevronDown size={16} />)}
+                </th>
+                <th
+                  className={sortConfig.key === "customer" ? `sorted-${sortConfig.direction}` : ""}
+                  onClick={() => requestSort("customer")}
+                >
+                  Customer
+                  {sortConfig.key === "customer" &&
+                    (sortConfig.direction === "asc" ? <ChevronUp size={16} /> : <ChevronDown size={16} />)}
+                </th>
+                <th
+                  className={sortConfig.key === "amount" ? `sorted-${sortConfig.direction}` : ""}
+                  onClick={() => requestSort("amount")}
+                >
+                  Amount
+                  {sortConfig.key === "amount" &&
+                    (sortConfig.direction === "asc" ? <ChevronUp size={16} /> : <ChevronDown size={16} />)}
+                </th>
+                <th
+                  className={sortConfig.key === "items" ? `sorted-${sortConfig.direction}` : ""}
+                  onClick={() => requestSort("items")}
+                >
+                  Items
+                  {sortConfig.key === "items" &&
+                    (sortConfig.direction === "asc" ? <ChevronUp size={16} /> : <ChevronDown size={16} />)}
+                </th>
+                <th
+                  className={sortConfig.key === "date" ? `sorted-${sortConfig.direction}` : ""}
+                  onClick={() => requestSort("date")}
+                >
+                  Date
+                  {sortConfig.key === "date" &&
+                    (sortConfig.direction === "asc" ? <ChevronUp size={16} /> : <ChevronDown size={16} />)}
+                </th>
+                <th
+                  className={sortConfig.key === "status" ? `sorted-${sortConfig.direction}` : ""}
+                  onClick={() => requestSort("status")}
+                >
+                  Status
+                  {sortConfig.key === "status" &&
+                    (sortConfig.direction === "asc" ? <ChevronUp size={16} /> : <ChevronDown size={16} />)}
+                </th>
+                <th>Actions</th>
               </tr>
-            ) : (
-              sortedTransactions.map((tx) => (
-                <React.Fragment key={tx.id}>
-                  <tr className={selectedRows.includes(tx.id) ? "selected" : ""}>
-                    <td className="checkbox-cell">
-                      <input
-                        type="checkbox"
-                        checked={selectedRows.includes(tx.id)}
-                        onChange={() => toggleRowSelect(tx.id)}
-                      />
-                    </td>
-                    <td>{tx.id}</td>
-                    <td>
-                      <div className="customer-info">
-                        <div>{tx.customer}</div>
-                        <div className="customer-email">{tx.email}</div>
-                      </div>
-                    </td>
-                    <td>${tx.amount.toFixed(2)}</td>
-                    <td>{tx.items}</td>
-                    <td>{formatDate(tx.date)}</td>
-                    <td>
-                      {statusUpdating === tx.id ? (
-                        <div className="status-updating">
-                          <div className="spinner"></div>
-                          Updating...
+            </thead>
+            <tbody>
+              {sortedTransactions.length === 0 ? (
+                <tr>
+                  <td colSpan="8" className="no-results">
+                    No transactions found
+                  </td>
+                </tr>
+              ) : (
+                sortedTransactions.map((tx) => (
+                  <React.Fragment key={tx.id}>
+                    <tr className={selectedRows.includes(tx.id) ? "selected" : ""}>
+                      <td className="checkbox-cell">
+                        <input
+                          type="checkbox"
+                          checked={selectedRows.includes(tx.id)}
+                          onChange={() => toggleRowSelect(tx.id)}
+                        />
+                      </td>
+                      <td>{tx.id}</td>
+                      <td>
+                        <div className="customer-info">
+                          <div>{tx.customer}</div>
+                          <div className="customer-email">{tx.email}</div>
                         </div>
-                      ) : (
-                        <span className={`status-badge ${tx.status}`}>
-                          {tx.status.charAt(0).toUpperCase() + tx.status.slice(1)}
-                        </span>
-                      )}
-                    </td>
-                    <td>
-                      <div className="row-actions">
-                        <button
-                          className="expand-row"
-                          onClick={() => toggleRowExpand(tx.id)}
-                          aria-label={expandedRows[tx.id] ? "Collapse row" : "Expand row"}
-                        >
-                          <ChevronRight size={18} className={expandedRows[tx.id] ? "expanded" : ""} />
-                        </button>
-                        <div className="action-dropdown">
-                          <button className="action-dropdown-trigger">
-                            <MoreVertical size={18} />
+                      </td>
+                      <td>${tx.amount.toFixed(2)}</td>
+                      <td>{tx.items}</td>
+                      <td>{formatDate(tx.date)}</td>
+                      <td>
+                        {statusUpdating === tx.id ? (
+                          <div className="status-updating">
+                            <div className="spinner"></div>
+                            Updating...
+                          </div>
+                        ) : (
+                          <span className={`status-badge ${tx.status}`}>
+                            {tx.status.charAt(0).toUpperCase() + tx.status.slice(1)}
+                          </span>
+                        )}
+                      </td>
+                      <td>
+                        <div className="row-actions">
+                          <button
+                            className="expand-row"
+                            onClick={() => toggleRowExpand(tx.id)}
+                            aria-label={expandedRows[tx.id] ? "Collapse row" : "Expand row"}
+                          >
+                            <ChevronRight size={18} className={expandedRows[tx.id] ? "expanded" : ""} />
                           </button>
-                          <div className="action-dropdown-menu">
-                            <button>
-                              <Edit size={14} /> Edit
+                          <div className="action-dropdown">
+                            <button className="action-dropdown-trigger">
+                              <MoreVertical size={18} />
                             </button>
-                            <button onClick={() => updateStatus(tx.id, "completed")}>
-                              <Check size={14} /> Mark Completed
-                            </button>
-                            <button onClick={() => updateStatus(tx.id, "processing")}>
-                              <RefreshCw size={14} /> Mark Processing
-                            </button>
-                            <button className="danger">
-                              <Trash2 size={14} /> Delete
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                  {expandedRows[tx.id] && (
-                    <tr className="expanded-row">
-                      <td colSpan="8">
-                        <div className="expanded-content">
-                          <div className="expanded-section">
-                            <h4>Products</h4>
-                            <table className="products-table">
-                              <thead>
-                                <tr>
-                                  <th>Product ID</th>
-                                  <th>Name</th>
-                                  <th>Quantity</th>
-                                  <th>Price</th>
-                                  <th>Total</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {tx.products.map((product) => (
-                                  <tr key={product.id}>
-                                    <td>{product.id}</td>
-                                    <td>{product.name}</td>
-                                    <td>{product.quantity}</td>
-                                    <td>${product.price.toFixed(2)}</td>
-                                    <td>${(product.price * product.quantity).toFixed(2)}</td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          </div>
-
-                          <div className="expanded-details">
-                            <div className="detail-group">
-                              <h4>Payment Details</h4>
-                              <div className="detail-item">
-                                <span className="detail-label">Method:</span>
-                                <span className="detail-value">{tx.paymentMethod}</span>
-                              </div>
-                              <div className="detail-item">
-                                <span className="detail-label">Subtotal:</span>
-                                <span className="detail-value">${(tx.amount * 0.9).toFixed(2)}</span>
-                              </div>
-                              <div className="detail-item">
-                                <span className="detail-label">Tax:</span>
-                                <span className="detail-value">${(tx.amount * 0.1).toFixed(2)}</span>
-                              </div>
-                              <div className="detail-item total">
-                                <span className="detail-label">Total:</span>
-                                <span className="detail-value">${tx.amount.toFixed(2)}</span>
-                              </div>
+                            <div className="action-dropdown-menu">
+                              <button>
+                                <Edit size={14} /> Edit
+                              </button>
+                              <button onClick={() => updateStatus(tx.id, "completed")}>
+                                <Check size={14} /> Mark Completed
+                              </button>
+                              <button onClick={() => updateStatus(tx.id, "processing")}>
+                                <RefreshCw size={14} /> Mark Processing
+                              </button>
+                              <button className="danger">
+                                <Trash2 size={14} /> Delete
+                              </button>
                             </div>
-
-                            <div className="detail-group">
-                              <h4>Shipping Information</h4>
-                              <div className="detail-item">
-                                <span className="detail-label">Address:</span>
-                                <span className="detail-value">{tx.shippingAddress}</span>
-                              </div>
-                            </div>
-
-                            {tx.notes && (
-                              <div className="detail-group">
-                                <h4>Notes</h4>
-                                <div className="detail-item">
-                                  <span className="detail-value notes">{tx.notes}</span>
-                                </div>
-                              </div>
-                            )}
-                          </div>
-
-                          <div className="expanded-actions">
-                            <button className="action-button">
-                              <Download size={14} /> Export
-                            </button>
-                            <button className="action-button">
-                              <Edit size={14} /> Edit
-                            </button>
                           </div>
                         </div>
                       </td>
                     </tr>
-                  )}
-                </React.Fragment>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+                    {expandedRows[tx.id] && (
+                      <tr className="expanded-row">
+                        <td colSpan="8">
+                          <div className="expanded-content">
+                            <div className="expanded-section">
+                              <h4>Products</h4>
+                              <table className="products-table">
+                                <thead>
+                                  <tr>
+                                    <th>Product ID</th>
+                                    <th>Name</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Total</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {tx.products.map((product) => (
+                                    <tr key={product.id}>
+                                      <td>{product.id}</td>
+                                      <td>{product.name}</td>
+                                      <td>{product.quantity}</td>
+                                      <td>${product.price.toFixed(2)}</td>
+                                      <td>${(product.price * product.quantity).toFixed(2)}</td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
 
-      {notification && <div className={`notification ${notification.type}`}>{notification.message}</div>}
-    </div>
+                            <div className="expanded-details">
+                              <div className="detail-group">
+                                <h4>Payment Details</h4>
+                                <div className="detail-item">
+                                  <span className="detail-label">Method:</span>
+                                  <span className="detail-value">{tx.paymentMethod}</span>
+                                </div>
+                                <div className="detail-item">
+                                  <span className="detail-label">Subtotal:</span>
+                                  <span className="detail-value">${(tx.amount * 0.9).toFixed(2)}</span>
+                                </div>
+                                <div className="detail-item">
+                                  <span className="detail-label">Tax:</span>
+                                  <span className="detail-value">${(tx.amount * 0.1).toFixed(2)}</span>
+                                </div>
+                                <div className="detail-item total">
+                                  <span className="detail-label">Total:</span>
+                                  <span className="detail-value">${tx.amount.toFixed(2)}</span>
+                                </div>
+                              </div>
+
+                              <div className="detail-group">
+                                <h4>Shipping Information</h4>
+                                <div className="detail-item">
+                                  <span className="detail-label">Address:</span>
+                                  <span className="detail-value">{tx.shippingAddress}</span>
+                                </div>
+                              </div>
+
+                              {tx.notes && (
+                                <div className="detail-group">
+                                  <h4>Notes</h4>
+                                  <div className="detail-item">
+                                    <span className="detail-value notes">{tx.notes}</span>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+
+                            <div className="expanded-actions">
+                              <button className="action-button">
+                                <Download size={14} /> Export
+                              </button>
+                              <button className="action-button">
+                                <Edit size={14} /> Edit
+                              </button>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {notification && <div className={`notification ${notification.type}`}>{notification.message}</div>}
+      </div>
+    </AdminLayout>
   )
 }
 

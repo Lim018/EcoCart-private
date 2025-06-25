@@ -51,7 +51,7 @@ const ProductCatalog = () => {
       id: 1,
       name: "Set Sikat Gigi Bambu",
       price: 194850, // 12.99 USD * 15000
-      image: "/bamboo-toothbrush-set.png",
+      image: "/eco-friendly-oral-care.png",
       comparisonImage: "/plastic-toothbrush-comparison.png",
       category: "home",
       rating: 4.8,
@@ -101,7 +101,7 @@ const ProductCatalog = () => {
       id: 3,
       name: "Kantong Belanja Reusable",
       price: 239850, // 15.99 USD * 15000
-      image: "/reusable-produce-bags.png",
+      image: "/colorful-produce-bags.png",
       comparisonImage: "/plastic-produce-bags-comparison.png",
       category: "home",
       rating: 4.9,
@@ -140,31 +140,6 @@ const ProductCatalog = () => {
         energySaved: "Memanfaatkan energi surya terbarukan",
         recycledMaterials: "Casing terbuat dari 80% plastik daur ulang",
         carbonReduced: "Mengurangi jejak karbon dari pengisian listrik",
-      },
-    },
-    {
-      id: 5,
-      name: "Pembungkus Makanan Beeswax",
-      price: 284850, // 18.99 USD * 15000
-      image: "/beeswax-food-wraps.png",
-      comparisonImage: "/plastic-wrap-comparison.png",
-      category: "home",
-      rating: 4.7,
-      reviewCount: 156,
-      isNew: false,
-      isBestseller: true,
-      sustainabilityScore: 95,
-      description: "Set 3 pembungkus makanan beeswax reusable untuk menggantikan plastik pembungkus.",
-      features: [
-        "Terbuat dari katun organik, lilin lebah, dan resin pohon",
-        "Dapat digunakan kembali hingga 1 tahun",
-        "Dapat dicuci dengan air dingin",
-        "Memiliki sifat antibakteri alami",
-      ],
-      impact: {
-        plasticSaved: "Menggantikan sekitar 250 meter plastik pembungkus setiap tahun",
-        biodegradable: "Sepenuhnya dapat dikompos di akhir masa pakai",
-        naturalMaterials: "Terbuat dari bahan alami dan berkelanjutan",
       },
     },
     {
