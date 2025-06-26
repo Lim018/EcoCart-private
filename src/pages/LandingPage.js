@@ -174,7 +174,7 @@ const LandingPage = () => {
                       <strong>Dampak:</strong> {product.sustainability.impact}
                     </li>
                   </ul>
-                  <Link to={`/products/${product.id}`} className="btn btn-primary btn-sm">
+                  <Link to={`/products`} className="btn btn-primary btn-sm">
                     Lihat Produk
                   </Link>
                 </div>
