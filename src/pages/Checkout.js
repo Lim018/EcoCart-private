@@ -315,22 +315,22 @@ const Checkout = () => {
 
           <div className="progress-steps">
             <div className={`progress-step ${currentStep >= 1 ? "active" : ""} ${currentStep > 1 ? "completed" : ""}`}>
-              <div className="step-number">{currentStep > 1 ? <i className="fas fa-check"></i> : 1}</div>
+              <div className="step-number">{1}</div>
               <div className="step-label">Pengiriman</div>
             </div>
 
             <div className={`progress-step ${currentStep >= 2 ? "active" : ""} ${currentStep > 2 ? "completed" : ""}`}>
-              <div className="step-number">{currentStep > 2 ? <i className="fas fa-check"></i> : 2}</div>
+              <div className="step-number">{2}</div>
               <div className="step-label">Pengantaran</div>
             </div>
 
             <div className={`progress-step ${currentStep >= 3 ? "active" : ""} ${currentStep > 3 ? "completed" : ""}`}>
-              <div className="step-number">{currentStep > 3 ? <i className="fas fa-check"></i> : 3}</div>
+              <div className="step-number">{3}</div>
               <div className="step-label">Pembayaran</div>
             </div>
 
             <div className={`progress-step ${currentStep >= 4 ? "active" : ""} ${currentStep > 4 ? "completed" : ""}`}>
-              <div className="step-number">4</div>
+              <div className="step-number">{4}</div>
               <div className="step-label">Tinjauan</div>
             </div>
           </div>
@@ -897,10 +897,10 @@ const Checkout = () => {
               <div className="summary-items">
                 {cartItems.map((item) => (
                   <div className="summary-item" key={item.id}>
-                    <div className="item-image">
+                    {/* <div className="item-image">
                       <img src={item.image || "/placeholder.svg"} alt={item.name} />
                       <span className="item-quantity">{item.quantity}</span>
-                    </div>
+                    </div> */}
                     <div className="item-details">
                       <h4>{item.name}</h4>
                       <div className="item-price">{formatPrice(item.price * item.quantity)}</div>
