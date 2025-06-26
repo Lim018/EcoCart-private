@@ -8,13 +8,22 @@ const QuickViewModal = ({ product, onClose }) => {
   const [activeImage, setActiveImage] = useState(0)
   const [quantity, setQuantity] = useState(1)
 
-  // Sample additional images (in a real app, these would come from the product data)
+  // Filter out placeholder images and take the first valid image
   const productImages = [
     product.image,
     product.comparisonImage,
     "/placeholder.svg?key=b6bkb",
     "/placeholder.svg?key=wspvl",
-  ]
+  ].filter(image => image && !image.includes("placeholder.svg"));
+
+  // Set activeImage to 0 if valid images exist, otherwise -1
+  useEffect(() => {
+    if (productImages.length === 0) {
+      setActiveImage(-1);
+    } else if (activeImage >= productImages.length) {
+      setActiveImage(0);
+    }
+  }, [productImages, activeImage]);
 
   // Format price in IDR
   const formatPrice = (price) => {
@@ -30,11 +39,11 @@ const QuickViewModal = ({ product, onClose }) => {
     }
 
     document.addEventListener("keydown", handleEscape)
-    document.body.style.overflow = "hidden" // Prevent scrolling when modal is open
+    document.body.style.overflow = "hidden"
 
     return () => {
       document.removeEventListener("keydown", handleEscape)
-      document.body.style.overflow = "auto" // Restore scrolling when modal is closed
+      document.body.style.overflow = "auto"
     }
   }, [onClose])
 
@@ -64,20 +73,11 @@ const QuickViewModal = ({ product, onClose }) => {
 
         <div className="modal-content">
           <div className="modal-gallery">
-            <div className="main-image">
-              <img src={productImages[activeImage] || "/placeholder.svg"} alt={product.name} />
-            </div>
-            <div className="thumbnail-gallery">
-              {productImages.map((image, index) => (
-                <div
-                  key={index}
-                  className={`thumbnail ${activeImage === index ? "active" : ""}`}
-                  onClick={() => setActiveImage(index)}
-                >
-                  <img src={image || "/placeholder.svg"} alt={`${product.name} - Tampilan ${index + 1}`} />
-                </div>
-              ))}
-            </div>
+            {productImages.length > 0 && (
+              <div className="main-image">
+                <img src={productImages[0]} alt={product.name} />
+              </div>
+            )}
           </div>
 
           <div className="modal-info">
@@ -125,11 +125,11 @@ const QuickViewModal = ({ product, onClose }) => {
               </button>
             </div>
 
-            <div className="modal-footer">
+            {/* <div className="modal-footer">
               <Link to={`/products/${product.id}`} className="view-details">
                 Lihat Detail Lengkap <i className="fas fa-arrow-right"></i>
               </Link>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
